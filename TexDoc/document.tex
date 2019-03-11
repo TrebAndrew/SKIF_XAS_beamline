@@ -1,17 +1,148 @@
-\documentclass[]{article}
+\documentclass[14pt,a4paper]{extarticle}
+\usepackage[utf8]{inputenc}
 
-%opening
-\title{}
-\author{}
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{mathrsfs}
+
+
+
+\usepackage[version=3]{mhchem}% Package for chemical equation typesetting
+%\renewcommand{\thefigure}{\thechapter.\Alph{figure}}
+
+
+\usepackage{lineno}
+%\linenumbers
+
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[hypcap]{subcaption}
+% \usepackage[colorlinks=true, linkcolor=Maroon, citecolor=ForestGreen]{hyperref}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[height=25cm, a4paper, hmargin={2.5cm, 1.5cm}, vmargin={2cm, 2.3cm}]{geometry}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}% {.3em}
+
+\usepackage{titlesec}
+\titleformat*{\section}{\normalsize\bfseries}
+\titleformat*{\subsection}{\normalsize\bfseries}
+%\titlelabel{\thetitle.\quad}
+
+
+
+
+\usepackage[separate-uncertainty = true, multi-part-units=single, range-phrase=--, range-units=single]{siunitx}
+
+\mathchardef\period=\mathcode`.
+\DeclareMathSymbol{.}{\mathord}{letters}{"3B}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage[backend=bibtex, style=numeric, sorting=none, maxnames=3, minnames=3, hyperref=true, url=true, isbn=false, backref=true]{biblatex}
+\bibliography{mybib}
+
+\usepackage{tocloft}
+\usepackage{tikz}
+\hyphenation{Ha-ma-ma-tsu}
+
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+
+\usepackage{titletoc}
+\dottedcontents{section}[3em]{}{2.9em}{1pc}
+\dottedcontents{subsection}[3em]{}{2.3em}{1pc}
+\renewcommand{\thesection}{\thechapter\arabic{section}.}
+%\renewcommand{\thesection}{\thechapter\arabic{subsection}.}
+
+\renewcommand{\figurename}{Рис.}
+\usepackage[labelsep=period, font=small]{caption}
+
+\usepackage{titlesec}
+\titlespacing*{\section}
+{0pt}{1pt}{0pt}
+% {0pt}{5.5ex plus 1ex minus .2ex}{4.3ex plus .2ex}
+\titlespacing*{\subsection}
+{0pt}{1pt}{0pt}
+% {0pt}{5.5ex plus 1ex minus .2ex}{4.3ex plus .2ex}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+%\fancyhead[LE,RO]{Share\LaTeX}
+%\fancyhead[RE,LO]{Guides and tutorials}
+%\fancyfoot[CE,CO]{\leftmark}
+\fancyfoot[LE,RO]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
 
 \begin{document}
 
-\maketitle
+Выведем спектр излучения из ондулятора. Начнём с уравнения движение релятивистского электрона в магнитном поле.
 
-\begin{abstract}
+\begin{equation}
+	\vec{F} = e \cdot[\vec{v} \times \vec{B}],
+\end{equation} 
+где $e$ --- заряд электрона, а $\vec{v}$ и $\vec{B}$ скорость частицы и магнитное поле соответственно. Уравнение можно переписать в виде:
 
-\end{abstract}
+\begin{equation}
+	\frac{d\vec{p}}{dt} = \frac{e}{\gamma m_e}\cdot [\vec{v} \times \vec{B}],
+\end{equation}
+где $\gamma$ --- лоренц фактор, появившийся из релятивистского импульса. Направим ось $z$ вдоль направления релятивистского движения электрона и введём магнитное поле в ондуляторе $B_0\cos(k_w z)$, направленное вдоль оси $y$, где $k_w$ связана с периодом ондулятора следующим образом $k_w = \frac{2\pi}{\lambda_w}$. 
 
-\section{}
+\begin{equation}
+	\begin{cases}
+		\frac{d^2 x}{dt^2} = - \frac{e B_0}{\gamma m_e}\frac{dz}{dt} \cos(k_w z)\\
+		\frac{d^2 z}{dt^2} = \frac{e B_0}{\gamma m_e}\frac{dx}{dt} \cos(k_w z)
+	\end{cases} 
+\end{equation}
+
+один раз интегрируя первой уравнение из системы с заменой $dz = \beta cdt$, где $\beta = \frac{\|\vec{v}\|}{c}$, можно получить: 
+
+\begin{equation}
+ 	\label{eq:dx/dt}
+	\frac{dx}{dt} = - \frac{eB_0}{\gamma m_ek_w} \sin(k_w z)
+\end{equation}
+Введём известный коэффициент ондуляторности --- $K = \frac{eB_0 \lambda}{2\pi m_ek_w}$, который показывает угол отклонения электрона от оси $z$. 
+
+Подставляя получившийся результат~\ref{eq:dx/dt} во второе уравнение системы и интегрируя с пределами интегрирования от $0$ до некоторого $z_0$, получим систему:
+
+\begin{equation}
+	\begin{cases}
+		\frac{dx}{dt} = - \frac{Kc}{\gamma} \sin(k_w z)\\
+		\frac{dz}{dt} = \beta c - \frac{K^2 c}{2 \gamma^2 \beta}\sin^2(k_w z)
+	\end{cases} 
+\end{equation}
 
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
