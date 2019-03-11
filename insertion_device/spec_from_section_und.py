@@ -1,5 +1,5 @@
 #############################################################################
-#Create a tapered undulator/any magnetic structure. Calculate !two! electric field files 
+#Create a tapered undulator magnetic structure. Calculate !two! electric field files 
 #otimised for extracting spectrum and intensity. Save it to files using pickle lib
 #v0.1
 #############################################################################
@@ -9,26 +9,24 @@ from srwlib import *
 from uti_plot import *
 import os
 import sys
-import pickle
 
-print('SRWLIB Extended Example # 6:')
-print('Calculating spectral flux of undulator radiation by finite-emittance electron beam collected through a finite aperture and power density distribution of this radiation (integrated over all photon energies)')
+print('SKIF Extended Example # 2:')
+print('Creating a tapered undulator magnetic structure. Calculate !two! electric field files otimised for extracting spectrum and intensity. Save it to files using pickle lib')
 
-#**********************Input Parameters:
-wfrPathName = '/home/andrei/Documents/9_term/diplom/BEAMLINE/files/' #example data sub-folder name
-wfr1FileName = 'wfr1.wfr' #file name for output UR flux data
-wfr2FileName = 'wfr2.wfr'
+#**********************Output files
+wfrPathName = '/home/andrei/Documents/SKIF_XFAS_beamline/fields/' #example data sub-folder name
+wfr1FileName = 'wfr1_for_tapered_und.wfr' #file name for output UR flux data
+wfr2FileName = 'wfr2_for_tapered_und.wfr'
+
 #***********Undulator
 undarr = []
 undarrH = []
 distz =  []
 distx =  []
 disty =  []
-'''
-#####Sectional undulator calculation######
 
-PER = 80
-NumPIECE = 4
+PER = 60
+NumPIECE = 3
 undper = 0.0156
 numper = PER/NumPIECE
 magf = 1
@@ -62,42 +60,14 @@ for i in range(NumPIECE):
     distx.append(0)
     disty.append(0)
 print(distx, distz)
-######                      ######
-'''
-######UNDULATOR calculations######
-Length = 2.3 # m
-undper = 0.018 # m
-numper = 128
-magf = 1.4
 
+magFldCnt = SRWLMagFldC(undarr, array('d', distx), array('d', disty), array('d', distz)) #Container of all Field Elements
+#***********
 
-harmB1 = SRWLMagFldH() #magnetic field harmonic
-harmB1.n = 1 #harmonic number
-harmB1.h_or_v = 'v' #magnetic field plane: horzontal ('h') or vertical ('v')
-harmB1.B = magf #magnetic field amplitude [T]
-
-und1 = SRWLMagFldU([harmB1])
-und1.per = undper  #period length [m]
-und1.nPer = numper #number of periods (will be rounded to integer)
-
-K = 0.965 * magf * undper * 100
-print("K = ",K)
-
-harmB1 = SRWLMagFldH() #magnetic field harmonic
-harmB1.n = 1 #harmonic number
-harmB1.h_or_v = 'v' #magnetic field plane: horzontal ('h') or vertical ('v')
-harmB1.B = magf #magnetic field amplitude [T]
-und1 = SRWLMagFldU([harmB1])
-und1.per = undper  #period length [m]
-und1.nPer = numper #number of periods (will be rounded to integer)
-######                      ########
-
-#magFldCnt = SRWLMagFldC(undarr, array('d', distx), array('d', disty), array('d', distz)) #Container of all Field Elements
-magFldCnt = SRWLMagFldC([und1], array('d', [0]), array('d', [0]), array('d', [0])) #Container of all Field Elements
-
+#%%
 #***********Electron Beam
 eBeam = SRWLPartBeam()
-eBeam.Iavg = 0.4 #average current [A]
+eBeam.Iavg = 0.4          #average current [A]
 eBeam.partStatMom1.x = 0. #initial transverse positions [m]
 eBeam.partStatMom1.y = 0.
 eBeam.partStatMom1.z = 0. #initial longitudinal positions (set in the middle of undulator)
@@ -149,12 +119,13 @@ useTermin = 1 #Use "terminating terms" (i.e. asymptotic expansions at zStartInte
 sampFactNxNyForProp = 0 #sampling factor for adjusting nx, ny (effective if > 0)
 arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, sampFactNxNyForProp]
 
-wfr1 = SRWLWfr() #For spectrum vs photon energy
 
-wfr1.allocate(200, 30, 30) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
-wfr1.mesh.zStart = 23. #Longitudinal Position [m] at which SR has to be calculated
-wfr1.mesh.eStart = 1000. #Initial Photon Energy [eV]
-wfr1.mesh.eFin = 3000. #Final Photon Energy [eV]
+wfr1 = SRWLWfr() #For spectrum vs photon energy (Spectral Flux)
+
+wfr1.allocate(100, 20, 20) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
+wfr1.mesh.zStart = 30. #Longitudinal Position [m] at which SR has to be calculated
+wfr1.mesh.eStart = 1200. #Initial Photon Energy [eV]
+wfr1.mesh.eFin = 3200. #Final Photon Energy [eV]
 a = 0.002
 wfr1.mesh.xStart = -a #Initial Horizontal Position [m]
 wfr1.mesh.xFin = a #Final Horizontal Position [m]
@@ -165,19 +136,19 @@ wfr1.partBeam = eBeam
 wfr2 = SRWLWfr() #For intensity distribution at fixed photon energy
 
 wfr2.allocate(1, 151, 151) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
-wfr2.mesh.zStart = 23. #Longitudinal Position [m] at which SR has to be calculated
-wfr2.mesh.eStart = 2000 #Initial Photon Energy [eV]
+wfr2.mesh.zStart = 30. #Longitudinal Position [m] at which SR has to be calculated
+wfr2.mesh.eStart = 2650 #Initial Photon Energy [eV]
 wfr2.mesh.eFin = wfr2.mesh.eFin #Final Photon Energy [eV]
-wfr2.mesh.xStart = -0.006 #Initial Horizontal Position [m]
-wfr2.mesh.xFin = 0.006 #Final Horizontal Position [m]
-wfr2.mesh.yStart = -0.006 #Initial Vertical Position [m]
-wfr2.mesh.yFin = 0.006 #Final Vertical Position [m]
+a = 0.002
+wfr2.mesh.xStart = -a #Initial Horizontal Position [m]
+wfr2.mesh.xFin = a #Final Horizontal Position [m]
+wfr2.mesh.yStart = -a #Initial Vertical Position [m]
+wfr2.mesh.yFin = a #Final Vertical Position [m]
 wfr2.partBeam = eBeam
 
-
-#sys.exit(0)
+#%%
 #**********************Calculation (SRWLIB function calls)
-
+            ######### Spectrum #######
 print('   Performing Electric Field (spectrum vs photon energy) calculation ... ', end='')
 srwl.CalcElecFieldSR(wfr1, 0, magFldCnt, arPrecPar)
 print('done')
@@ -186,8 +157,8 @@ print('   Performing Electric Field (wavefront at fixed photon energy) calculati
 srwl.CalcElecFieldSR(wfr2, 0, magFldCnt, arPrecPar)
 print('done')
 
-
-#saving Wave Front to a file
+#%% 
+#*****************Saving to files
 afile = open(wfrPathName + wfr1FileName, 'wb')
 pickle.dump(wfr1, afile)
 afile.close()
@@ -195,4 +166,3 @@ afile.close()
 afile = open(wfrPathName + wfr2FileName, 'wb')
 pickle.dump(wfr2, afile)
 afile.close()
-

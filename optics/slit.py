@@ -1,4 +1,4 @@
-    #############################################################################
+#############################################################################
 #Calculate electric field from an undulator/upload electric field from files. 
 #Propogate them through a slit. Plot intensity distribution and spectrum.
 #v0.1
@@ -11,23 +11,13 @@ import os
 import sys
 import pickle
 import matplotlib.pyplot as plt
-print('SRWLIB Extended Example # 6:')
-print('Calculating spectral flux of undulator radiation by finite-emittance electron beam collected through a finite aperture and power density distribution of this radiation (integrated over all photon energies)')
+print('SKIF Extended Example # 3:')
+print('Calculate electric field from an undulator/upload electric field from files. Propogate them through a slit')
 
-#**********************Input Parameters:
-strExDataFolderName = 'data_example_06' #example data sub-folder name
-strFluxOutFileName = 'ex06_res_flux.dat' #file name for output UR flux data
-strPowOutFileName = 'ex06_res_pow.dat' #file name for output power density data
-strTrjOutFileName = 'ex06_res_trj.dat' #file name for output trajectory data
-'''
-wfrPathName = '/home/andrei/Documents/9_term/diplom/BEAMLINE/files/' #example data sub-folder name
-wfr1FileName = 'wfr1.wfr' #file name for output UR flux data
-wfr2FileName = 'wfr2.wfr'
-'''
-wfrPathName = '/home/andrei/Documents/9_term/diplom/BEAMLINE/files/' #example data sub-folder name
-wfr1FileName = 'wfr1_for_BINP_UND.wfr' #file name for output UR flux data
-wfr2FileName = 'wfr2_for_BINP_UND.wfr'
-
+#**********************Output files
+wfrPathName = '/home/andrei/Documents/SKIF_XFAS_beamline/fields/' #example data sub-folder name
+wfr1FileName = 'wfr1_for_und.wfr' #file name for output UR flux data
+wfr2FileName = 'wfr2_for_und.wfr' #file name for output UR intesity data
 
 #***********Undulator
 
@@ -61,35 +51,8 @@ harmB1.B = magf + 0*magf_step #magnetic field amplitude [T]
 und1 = SRWLMagFldU([harmB1])
 und1.per = undper  #period length [m]
 und1.nPer = numper #number of periods (will be rounded to integer)
-#und = SRWLMagFldU([SRWLMagFldH(1, 'v', By, phBy, sBy, 1), SRWLMagFldH(1, 'h', Bx, phBx, sBx, 1)], undPer, numPer) #Ellipsoidal Undulator
-#magFldCnt = SRWLMagFldC([und], array('d', [xcID]), array('d', [ycID]), array('d', [zcID])) #Container of all Field Elements
-#magFldCnt = SRWLMagFldC(undarr, array('d', distx), array('d', disty), array('d', distz)) #Container of all Field Elements
 
-#magFldCnt = SRWLMagFldC(undarr, array('d', distx), array('d', disty), array('d', distz)) #Container of all Field Elements
 magFldCnt = SRWLMagFldC([und1], array('d', [0]), array('d', [0]), array('d', [0])) #Container of all Field Elements
-
-#***********Electron Beam
-eBeam = SRWLPartBeam()
-eBeam.Iavg = 0.4 #average current [A]
-eBeam.partStatMom1.x = 0. #initial transverse positions [m]
-eBeam.partStatMom1.y = 0.
-eBeam.partStatMom1.z = 0. #initial longitudinal positions (set in the middle of undulator)
-eBeam.partStatMom1.xp = 0 #initial relative transverse velocities
-eBeam.partStatMom1.yp = 0
-eBeam.partStatMom1.gamma = 3./0.51099890221e-03 #relative energy 3 Gev??
-sigEperE = 0.00089 #relative RMS energy spread
-sigX = 33.33e-06 #horizontal RMS size of e-beam [m]
-sigXp = 16.5e-06 #horizontal RMS angular divergence [rad]
-sigY = 2.912e-06 #vertical RMS size of e-beam [m]
-sigYp = 2.7472e-06 #vertical RMS angular divergence [rad]
-#2nd order stat. moments:
-eBeam.arStatMom2[0] = sigX*sigX #<(x-<x>)^2> 
-eBeam.arStatMom2[1] = 0 #<(x-<x>)(x'-<x'>)>
-eBeam.arStatMom2[2] = sigXp*sigXp #<(x'-<x'>)^2> 
-eBeam.arStatMom2[3] = sigY*sigY #<(y-<y>)^2>
-eBeam.arStatMom2[4] = 0 #<(y-<y>)(y'-<y'>)>
-eBeam.arStatMom2[5] = sigYp*sigYp #<(y'-<y'>)^2>
-eBeam.arStatMom2[10] = sigEperE*sigEperE #<(E-<E>)^2>/<E>^2
 
 #***********Auxiliary Electron Trajectory structure (for test)
 partTraj = SRWLPrtTrj() #defining auxiliary trajectory structure
@@ -122,33 +85,6 @@ useTermin = 1 #Use "terminating terms" (i.e. asymptotic expansions at zStartInte
 sampFactNxNyForProp = 0 #sampling factor for adjusting nx, ny (effective if > 0)
 arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, sampFactNxNyForProp]
 
-'''
-wfr1 = SRWLWfr() #For spectrum vs photon energy
-
-wfr1.allocate(200, 30, 30) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
-wfr1.mesh.zStart = 35. #Longitudinal Position [m] at which SR has to be calculated
-wfr1.mesh.eStart = 1050. #Initial Photon Energy [eV]
-wfr1.mesh.eFin = 3000. #Final Photon Energy [eV]
-a = 0.002
-wfr1.mesh.xStart = -a #Initial Horizontal Position [m]
-wfr1.mesh.xFin = a #Final Horizontal Position [m]
-wfr1.mesh.yStart = -a #Initial Vertical Position [m]
-wfr1.mesh.yFin = a #Final Vertical Position [m]
-wfr1.partBeam = eBeam
-
-wfr2 = SRWLWfr() #For intensity distribution at fixed photon energy
-
-wfr2.allocate(1, 151, 151) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
-wfr2.mesh.zStart = 35. #Longitudinal Position [m] at which SR has to be calculated
-wfr2.mesh.eStart = 2660 #Initial Photon Energy [eV]
-wfr2.mesh.eFin = wfr2.mesh.eStart #Final Photon Energy [eV]
-a = 0.006
-wfr2.mesh.xStart = -a #Initial Horizontal Position [m]
-wfr2.mesh.xFin = a #Final Horizontal Position [m]
-wfr2.mesh.yStart = -a #Initial Vertical Position [m]
-wfr2.mesh.yFin = a #Final Vertical Position [m]
-wfr2.partBeam = eBeam
-'''
 afile = open(wfrPathName + wfr1FileName, 'rb')
 wfr1 =  pickle.load(afile)
 afile.close()
@@ -157,11 +93,7 @@ afile = open(wfrPathName + wfr2FileName, 'rb')
 wfr2 =  pickle.load(afile)
 afile.close()
             ######### Spectrum #######
-'''
-print('   Performing Electric Field (spectrum vs photon energy) calculation ... ', end='')
-srwl.CalcElecFieldSR(wfr1, 0, magFldCnt, arPrecPar)
-print('done')
-'''
+
 print('   Extracting Intensity from calculated Electric Field(Spectral Flux) ... ', end='')
 arI1 = array('f', [0]*wfr1.mesh.ne)
 srwl.CalcIntFromElecField(arI1, wfr1, 6, 2, 0, wfr1.mesh.eStart, wfr1.mesh.xStart, wfr1.mesh.yStart)
@@ -250,15 +182,7 @@ optBL = SRWLOptC([SSA, Drift_SSA_SCREEN], [ppSSA, ppDrift_SSA_VKB])#SSA, Drift_S
 #, ppSSA, ppDrift_SSA_VKB])#, ppApKB, ppVKB, ppDrift_VKB_HKB, ppHKB, ppDrift_HKB_Sample, ppFinal]) 
 
 #///////////WAVEFRONT PROPOGATION//////#
-'''
-afile = open(wfrPathName + wfr1FileName, 'rb')
-wfr1 =  pickle.load(afile)
-afile.close()
 
-afile = open(wfrPathName + wfr2FileName, 'rb')
-wfr2 =  pickle.load(afile)
-afile.close()
-'''
 print('   Simulating Electric Field Wavefront Propagation ... ', end='')
 t0 = time.time();
 srwl.PropagElecField(wfr2, optBL)

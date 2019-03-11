@@ -1,6 +1,6 @@
 #############################################################################
-#Create a tapered undulator/any magnetic structure. Calculate !two! electric field files 
-#otimised for extracting spectrum and intensity. Save it to files using pickle lib
+#Create a tapered undulator/wiggler magnetic structure. Calculate and draw !two! electric field files 
+#otimised for extracting spectrum and intensity and the trajectory of the electron. Save it to files using pickle lib
 #v0.1
 #############################################################################
 
@@ -12,78 +12,22 @@ import sys
 import pickle
 
 print('SRWLIB Extended Example # 6:')
-print('Calculating spectral flux of undulator radiation by finite-emittance electron beam collected through a finite aperture and power density distribution of this radiation (integrated over all photon energies)')
+print('Create a tapered undulator/wiggler magnetic structure. Calculate and draw !two! electric field files otimised for extracting spectrum and intensity and the trajectory of the electron. Save it to files using pickle lib')
 
-#**********************Input Parameters:
-wfrPathName = '/home/andrei/Documents/9_term/diplom/BEAMLINE/files/' #example data sub-folder name
-wfr1FileName = 'wfr1_for_BINP_UND.wfr' #file name for output UR flux data
-wfr2FileName = 'wfr2_for_BINP_UND.wfr'
-wfr3FileName = 'wfr3_for_BINP_UND.wfr'
+#**********************Output files
+PathName = '/home/andrei/Documents/SKIF_XFAS_beamline/fields/' #example data sub-folder name
+FileName = 'undulator_wiggler_traj.trj' #file name for output UR flux data
 
-stkFPathName = '/home/andrei/Documents/9_term/diplom/BEAMLINE/files/'
-stkFFileName = 'stkF_for_BINP_UND.stkF'
 #***********Undulator
-undarr = []
-undarrH = []
-distz =  []
-distx =  []
-disty =  []
 
-Length = 2.3 #m
-PER = 60
-NumPIECE = 2
-undper = 0.018
-numper = PER/NumPIECE
-magf = 1.3
-magf_step = 0/100
-
-Bx = magf #Peak Horizontal field [T]
-By = magf*(1 + magf_step/2) #+ (NumPIECE-1)*magf_step#Peak Vertical field [T]
-phBx = 0#Initial Phase of the Horizontal field component
-phBy = 0 #Initial Phase of the Vertical field component
-#sBx = 1 #Symmetry of the Horizontal field component vs Longitudinal position
-#sBy = 1 #Symmetry of the Vertical field component vs Longitudinal position
-xcID = 0 #Transverse Coordinates of Undulator Center [m]
-ycID = 0
-zcID = 0 #Longitudinal Coordinate of Undulator Center [m]
-
-und= []
-'''
-for i in range(NumPIECE):
-    B1 = Bx# + i*magf_step
-    und = SRWLMagFldU([SRWLMagFldH(1, 'v', B1, phBy, sBy, 1)], undper, numper)#, SRWLMagFldH(1, 'h', B2, phBx, sBx, 1)], undPer, numPer) #Ellipsoidal Undulator
-    undarr.append(und)
-    distz.append(-(NumPIECE - i - 1)*undper*numper)
-    distx.append(0)
-    disty.append(0)
-    
-for i in range(NumPIECE):
-    B2 = By# + i*magf_step
-    phBx = 0
-    print(phBx)
-    
-    if i == 0:
-        sBx = 1
-    else: 
-        sBx = -1
-   
-    und = SRWLMagFldU([SRWLMagFldH(1, 'v', B2, phBx, sBx, 1)], undper, numper)#, SRWLMagFldH(1, 'h', B2, phBx, sBx, 1)], undPer, numPer) #Ellipsoidal Undulator
-    undarr.append(und)
-    distz.append(i*(undper*numper + 5.5*undper))
-    distx.append(0)
-    disty.append(0)
-
-print(distz)
-'''
-
-Length = 2.3 # m
-undper = 0.018 # m
-numper = 30
-magf = 1.3
+Length = 5.3 # m
+undper = 0.08 # m
+numper = 80
+magf = 1.8
 
 
 harmB1 = SRWLMagFldH() #magnetic field harmonic
-harmB1.n = 1 #harmonic number
+#harmB1.n = 0 #harmonic number
 harmB1.h_or_v = 'v' #magnetic field plane: horzontal ('h') or vertical ('v')
 harmB1.B = magf #magnetic field amplitude [T]
 und1 = SRWLMagFldU([harmB1])
@@ -93,33 +37,18 @@ und1.nPer = numper #number of periods (will be rounded to integer)
 harmB2 = SRWLMagFldH() #magnetic field harmonic
 harmB2.n = 1 #harmonic number
 harmB2.h_or_v = 'v' #magnetic field plane: horzontal ('h') or vertical ('v')
-harmB2.B = magf + magf_step #magnetic field amplitude [T]
+harmB2.B = magf #magnetic field amplitude [T]
 harmB2.ph = -2
-*pi#*0.5 #+ pi/2
 und2 = SRWLMagFldU([harmB2])
 und2.per = undper  #period length [m]
 und2.nPer = numper #number of periods (will be rounded to integer)
 
-harmB3 = SRWLMagFldH() #magnetic field harmonic
-harmB3.n = 1 #harmonic number
-harmB3.h_or_v = 'v' #magnetic field plane: horzontal ('h') or vertical ('v')
-harmB3.B = magf + 2*magf_step #magnetic field amplitude [T]
-harmB3.ph = 2*pi #+ pi/2
-und3 = SRWLMagFldU([harmB3])
-und3.per = undper  #period length [m]
-und3.nPer = numper #number of periods (will be rounded to integer)
-
 K = 0.965 * magf * undper * 100
 print("K = ",K)
 
-#und = SRWLMagFldU([SRWLMagFldH(1, 'v', By, phBy, sBy, 1), SRWLMagFldH(1, 'h', Bx, phBx, sBx, 1)], undPer, numPer) #Ellipsoidal Undulator
-#magFldCnt = SRWLMagFldC([und], array('d', [xcID]), array('d', [ycID]), array('d', [zcID])) #Container of all Field Elements
-#magFldCnt = SRWLMagFldC(undarr, array('d', distx), array('d', disty), array('d', distz)) #Container of all Field Elements
+#magFldCnt = SRWLMagFldC([und1, und2], array('d', [0, 0]), array('d', [0, 0]), array('d', [0, numper*undper+3*undper])) #Container of all Field Elements
+magFldCnt = SRWLMagFldC([und1], array('d', [0]), array('d', [0]), array('d', [0])) #Container of all Field Elements
 
-#magFldCnt = SRWLMagFldC(undarr, array('d', distx), array('d', disty), array('d', distz)) #Container of all Field Elements
-#magFldCnt = SRWLMagFldC([und1], array('d', [0]), array('d', [0]), array('d', [0])) #Container of all Field Elements
-magFldCnt = SRWLMagFldC([und1, und2], array('d', [0, 0]), array('d', [0, 0]), array('d', [0, numper*undper+3*undper])) #Container of all Field Elements
-#magFldCnt = SRWLMagFldC([und1, und2, und3], array('d', [0, 0, 0]), array('d', [0, 0, 0]), array('d', [0, 1*numper*undper + 0*undper, 2*numper*undper + 0*undper])) #Container of all Field Elements
 #***********Electron Beam
 eBeam = SRWLPartBeam()
 eBeam.Iavg = 0.4 #average current [A]
@@ -177,10 +106,10 @@ arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, sampFactN
 #***********UR Stokes Parameters (mesh) for Spectral Flux
 
 wfr1 = SRWLWfr() #For spectrum vs photon energy
-wfr1.allocate(2000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
+wfr1.allocate(500, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
 wfr1.mesh.zStart = 22. #Longitudinal Position [m] at which SR has to be calculated
-wfr1.mesh.eStart = 1100. #Initial Photon Energy [eV]
-wfr1.mesh.eFin = 1700#4300. #Final Photon Energy [eV]
+wfr1.mesh.eStart = 300. #Initial Photon Energy [eV]
+wfr1.mesh.eFin = 15000#4300. #Final Photon Energy [eV]
 #wfr1.avgPhotEn= #4205
 a = 0.002
 wfr1.mesh.xStart = -a #Initial Horizontal Position [m]
@@ -200,14 +129,13 @@ wfr2.mesh.xFin = a #Final Horizontal Position [m]
 wfr2.mesh.yStart = -a #Initial Vertical Position [m]
 wfr2.mesh.yFin = a #Final Vertical Position [m]
 wfr2.partBeam = eBeam
-
 print('   Performing Electric Field (spectrum vs photon energy) calculation ... ', end='')
 srwl.CalcElecFieldSR(wfr1, 0, magFldCnt, arPrecPar)
 print('done')
 
-print('   Performing Electric Field (wavefront at fixed photon energy) calculation ... ', end='')
-srwl.CalcElecFieldSR(wfr2, 0, magFldCnt, arPrecPar)
-print('done')
+#print('   Performing Electric Field (wavefront at fixed photon energy) calculation ... ', end='')
+#srwl.CalcElecFieldSR(wfr2, 0, magFldCnt, arPrecPar)
+#print('done')
 
             ######### Spectrum #######
 print('   Extracting Intensity from calculated Electric Field(Spectral Flux) ... ', end='')
@@ -218,16 +146,14 @@ print('done')
 print('   Plotting the results (blocks script execution; close any graph windows to proceed) ... ', end='')
 uti_plot1d(arI1, [wfr1.mesh.eStart, wfr1.mesh.eFin, wfr1.mesh.ne], ['Photon Energy [eV]', 'Intensity [ph/s/.1%bw/mm^2]', 'On-Axis Spectrum'])
 
-            ######### Intensity #######
-print('   Extracting Intensity from calculated Electric Field ... ', end='')
-arI2 = array('f', [0]*wfr2.mesh.nx*wfr2.mesh.ny) #"flat" array to take 2D intensity data
-srwl.CalcIntFromElecField(arI2, wfr2, 6, 0, 3, wfr2.mesh.eStart, 0, 0)
-print('done')
+#            ######### Intensity #######
+#print('   Extracting Intensity from calculated Electric Field ... ', end='')
+#arI2 = array('f', [0]*wfr2.mesh.nx*wfr2.mesh.ny) #"flat" array to take 2D intensity data
+#srwl.CalcIntFromElecField(arI2, wfr2, 6, 0, 3, wfr2.mesh.eStart, 0, 0)
+#print('done')
+#uti_plot2d(arI2, [1000*wfr2.mesh.xStart, 1000*wfr2.mesh.xFin, wfr2.mesh.nx], [1000*wfr2.mesh.yStart, 1000*wfr2.mesh.yFin, wfr2.mesh.ny], ['Horizontal Position [mm]', 'Vertical Position [mm]', 'Intensity at ' + str(wfr2.mesh.eStart) + ' eV'])
 
-uti_plot2d(arI2, [1000*wfr2.mesh.xStart, 1000*wfr2.mesh.xFin, wfr2.mesh.nx], [1000*wfr2.mesh.yStart, 1000*wfr2.mesh.yFin, wfr2.mesh.ny], ['Horizontal Position [mm]', 'Vertical Position [mm]', 'Intensity at ' + str(wfr2.mesh.eStart) + ' eV'])
-
-
-
+#%%
 numPer = 40 #Number of ID Periods (without counting for terminations)
 xcID = 0 #Transverse Coordinates of ID Center [m]
 ycID = 0
@@ -242,21 +168,17 @@ part.gamma = 3/0.51099890221e-03 #Relative Energy
 part.relE0 = 1 #Electron Rest Mass
 part.nq = -1 #Electron Charge
 
-npTraj = 10001 #Number of Points for Trajectory calculation
+npTraj = 1001 #Number of Points for Trajectory calculation
 fieldInterpMeth = 4 #2 #Magnetic Field Interpolation Method, to be entered into 3D field structures below (to be used e.g. for trajectory calculation):
 #1- bi-linear (3D), 2- bi-quadratic (3D), 3- bi-cubic (3D), 4- 1D cubic spline (longitudinal) + 2D bi-cubic
 arPrecPar = [1] #General Precision parameters for Trajectory calculation:
 
-
 #**********************Trajectory structure, where the results will be stored
 partTraj = SRWLPrtTrj()
 partTraj.partInitCond = part
-#partTraj.allocate(npTraj)
 partTraj.allocate(npTraj, True)
-
-partTraj.ctStart = 0.2 #Start Time for the calculation
-#partTraj.ctEnd = (numPer + 2)*per + magFldCnt.arMagFld[0].rz + magFldCnt.arMagFld[2].rz #End Time
-partTraj.ctEnd = 0.35#magFldCnt.arMagFld[0].rz
+partTraj.ctStart = -0.45 #Start Time for the calculation
+partTraj.ctEnd = 0.45#magFldCnt.arMagFld[0].rz
 
 #**********************Calculation (SRWLIB function call)
 print('   Performing calculation ... ', end='')
@@ -273,56 +195,15 @@ for i in range(partTraj.np):
 uti_plot1d(partTraj.arX, ctMesh, ['ct [m]', 'Horizontal Position [mm]'])
 uti_plot1d(partTraj.arY, ctMesh, ['ct [m]', 'Vertical Position [mm]'])
 
-uti_plot_show() #show all graphs (and block execution)
-print('done')
-
-
-
-'''
-srwl.CalcIntFromElecField(arI2, wfr2, 6, 0, 3, wfr1.mesh.eStart, 0, 0)
-print('done')
-
-arI2x = array('f', [0]*wfr2.mesh.nx) #array to take 1D intensity data (vs X)
-srwl.CalcIntFromElecField(arI2x, wfr2, 6, 0, 1, wfr2.mesh.eStart, 0, 0)
-uti_plot1d(arI2x, [1000*wfr2.mesh.xStart, 1000*wfr2.mesh.xFin, wfr2.mesh.nx], ['Horizontal Position [mm]', 'Intensity [ph/s/.1%bw/mm^2]', 'Intensity at ' + str(wfr2.mesh.eStart) + ' eV\n(horizontal cut at x = 0)'])
-
-arI2y = array('f', [0]*wfr2.mesh.ny) #array to take 1D intensity data (vs Y)
-srwl.CalcIntFromElecField(arI2y, wfr2, 6, 0, 2, wfr2.mesh.eStart, 0, 0)
-uti_plot1d(arI2y, [1000*wfr2.mesh.yStart, 1000*wfr2.mesh.yFin, wfr2.mesh.ny], ['Vertical Position [mm]', 'Intensity [ph/s/.1%bw/mm^2]', 'Intensity at ' + str(wfr2.mesh.eStart) + ' eV\n(vertical cut at y = 0)'])
-  ''' 
-
-
-
-
-
-
-
-'''
-print('   Performing Electric Field (wavefront at fixed photon energy) calculation ... ', end='')
-srwl.CalcElecFieldSR(wfr3, 0, magFldCnt, arPrecPar)
-print('done')
-
-print('   Performing Spectral Flux (Stokes parameters) calculation ... ', end='')
-srwl.CalcStokesUR(stkF, eBeam, und1, arPrecF)
-print('done')
-
-#saving Wave Front to a file
-afile = open(wfrPathName + wfr1FileName, 'wb')
-pickle.dump(wfr1, afile)
+#%%
+#*****************Saving to files
+afile = open(PathName + FileName, 'wb')
+pickle.dump(partTraj, afile)
 afile.close()
 
-afile = open(wfrPathName + wfr2FileName, 'wb')
-pickle.dump(wfr2, afile)
-afile.close()
 
-afile = open(wfrPathName + wfr3FileName, 'wb')
-pickle.dump(wfr3, afile)
-afile.close()
 
-afile = open(stkFPathName + stkFFileName, 'wb')
-pickle.dump(stkF, afile)
-afile.close()
-'''
+
 
 
 
