@@ -1,0 +1,241 @@
+\documentclass[14pt,a4paper]{extarticle}
+\usepackage[utf8]{inputenc}
+
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{mathrsfs}
+
+\numberwithin{equation}{section}
+
+
+\usepackage[version=3]{mhchem}% Package for chemical equation typesetting
+%\renewcommand{\thefigure}{\thechapter.\Alph{figure}}
+
+
+\usepackage{lineno}
+%\linenumbers
+
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[hypcap]{subcaption}
+% \usepackage[colorlinks=true, linkcolor=Maroon, citecolor=ForestGreen]{hyperref}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[height=25cm, a4paper, hmargin={2.5cm, 1.5cm}, vmargin={2cm, 2.3cm}]{geometry}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}% {.3em}
+
+\usepackage{titlesec}
+\titleformat*{\section}{\normalsize\bfseries}
+\titleformat*{\subsection}{\normalsize\bfseries}
+%\titlelabel{\thetitle.\quad}
+
+
+
+
+\usepackage[separate-uncertainty = true, multi-part-units=single, range-phrase=--, range-units=single]{siunitx}
+
+%\mathchardef\period=\mathcode`.
+%\DeclareMathSymbol{.}{\mathord}{letters}{"3B}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage[backend=bibtex, style=numeric, sorting=none, maxnames=3, minnames=3, hyperref=true, url=true, isbn=false, backref=true]{biblatex}
+\bibliography{mybib}
+
+\usepackage{tocloft}
+\usepackage{tikz}
+\hyphenation{Ha-ma-ma-tsu}
+
+%\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+
+\usepackage{titletoc}
+\dottedcontents{section}[3em]{}{2.9em}{1pc}
+\dottedcontents{subsection}[3em]{}{2.3em}{1pc}
+%\renewcommand{\thesection}{\thechapter\arabic{section}}
+%\renewcommand{\thesection}{\thechapter\arabic{subsection}.}
+
+\renewcommand{\figurename}{Рис.}
+%\usepackage[labelsep=period, font=small]{caption}
+
+\usepackage{titlesec}
+\usepackage{physics}
+\titlespacing*{\section}
+{0pt}{1pt}{0pt}
+% {0pt}{5.5ex plus 1ex minus .2ex}{4.3ex plus .2ex}
+\titlespacing*{\subsection}
+{0pt}{1pt}{0pt}
+% {0pt}{5.5ex plus 1ex minus .2ex}{4.3ex plus .2ex}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+%\fancyhead[LE,RO]{Share\LaTeX}
+%\fancyhead[RE,LO]{Guides and tutorials}
+%\fancyfoot[CE,CO]{\leftmark}
+\fancyfoot[LE,RO]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+
+\begin{document}
+\section{Излучение релятивистской частицы}
+\subsection{Уравнение движения}
+Выведем спектр излучения из ондулятора. Вывод начнём с уравнения движение релятивистского электрона в магнитном поле.
+
+\begin{equation}
+	\vec{F} = e[\vec{v} \times \vec{B}],
+\end{equation} 
+где $e$ --- заряд электрона, а $\vec{v}$ и $\vec{B}$ скорость частицы и магнитное поле соответственно. Уравнение можно переписать в виде:
+
+\begin{equation}
+	\cfrac{d\vec{p}}{dt} = \cfrac{e}{\gamma m_e}[\vec{v} \times \vec{B}],
+\end{equation}
+где $\gamma$ --- лоренц фактор, появившийся из релятивистского импульса. Направим ось $z$ вдоль направления релятивистского движения электрона и введём магнитное поле в ондуляторе $B_0\cos(k_w z)$, направленное вдоль оси $y$, где $k_w$ связана с периодом ондулятора следующим образом $k_w = 2\pi/\lambda_w$. 
+
+\begin{equation}
+	\begin{cases}
+		\cfrac{d^2 x}{dt^2} = - \cfrac{e B_0}{\gamma m_e}\cfrac{dz}{dt} \cos(k_w z)\\
+		\cfrac{d^2 z}{dt^2} = \cfrac{e B_0}{\gamma m_e}\cfrac{dx}{dt} \cos(k_w z)
+	\end{cases} 
+\end{equation}
+
+один раз интегрируя первой уравнение из системы с заменой $dz = \beta cdt$, где $\beta = \|\vec{v}\| /c$, можно получить: 
+
+\begin{equation}
+ 	\label{eq:dx/dt}
+	\cfrac{dx}{dt} = - \cfrac{eB_0}{\gamma m_ek_w} \sin(k_w z)
+\end{equation}
+Введём известный коэффициент ондуляторности --- $K = \cfrac{eB_0 \lambda}{2\pi m_ek_w}$, который показывает угол отклонения электрона от оси $z$(?????). 
+
+Подставляя получившийся результат~\ref{eq:dx/dt} во второе уравнение системы и интегрируя с пределами интегрирования от $0$ до некоторого $z_0$, получим систему:
+
+\begin{equation}
+	\begin{cases}
+		\cfrac{dx}{dt} = - \cfrac{Kc}{\gamma} \sin(k_w z)\\
+		\cfrac{dz}{dt} = \beta c - \cfrac{K^2 c}{2 \gamma^2 \beta}\sin^2(k_w z)
+	\end{cases} 
+\end{equation}
+
+Проинтегрировав оба уравнения(в каких пределах?), получим,
+
+\begin{equation}
+	\begin{cases}
+		x = - \cfrac{Kc}{с\gamma k_w \beta} \cos(k_w z)\\
+		z = \overline{\beta}ct + \cfrac{K^2}{8 \beta^2 \gamma^2 k_w}\sin(2k_w z), 
+	\end{cases} 
+\end{equation}
+где был введено обозначение $\overline{\beta}$, которое определяется как $\overline{\beta}c = \beta c(1 - \cfrac{K^2}{8 \beta^2 \gamma^2 k_w})$
+\subsection{Спектр излучения}
+Вывод спектра излучения будем проводить в $r\omega$-пространстве. Начнём с уравнений Максвелла в вакууме:
+\begin{equation}
+	\begin{cases}
+		\nabla \cdot \vec{E} = 4\pi \rho\\
+		\nabla \cdot \vec{E} = 0\\
+		[\nabla \times \vec{E}] = -\cfrac{1}{c} \cfrac{d\vec{B}}{dt}\\
+		[\nabla \times \vec{B}] = \cfrac{4\pi}{c} \vec{j} + \cfrac{1}{c} \cfrac{d\vec{D}}{dt}
+	\end{cases} 
+\end{equation}
+
+Из уравнений тривиально можно получить неоднородное волновое уравнение(какая калибровка?): 
+\begin{equation}
+	\label{eq:inhomo_wave_eq_xt}
+	\pdv[2]{\vec{E}}{t} + c^2 \nabla^2 \vec{E} = 4\pi c^2 \nabla \rho + 4\pi \pdv{\vec{j}}{t}
+\end{equation}
+
+Это же уравнение перепишем в $r\omega$-пространстве, определив преобразование Фурье следующим образом:
+
+\begin{equation}
+	\label{eq:Fourier_wt}
+	\begin{array}{lcl}
+		\vec{\widetilde{E}}(r, \omega) = \displaystyle\int\limits_{-\infty}^{\infty} dt \vec{E}(r, t)\exp[-i\omega t]\\
+		\\
+		\vec{E}(r, \omega) = \cfrac{1}{2\pi}\displaystyle\int\limits_{-\infty}^{\infty} d\omega \vec{\widetilde{E}}(r, t)\exp[i\omega t]
+	\end{array}
+\end{equation}
+
+Применив к уравнению~\ref{eq:inhomo_wave_eq_xt}, получим:
+\begin{equation}
+	\omega^2 \vec{\widetilde{E}} + c^2 \nabla^2 \vec{\widetilde{E}} = 4\pi c^2 \nabla  \widetilde{\rho} - 4i\pi \vec{\widetilde{j}}
+\end{equation}
+
+Для одного электрона движущегося в вакууме ток и плотность заряда выражается через дельта-функцию Дирака: $\rho(r,t) = -e\delta(\vec{r}- \vec{r'(t)}) = -\cfrac{e}{v_z(z)}\delta(\vec{r_{\bot}}- \vec{r'_{\bot}(t)})\delta(\cfrac{s(x)}{v} - t)$ и $j(r,t) = \vec{v}\rho(r,t)$. В $r\omega$-пространстве $\widetilde{\rho}(r,\omega) = -\cfrac{e}{v_z(z)}\delta(\vec{r_{\bot}}- \vec{r'_{\bot}(t)})\exp[\cfrac{iws(z)}{v}]$ и, соответственно, $\widetilde{\vec{j}}(r,\omega) = \vec{v}\widetilde{\rho}(r,\omega)$. Продолжение следует...
+ 
+\section{Фурье оптика}
+В этой главе мы предложим наглядный подход к решению задачи о распространение волнового фронта в пустом пространстве, его прохождении через систему линз и другие оптические элементы. Приведённые результаты напрямую могут быть использованы в программном коде. Распределение поля в начальный момент времени будем считать гауссовским, однако, как будет показано, развитый подход может быть использован для произвольного распределения поля. В наших выкладкам мы следуем подходу (Салдин; Гудман)
+\subsection{Распространение света в пустом пространстве}
+Наши рассуждения мы начнём с волнового уравнения в пустом пространстве ($\vec{j} = 0, \rho = 0$). 
+
+\begin{equation}
+	\pdv[2]{\vec{E}}{t} + c^2 \nabla^2 \vec{E} = 0
+\end{equation}
+
+В  $r\omega$-пространстве уравнение приобретает знакомый вид уравнения Гельмгольца, где $k_0 = \omega/c$.
+
+\begin{equation}
+	k_0^2\vec{\widetilde{E}} + \nabla^2 \vec{\widetilde{E}} = 0
+\end{equation}
+
+Совершив фурье-преобразование в $k$-пространство по координатам $x,y$, которое определим схожим образом с~\ref{eq:Fourier_wt}:
+
+\begin{equation}
+	\label{eq:Fourier_rk}
+		\begin{array}{lcl}
+		\vec{\widehat{E}}(\vec{k}, \omega) = \displaystyle\int\limits_{-\infty}^{\infty}\int\limits_{-\infty}^{\infty} dxdy \vec{E}(\vec{r}, t)\exp[ik_xx + ik_xx]\\
+		\\
+		\vec{E}(\vec{r}, \omega) = \cfrac{1}{4\pi^2}\displaystyle\int\limits_{-\infty}^{\infty}\int\limits_{-\infty}^{\infty} dk_xdk_y \vec{\widehat{E}}(\vec{k}, t)\exp[-ik_xx - ik_xx],
+	\end{array}
+\end{equation}
+
+получим: 
+\begin{equation}
+	k_0^2\Big(1 - \cfrac{k^2_x}{k^2_0} - \cfrac{k^2_y}{k^2_0} \Big)\vec{\widehat{E}} + \dv[2]{\vec{\widehat{E}}}{z} = 0
+\end{equation}
+
+Теперь можно напрямую можно получить решение этого обыкновенного дифференциального уравнения:
+\begin{equation}
+	\vec{\widehat{E}}(\omega, k_x, k_y, z) = \vec{\widehat{E}}(\omega, k_x, k_y, 0)\exp[ik_0z\sqrt{1 - \frac{k^2_x}{k^2_0} - \frac{k^2_y}{k^2_0}} ]
+\end{equation}
+
+Введём функцию отклика среды:
+
+\begin{equation}
+	H(k_x, k_y, z) = \cfrac{\vec{\widehat{E}}(\omega, k_x, k_y, z)}{\vec{\widehat{E}}(\omega, k_x, k_y, 0)} = \exp[ik_0z\sqrt{1 - \frac{k^2_x}{k^2_0} - \frac{k^2_y}{k^2_0}} ]
+\end{equation}
+ 
+Видно, чтобы получить распределение электромагнитного поля на некотором расстоянии $z$, необходимо совершить обратное преобразование Фурье в $xy$-пространство. Таким образом решение волнового уравнения сводиться к двум относительно простым операциям: первое, --- перевод начального распределения в $k_xk_y$-пространство, далее домножение получившегося распределения на функцию отклика среды, в нашем случае пустое пространство, и последний шаг, --- обратное преобразование Фурье. 
+
+\subsection{Действие тонкой линзы на волновой фронт}
+Тонкая линза 
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
