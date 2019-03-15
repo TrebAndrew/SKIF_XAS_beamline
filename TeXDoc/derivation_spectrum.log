@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.21)  12 MAR 2019 15:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.21)  15 MAR 2019 14:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2770,7 +2770,11 @@ LaTeX Font Info:    Try loading font information for T2A+cmr on input line 26.
 
 (/usr/share/texlive/texmf-dist/tex/latex/cyrillic/t2acmr.fd
 File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
-))
+)
+
+LaTeX Warning: Label `eq:field_in_parax' multiply defined.
+
+)
 \openout1 = `derivation_spectrum.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 88.
@@ -2791,8 +2795,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 88.
 LaTeX Font Info:    ... okay on input line 88.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 88.
 LaTeX Font Info:    ... okay on input line 88.
-
-(/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
+ (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count427
 \scratchdimen=\dimen299
@@ -3002,121 +3005,171 @@ Package babel Info: Redefining russian shorthand "|
 Package babel Info: Redefining russian shorthand "~
 (babel)             in language  on input line 89.
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 90.
+(babel)             in language  on input line 91.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 90.
+(babel)             in language  on input line 91.
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 125.
+(babel)             in language  on input line 117.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 125.
+(babel)             in language  on input line 117.
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 125.
+(babel)             in language  on input line 117.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 125.
+(babel)             in language  on input line 117.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (4.23734pt too wide) in paragraph at lines 130--131
+[]\T2A/cmr/m/n/14.4 Проинтегрировав оба урав-не-ния(в ка-ких пре-де-лах?), по-л
+у-чим (Wiedemann), 
+ []
 
-LaTeX Warning: Command \cyrs invalid in math mode on input line 131.
+
+LaTeX Warning: Command \cyrs invalid in math mode on input line 135.
 
 Missing character: There is no с in font cmr12!
-
-Overfull \hbox (3.00467pt too wide) in paragraph at lines 134--136
-\T2A/cmr/m/n/14.4 где был вве-де-но обо-зна-че-ние $[]$, ко-то-рое опре-де-ля-е
-т-ся как $[]\OML/cmm/m/it/14.4 c \OT1/cmr/m/n/14.4 = \OML/cmm/m/it/14.4 ^^Lc\OT
-1/cmr/m/n/14.4 (1 \OMS/cmsy/m/n/14.4 ^^@ []\OT1/cmr/m/n/14.4 )$ 
- []
-
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 136.
+(babel)             in language  on input line 141.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 136.
+(babel)             in language  on input line 141.
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 162.
+(babel)             in language  on input line 155.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 162.
+(babel)             in language  on input line 155.
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 162.
+(babel)             in language  on input line 155.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 162.
+(babel)             in language  on input line 155.
 [2]
-Overfull \hbox (9.49786pt too wide) in paragraph at lines 169--170
-\T2A/cmr/m/n/14.4 ра-жа-ет-ся че-рез дельта-функцию Ди-ра-ка: $\OML/cmm/m/it/14
-.4 ^^Z\OT1/cmr/m/n/14.4 (\OML/cmm/m/it/14.4 r; t\OT1/cmr/m/n/14.4 ) = \OMS/cmsy
-/m/n/14.4 ^^@\OML/cmm/m/it/14.4 e^^N\OT1/cmr/m/n/14.4 ([] \OMS/cmsy/m/n/14.4 ^^
-@ []\OT1/cmr/m/n/14.4 ) = \OMS/cmsy/m/n/14.4 ^^@[]\OML/cmm/m/it/14.4 ^^N\OT1/cm
-r/m/n/14.4 ([] \OMS/cmsy/m/n/14.4 ^^@
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 189.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 189.
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 189.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 189.
+ [3]
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 230.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 230.
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 230.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 230.
+ [4]
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 244.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 244.
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 266.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 266.
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 266.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 266.
+ [5]
+Overfull \hbox (27.0621pt too wide) detected at line 283
+[]
  []
 
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 171.
+(babel)             in language  on input line 308.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 171.
+(babel)             in language  on input line 308.
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 173.
+(babel)             in language  on input line 308.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 173.
+(babel)             in language  on input line 308.
+[6]
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 184.
+(babel)             in language  on input line 335.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 184.
+(babel)             in language  on input line 335.
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 184.
+(babel)             in language  on input line 337.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 184.
-[3]
+(babel)             in language  on input line 337.
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 215.
+(babel)             in language  on input line 337.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 215.
+(babel)             in language  on input line 337.
+ [7]
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 337.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 337.
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 369.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 369.
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 369.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 369.
+ [8]
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 379.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 379.
 
 
 Package caption Warning: Unused \captionsetup[sub] on input line 30.
 See the caption package documentation for explanation.
 
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 217.
+(babel)             in language  on input line 381.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 217.
+(babel)             in language  on input line 381.
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 217.
+(babel)             in language  on input line 381.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 217.
-[4]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 217.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 217.
+(babel)             in language  on input line 381.
+[9]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 381.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 381.
  (./derivation_spectrum.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 217.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 217.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 381.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 381.
 Package rerunfilecheck Info: File `derivation_spectrum.out' has not changed.
-(rerunfilecheck)             Checksum: F9CFF3A55DFDBC9B9ABE97EF1932B96C;1594.
+(rerunfilecheck)             Checksum: AB8E5A4B3A41E7BA01F27551AD3F57D2;2667.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package logreq Info: Writing requests to 'derivation_spectrum.run.xml'.
 \openout1 = `derivation_spectrum.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 217.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 381.
  )
 (\end occurred when \iftrue on line 88 was incomplete) 
 Here is how much of TeX's memory you used:
- 39353 strings out of 493029
- 734445 string characters out of 6136233
- 906683 words of memory out of 5000000
- 42361 multiletter control sequences out of 15000+600000
+ 39386 strings out of 493029
+ 734890 string characters out of 6136233
+ 909698 words of memory out of 5000000
+ 42373 multiletter control sequences out of 15000+600000
  9776 words of font info for 36 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
- 55i,12n,54p,10361b,1558s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,14n,54p,10361b,1560s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/e
 nc/dvips/cm-super/cm-super-t2a.enc}</usr/share/texlive/texmf-dist/fonts/type1/p
 ublic/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
 ts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></u
-sr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/fonts
-/type1/public/cm-super/sfrm1440.pfb>
-Output written on derivation_spectrum.pdf (4 pages, 104025 bytes).
+cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/
+texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/pu
+blic/cm-super/sfrm1440.pfb>
+Output written on derivation_spectrum.pdf (9 pages, 149379 bytes).
 PDF statistics:
- 110 PDF objects out of 1000 (max. 8388607)
- 95 compressed objects within 1 object stream
- 27 named destinations out of 1000 (max. 500000)
- 61 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 184 PDF objects out of 1000 (max. 8388607)
+ 160 compressed objects within 2 object streams
+ 48 named destinations out of 1000 (max. 500000)
+ 69 words of extra memory for PDF output out of 10000 (max. 10000000)
 
