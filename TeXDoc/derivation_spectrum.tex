@@ -145,7 +145,7 @@
 		\nabla \cdot \vec{E} = 4\pi \rho\\
 		\nabla \cdot \vec{E} = 0\\
 		[\nabla \times \vec{E}] = -\cfrac{1}{c} \cfrac{d\vec{B}}{dt}\\
-		[\nabla \times \vec{B}] = \cfrac{4\pi}{c} \vec{j} + \cfrac{1}{c} \cfrac{d\vec{D}}{dt}
+		[\nabla \times \vec{B}] = \cfrac{4\pi}{c} \vec{j} + \cfrac{1}{c} \cfrac{\partial\vec{E}}{\partial t}
 	\end{cases} 
 \end{equation}
 Из уравнений тривиально можно получить неоднородное волновое уравнение(какая калибровка?): 
@@ -187,7 +187,7 @@
 		\widetilde{\vec{j}}(r,\omega) = \vec{v}\widetilde{\rho}(r,\omega)	
 	\end{array}
 \end{equation} 
-Подставим фурье-образы плотности тока и заряда в уравнение~\ref{eq:wave_slow_vary}, (где производная по градиентному члену?)
+Подставим фурье-образы плотности тока и заряда в уравнение~\ref{eq:wave_slow_vary}, (где производная по градиентному члену? добавить это)
 \begin{equation}
 	\label{eq:wave_eq}
 	\begin{array}{lcl}
@@ -195,17 +195,16 @@
 		\cfrac{4\pi e}{v_z(z)} \exp[iw\bigg(\cfrac{s(z)}{v} - \cfrac{z}{c}\bigg)]
 		\bigg(  
 			\cfrac{i\omega}{c^2}\vec{v}(z)
-			-\nabla)\bigg) \delta(\vec{r}_{\bot} - \vec{r'}_{\bot}(z)) 
+			-\nabla\bigg) \delta(\vec{r}_{\bot} - \vec{r'}_{\bot}(z)) 
 		
 	\end{array}
 \end{equation} 
-Получившиеся уравнение является точным. Теперь мы можешь применить ультрарелятивистское приближение $\gamma \gg 1$. 
+Получившиеся уравнение является точным. Теперь мы можешь применить параксиальное приближении. 
 \begin{equation}
 	\label{eq:wave_slow_vary_parax}
 	\begin{array}{lcl}
 		\nabla_{\bot}^2 \vec{\widetilde{E}}_{\bot} - \cfrac{2i\omega}{c}\cfrac{\partial\vec{\widetilde{E}}_{\bot}}{\partial z} = 
-		\cfrac{4\pi e}{v_z(z)} \exp[iw\bigg(\cfrac{s(z)}{v} - \cfrac{z}{c}\bigg)]\times\\
-		\bigg(  
+		\cfrac{4\pi e}{v_z(z)} \exp[iw\bigg(\cfrac{s(z)}{v} - \cfrac{z}{c}\bigg)]\bigg(  
 			\cfrac{i\omega}{c^2}\vec{v}_{\bot}(z) 
 			-\nabla_{\bot}\bigg) \delta(\vec{r}_{\bot} - \vec{r'}_{\bot}(z)) 
 	\end{array}
@@ -325,7 +324,7 @@
 	\begin{array}{lcl}
 		\vec{\widetilde{E}}_{\bot}(z_0,  \vec{r}_{\bot 0}, \omega) =
 		\cfrac{\omega e}{2c^2z_0}\cfrac{K}{\gamma}\exp[i\cfrac{\omega \theta^2 z_0}{2c}]
-		\sinc[i\bigg(k_w \cfrac{\Delta\omega}{\omega_r} + 
+		\sinc[\bigg(k_w \cfrac{\Delta\omega}{\omega_r} + 
 		\cfrac{\omega\vec{\theta}^2}{2c}\bigg)L/2]\vec{e}_x ,
 	\end{array}	
 \end{equation}
