@@ -100,7 +100,7 @@ arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, sampFactN
 
 wfr1 = SRWLWfr() #For spectrum vs photon energy
 
-wfr1.allocate(200, 2, 2) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
+wfr1.allocate(1000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
 wfr1.mesh.zStart = 22. #Longitudinal Position [m] at which SR has to be calculated
 wfr1.mesh.eStart = 6800. #Initial Photon Energy [eV]
 wfr1.mesh.eFin = 7200#4300. #Final Photon Energy [eV]
