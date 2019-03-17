@@ -21,9 +21,9 @@ FileName = 'undulator_wiggler_traj.trj' #file name for output UR flux data
 #***********Undulator
 
 Length = 5.3 # m
-undper = 0.08 # m
+undper = 0.02 # m
 numper = 80
-magf = 1.8
+magf = 1.2
 
 
 harmB1 = SRWLMagFldH() #magnetic field harmonic
@@ -108,8 +108,8 @@ arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, sampFactN
 wfr1 = SRWLWfr() #For spectrum vs photon energy
 wfr1.allocate(500, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
 wfr1.mesh.zStart = 22. #Longitudinal Position [m] at which SR has to be calculated
-wfr1.mesh.eStart = 300. #Initial Photon Energy [eV]
-wfr1.mesh.eFin = 15000#4300. #Final Photon Energy [eV]
+wfr1.mesh.eStart = 3500. #Initial Photon Energy [eV]
+wfr1.mesh.eFin = 3800#4300. #Final Photon Energy [eV]
 #wfr1.avgPhotEn= #4205
 a = 0.002
 wfr1.mesh.xStart = -a #Initial Horizontal Position [m]
