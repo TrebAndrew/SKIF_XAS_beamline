@@ -309,6 +309,7 @@
 
 Теперь вернёмся к градиентному члену, вклад от которого занулиться при усреднении по длине ондулятора при $n = 0$, этот вклад даст ненулевой вклад при $n = 1 - 2m$, т.о. в ход пойдут следующие члены разложения $J_m(v)$. Однако, помня интересующий нас диапазон углов, члены разложения будут порядка $\theta_x v^m$, очевидно, что их вклады пренебрежимо малы по сравнению с вкладами токового члена $\vec{e}_x$. Учитывая выше сказанные приближения, перепишем~\ref{eq:field_in_parax_Bessel}
 \begin{equation}
+	\label{eq:field_dist_in_integral}
 	\begin{array}{lcl}
 		\vec{\widetilde{E}}_{\bot}(z_0,  \vec{r}_{\bot 0}, \omega) =
 		\cfrac{\omega e}{2c^2z_0}\cfrac{K}{\gamma}\exp[i\cfrac{\omega \theta^2 z_0}{2c}]
@@ -321,28 +322,60 @@
 \end{equation}
 Интеграл легко берётся:
 \begin{equation}
+	\label{eq:field_dist_nonNorm}
 	\begin{array}{lcl}
 		\vec{\widetilde{E}}_{\bot}(z_0,  \vec{r}_{\bot 0}, \omega) =
-		\cfrac{\omega e}{2c^2z_0}\cfrac{K}{\gamma}\exp[i\cfrac{\omega \theta^2 z_0}{2c}]
+		\cfrac{\omega eL}{c^2z_0}\cfrac{K}{\gamma}\exp[i\cfrac{\omega \theta^2 z_0}{2c}]
 		\sinc[\bigg(k_w \cfrac{\Delta\omega}{\omega_r} + 
 		\cfrac{\omega\vec{\theta}^2}{2c}\bigg)L/2]\vec{e}_x ,
 	\end{array}	
 \end{equation}
-где введено обозначение: $A_{JJ} = J_1(v) - J_0(v)$
+где введено обозначение: $A_{JJ} = J_1(v) - J_0(v)$. 
 
+В следующем параграфе мы займёмся выводном влияния конченого эмиттанса на распределение излучения, чтобы облегчить выкладки мы введём нормализованные единицы.
 
+\begin{equation}
+	\begin{array}{lcl}
+		\hat{E}_{\bot} = \cfrac{c^2z_0\gamma \widetilde{E}_{\bot}}{e\omega KLA_{JJ}}\\
+		\hat{\theta} = \theta\sqrt{\cfrac{\omega L}{c}}\\
+		\hat{z} = \cfrac{z}{L} ,
+	\end{array}	
+\end{equation}
+а также, 
+\begin{equation}
+	\hat{C} = CL = 2\pi N\cfrac{\Delta\omega}{\omega_r}
+\end{equation}
+Теперь уравнения~\ref{eq:field_dist_nonNorm} и~\ref{eq:field_dist_in_integral} могут быть переписаны в нормализованных единицах.
+\begin{equation}
+	\label{eq:field_dist_in_integral}
+	\begin{array}{lcl}
+		\hat{E}_{\bot} = e^{i\Phi}
+		\displaystyle\int\limits_{-1/2}^{1/2} dz'
+		\exp[i\bigg(\hat{C} + 
+		\cfrac{\hat{\theta}^2}{2}\bigg)z'],
+	\end{array}	
+\end{equation}
 
- \begin{figure}
+\begin{equation}
+	\label{eq:field_dist_nonNorm}
+	\begin{array}{lcl}
+		\hat{E}_{\bot} = e^{i\Phi}
+		\sinc\bigg(\cfrac{\hat{C}}{2} + 
+		\cfrac{\hat{\theta}^2}{4}\bigg),
+	\end{array}	
+\end{equation}
+
+\begin{figure}
 	\centering  
-	\begin{minipage}{0.48\textwidth}
+	\begin{minipage}{0.49\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{pic/spec.pdf}
+		\includegraphics[width=\textwidth]{pic/angleC_neg.pdf}
 		\caption{}
 		\label{fig:spec_2017-04-20}
 	\end{minipage}\hfill
-	\begin{minipage}{0.48\textwidth}
+	\begin{minipage}{0.49\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{pic/angle.pdf}
+		\includegraphics[width=\textwidth]{pic/angleC_pos.pdf}
 		\caption{}
 		\label{fig:en_loss_in_a_foil}
 	\end{minipage}    

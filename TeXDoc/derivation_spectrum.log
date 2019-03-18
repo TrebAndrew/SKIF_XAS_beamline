@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.21)  17 MAR 2019 19:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.21)  18 MAR 2019 12:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2774,6 +2774,12 @@ File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 
 LaTeX Warning: Label `eq:field_in_parax' multiply defined.
 
+
+LaTeX Warning: Label `eq:field_dist_in_integral' multiply defined.
+
+
+LaTeX Warning: Label `eq:field_dist_nonNorm' multiply defined.
+
 )
 \openout1 = `derivation_spectrum.aux'.
 
@@ -3088,71 +3094,81 @@ Package babel Info: Redefining russian shorthand "|
 (babel)             in language  on input line 307.
 Package babel Info: Redefining russian shorthand "~
 (babel)             in language  on input line 307.
-[6] <pic/spec.pdf, id=108, 361.35pt x 361.35pt>
-File: pic/spec.pdf Graphic file (type pdf)
- <use pic/spec.pdf>
-Package pdftex.def Info: pic/spec.pdf used on input line 339.
-(pdftex.def)             Requested size: 232.17242pt x 232.17297pt.
+[6]
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 336.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 336.
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 336.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 336.
+ [7] <pic/angleC_neg.pdf, id=120, 435.36566pt x 311.63313pt>
+File: pic/angleC_neg.pdf Graphic file (type pdf)
 
-<pic/angle.pdf, id=109, 362.42757pt x 349.6599pt>
-File: pic/angle.pdf Graphic file (type pdf)
- <use pic/angle.pdf>
-Package pdftex.def Info: pic/angle.pdf used on input line 345.
-(pdftex.def)             Requested size: 232.17242pt x 223.99498pt.
-Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 351.
-Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 351.
-Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 353.
-Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 353.
-Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 353.
-Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 353.
- [7]
-Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 353.
-Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 353.
-Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 375.
-Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 375.
-Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 375.
-Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 375.
+<use pic/angleC_neg.pdf>
+Package pdftex.def Info: pic/angleC_neg.pdf used on input line 372.
+(pdftex.def)             Requested size: 237.01411pt x 169.65361pt.
 
-[8 <./pic/spec.pdf> <./pic/angle.pdf
+<pic/angleC_pos.pdf, id=121, 425.74211pt x 311.63313pt>
+File: pic/angleC_pos.pdf Graphic file (type pdf)
 
-pdfTeX warning: /usr/bin/pdflatex (file ./pic/angle.pdf): PDF inclusion: multip
-le pdfs with page group included in a single page
+<use pic/angleC_pos.pdf>
+Package pdftex.def Info: pic/angleC_pos.pdf used on input line 378.
+(pdftex.def)             Requested size: 237.01411pt x 173.491pt.
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 384.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 384.
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 386.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 386.
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 386.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 386.
+ [8 <./pic/angleC_neg.pdf> <./pic/angleC_pos.pdf
+
+pdfTeX warning: /usr/bin/pdflatex (file ./pic/angleC_pos.pdf): PDF inclusion: m
+ultiple pdfs with page group included in a single page
 >]
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 395.
+(babel)             in language  on input line 386.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 395.
+(babel)             in language  on input line 386.
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 424.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 424.
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 424.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 424.
+ [9]
+Package babel Info: Redefining russian shorthand "|
+(babel)             in language  on input line 428.
+Package babel Info: Redefining russian shorthand "~
+(babel)             in language  on input line 428.
 
 
 Package caption Warning: Unused \captionsetup[sub] on input line 30.
 See the caption package documentation for explanation.
 
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 397.
+(babel)             in language  on input line 430.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 397.
+(babel)             in language  on input line 430.
 Package babel Info: Redefining russian shorthand "|
-(babel)             in language  on input line 397.
+(babel)             in language  on input line 430.
 Package babel Info: Redefining russian shorthand "~
-(babel)             in language  on input line 397.
-[9]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 397.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 397.
+(babel)             in language  on input line 430.
+[10]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 430.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 430.
  (./derivation_spectrum.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 397.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 397.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 430.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 430.
 Package rerunfilecheck Info: File `derivation_spectrum.out' has not changed.
 (rerunfilecheck)             Checksum: AB8E5A4B3A41E7BA01F27551AD3F57D2;2667.
 
@@ -3162,14 +3178,14 @@ LaTeX Warning: There were multiply-defined labels.
 Package logreq Info: Writing requests to 'derivation_spectrum.run.xml'.
 \openout1 = `derivation_spectrum.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 397.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 430.
  )
 (\end occurred when \iftrue on line 88 was incomplete) 
 Here is how much of TeX's memory you used:
- 39404 strings out of 493029
- 735174 string characters out of 6136233
+ 39412 strings out of 493029
+ 735343 string characters out of 6136233
  909698 words of memory out of 5000000
- 42388 multiletter control sequences out of 15000+600000
+ 42390 multiletter control sequences out of 15000+600000
  9776 words of font info for 36 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
  55i,14n,54p,10361b,1562s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -3185,10 +3201,10 @@ e/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/
 texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/pu
 blic/cm-super/sfrm1440.pfb>
-Output written on derivation_spectrum.pdf (9 pages, 174539 bytes).
+Output written on derivation_spectrum.pdf (10 pages, 174133 bytes).
 PDF statistics:
- 240 PDF objects out of 1000 (max. 8388607)
- 181 compressed objects within 2 object streams
- 49 named destinations out of 1000 (max. 500000)
+ 249 PDF objects out of 1000 (max. 8388607)
+ 190 compressed objects within 2 object streams
+ 54 named destinations out of 1000 (max. 500000)
  79 words of extra memory for PDF output out of 10000 (max. 10000000)
 
