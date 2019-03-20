@@ -333,8 +333,8 @@
 где введено обозначение: $A_{JJ} = J_1(v) - J_0(v)$. 
 
 В следующем параграфе мы займёмся выводном влияния конченого эмиттанса на распределение излучения, чтобы облегчить выкладки мы введём нормализованные единицы.
-
 \begin{equation}
+	\label{eq:norm_units}
 	\begin{array}{lcl}
 		\hat{E}_{\bot} = \cfrac{c^2z_0\gamma \widetilde{E}_{\bot}}{e\omega KLA_{JJ}}\\
 		\hat{\theta} = \theta\sqrt{\cfrac{\omega L}{c}}\\
@@ -357,35 +357,99 @@
 \end{equation}
 
 \begin{equation}
-	\label{eq:field_dist_nonNorm}
+	\label{eq:field_dist_Norm}
 	\begin{array}{lcl}
 		\hat{E}_{\bot} = e^{i\Phi}
 		\sinc\bigg(\cfrac{\hat{C}}{2} + 
 		\cfrac{\hat{\theta}^2}{4}\bigg),
 	\end{array}	
 \end{equation}
-
 \begin{figure}
 	\centering  
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{pic/angleC_neg.pdf}
 		\caption{}
-		\label{fig:spec_2017-04-20}
+		\label{fig:angle_dist_C_neg}
 	\end{minipage}\hfill
 	\begin{minipage}{0.49\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{pic/angleC_pos.pdf}
 		\caption{}
-		\label{fig:en_loss_in_a_foil}
+		\label{fig:angle_dist_C_pos}
 	\end{minipage}    
 \end{figure}
+На рис.~\ref{fig:angle_dist_C_neg} и рис.~\ref{fig:angle_dist_C_pos} изображены угловые распределения излучения. Из них можно понять, что если сдвижка по спектру идёт в область меньших частот, то условие резонанса удовлетворяется на других углах и проинтегрированные по даст некоторую интенсивность. Если же сдвигаться по спектру в область более высоких частот, что условие резонанса на углах не будет выполняться и интенсивность быстро упадёт. На рис.~\ref{fig:spec_integrate_angle} представлен проинтегрированный по разным углам $\hat{\theta}$ спектр.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.99\textwidth]{{pic/spec_integ_ang}.pdf}
+	\caption{} 
+	\label{fig:spec_integrate_angle}
+\end{figure}
+\subsection{Учёт конечности эмиттанса}
+В этой параграфе мы покажем влияние эмиттанса пучка на спектр излучения и угловое распределение. Для начала перепишем уравнение~\ref{eq:field_dist_Norm} с учётом отклонения частиц от заданной траектории, --- $h_x$ и $h_y$ и с некоторым дополнительным углом $\eta_x$ и $\eta_x$. Сразу можно понять, что в уравнениие~\ref{eq:field_dist_Norm} можно сделать замену $\theta_{x,y} \rightarrow \theta_{x,y} - \eta_{x, y} - \cfrac{l_{x,y}}{z_0}$ и переписать углы в нормализованных единицах аналогично с~\ref{eq:norm_units}, с точностью до фазы: 
+\begin{equation}
+	\label{eq:field_dist_Norm}
+	\begin{array}{lcl}
+	\hat{E}_{\bot} \sim
+	\sinc\bigg[\cfrac{\hat{C}}{2} + 
+	\cfrac{1}{4}\bigg(\hat{\theta}_{x} - \hat{\eta}_{x} - \cfrac{l_{x}}{z_0}\bigg)^2 +
+	\cfrac{1}{4}\bigg(\hat{\theta}_{y} - \hat{\eta}_{y} - \cfrac{l_{y}}{z_0}\bigg)^2\bigg],
+	\end{array}	
+\end{equation}
+При этом можно положить  $\cfrac{l_{x,y}}{z_0} \ll 1$, что выполняется с очень высокой точностью. 
 
+В наших рассуждениях мы будем использовать один предельный случай: электронный пучок не симметричен его вертикальны размер много меньше размера по радиальному направлению. Распределение частиц будем считать гауссовым: 
+\begin{equation}
+	\label{eq:field_dist_Norm}
+	h_{x, y}(\eta_{x, y}) = \cfrac{N_e}{\sqrt{2\pi}\sigma_{x', y'}} \exp[-\cfrac{\eta^2_{x, y}}{2\sigma^2_{x', y'}}]
+\end{equation}
+
+Для удобства перепишем это распределение в нормализованных единицах, помня $\sigma_{x', y'} = \epsilon_{x', y'}/\beta_{x', y'}$, где $\epsilon_{x', y'}$ --- вертикальный и горизонтальный эмиттансы, $\beta_{0x', y'}$ --- минимум бета-функции, обычно минимум бета-функции выбирают в середине ондулятора. Нормализованные единицы для $\hat{\beta}_{0} = \beta_{0}$
+и $\hat{\epsilon} = (\omega/c)\epsilon$
+\begin{equation}
+	\label{eq:field_dist_Norm}
+	h(\hat{\eta}) = \cfrac{1}{\sqrt{2\pi\hat{\epsilon}/\hat{\beta}}} \exp[-\cfrac{\hat{\eta}^2\hat{\beta}_{0}}{2\hat{\epsilon}^2}]
+\end{equation}
+Как уже упоминалось мы будем рассматривать предельный случай $\epsilon_{y'}/\beta_{y'} \ll 1$, в то время как $\hat{\beta_0}_{x,y} \sim 1$, поэтому просто $\epsilon_{y'} \ll 1$. Теперь можно записать интенсивность поля следующий образом: 
+\begin{equation}
+	\label{eq:convolution}
+	\hat{I} = \cfrac{1}{\sqrt{2\pi\hat{\epsilon}/\hat{\beta}}}
+	\displaystyle\int\limits_{-\infty}^{\infty} d\hat{\eta}_x \sinc^2(\zeta)	
+	\exp[-\cfrac{\hat{\eta}_x^2\hat{\beta}_{0x}}{2\hat{\epsilon}_x}],д
+\end{equation}
+Где мы ввели $\zeta = \cfrac{\hat{C}}{2} + 
+\cfrac{1}{4}(\hat{\theta}_{x} - \hat{\eta}_{x})^2 +
+\cfrac{1}{4}\hat{\theta}_{y}^2$.Здесь мы учли, что распределение по $y$ действует как дельта-функция. Предыдущее уравнение упрощается дальше в пределе $\hat{\epsilon}_x\hat{\beta}_x \gg 1$, опять же помня, что и $\hat{\beta}_x \sim 1$, получается $\hat{\epsilon}_x \gg 1$. Ширина $\sinc^2(\zeta)$ много больше ширины гауссвоского распределения, ширина которого $\hat{\epsilon}_x$, поэтому интеграл будет набираться в пике кардинального синуса и экспоненту можно вынести с аргументом: $\hat{\eta}_x = \hat{\theta}_x$: 
+\begin{equation}
+	\label{eq:convolution}
+	\hat{I} = \cfrac{\exp[-\hat{\theta}_x^2\hat{\beta}_{0x}/2\hat{\epsilon}_x]}{\sqrt{2\pi\hat{\epsilon}/\hat{\beta}}}
+	\displaystyle\int\limits_{-\infty}^{\infty} d\hat{\eta}_x \sinc^2\bigg(\cfrac{\hat{C}}{2} + 
+	\cfrac{1}{4}(\hat{\theta}_{x} - \hat{\eta}_{x})^2 +
+	\cfrac{1}{4}\hat{\theta}_{y}^2\bigg)	
+\end{equation}
+Этот интеграл можно взять числено. %введя очевидную замену $\hat{\eta_{x}} \rightarrow \hat{\theta}_x - \hat{\eta_{x}}$. 
+На рис.~\ref{fig:spec} представлен спектр излучения одного электрона, на~\ref{fig:2spec_emittance_and_single} представлены: линия 1.: спектр излучения пучка с $\hat{\epsilon}_x\rightarrow \infty$  $\hat{\epsilon}_x\rightarrow 0$, линия 2.: одноэлектронный спектр как функция $\hat{C} + \hat{\theta}_y^2/2$ при $\hat{\theta}_x = 0$ 
+\begin{figure}
+	\centering  
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{pic/spec_integ_emittance.pdf}
+		\caption{}
+		\label{fig:2spec_emittance_and_single}
+	\end{minipage}\hfill
+	\begin{minipage}{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{pic/spec_C.pdf}
+		\caption{}
+		\label{fig:spec}
+	\end{minipage}    
+\end{figure}
 \section{Фурье оптика}
 В этой главе мы предложим наглядный подход к решению задачи о распространение волнового фронта в пустом пространстве, его прохождении через систему линз и другие оптические элементы. Приведённые результаты напрямую могут быть использованы в программном коде. Распределение поля в начальный момент времени будем считать гауссовским, однако, как будет показано, развитый подход может быть использован для произвольного распределения поля. В наших выкладкам мы следуем подходу (Гудман, Салдин, Serkez)
+
 \subsection{Распространение света в пустом пространстве}
 Наши рассуждения мы начнём с волнового уравнения в пустом пространстве ($\vec{j} = 0, \rho = 0$). 
-
 \begin{equation}
 	\pdv[2]{\vec{E}}{t} + c^2 \nabla^2 \vec{E} = 0
 \end{equation}
