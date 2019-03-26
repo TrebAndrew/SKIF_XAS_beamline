@@ -13,9 +13,9 @@ print('SRWLIB Extended Example # 6:')
 print('Calculating spectral flux of undulator radiation by finite-emittance electron beam collected through a finite aperture and power density distribution of this radiation (integrated over all photon energies)')
 
 #**********************Input Parameters:
-wfrPathName = '/home/andrei/Documents/9_term/diplom/BEAMLINE/files/' #example data sub-folder name
-wfr1FileName = 'wfr1.wfr' #file name for output UR flux data
-wfr2FileName = 'wfr2.wfr'
+wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/fields/' #example data sub-folder name
+wfr1FileName = 'wfr1_for_tapered_und.wfr' #file name for output UR flux data
+wfr2FileName = 'wfr2_for_tapered_und.wfr'
 #***********Electron Beam
 eBeam = SRWLPartBeam()
 eBeam.Iavg = 0.4 #average current [A]
@@ -108,7 +108,7 @@ afile.close()
             ######### Spectrum #######
 print('   Extracting Intensity from calculated Electric Field(Spectral Flux) ... ', end='')
 arI1 = array('f', [0]*wfr1.mesh.ne)
-srwl.CalcIntFromElecField(arI1, wfr1, 6, 2, 0, wfr1.mesh.eStart, wfr1.mesh.xStart, wfr1.mesh.yStart)
+srwl.CalcIntFromElecField(arI1, wfr1, 6, 0, 0, wfr1.mesh.eStart, wfr1.mesh.xStart, wfr1.mesh.yStart)
 print('done')
 
 print('   Plotting the results (blocks script execution; close any graph windows to proceed) ... ', end='')

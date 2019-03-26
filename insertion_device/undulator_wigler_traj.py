@@ -10,21 +10,21 @@ from uti_plot import *
 import os
 import sys
 import pickle
-
+import random as rn
 print('SRWLIB Extended Example # 6:')
 print('Create a tapered undulator/wiggler magnetic structure. Calculate and draw !two! electric field files otimised for extracting spectrum and intensity and the trajectory of the electron. Save it to files using pickle lib')
 
 #**********************Output files
-PathName = '/home/andrei/Documents/SKIF_XFAS_beamline/fields/' #example data sub-folder name
+PathName = '/home/andrei/Documents/SKIF_XAS_beamline/fields/' #example data sub-folder name
 FileName = 'undulator_wiggler_traj.trj' #file name for output UR flux data
 
 #***********Undulator
 
-Length = 5.3 # m
-undper = 0.02 # m
-numper = 80
-magf = 1.2
-
+Length = 2.3 # m
+undper = 0.0196 # m
+numper = 30
+magf = 1
+magf_step = 4/100
 
 harmB1 = SRWLMagFldH() #magnetic field harmonic
 #harmB1.n = 0 #harmonic number
@@ -37,17 +37,54 @@ und1.nPer = numper #number of periods (will be rounded to integer)
 harmB2 = SRWLMagFldH() #magnetic field harmonic
 harmB2.n = 1 #harmonic number
 harmB2.h_or_v = 'v' #magnetic field plane: horzontal ('h') or vertical ('v')
-harmB2.B = magf #magnetic field amplitude [T]
-harmB2.ph = -2
+harmB2.B = magf + 1*magf_step #magnetic field amplitude [T]
+harmB2.ph = rn.uniform(0, 2*np.pi)
 und2 = SRWLMagFldU([harmB2])
 und2.per = undper  #period length [m]
 und2.nPer = numper #number of periods (will be rounded to integer)
 
+harmB3 = SRWLMagFldH() #magnetic field harmonic
+harmB3.n = 1 #harmonic number
+harmB3.h_or_v = 'v' #magnetic field plane: horzontal ('h') or vertical ('v')
+harmB3.B = magf + 2*magf_step #magnetic field amplitude [T]
+harmB3.ph = rn.uniform(0, 2*np.pi)
+und3 = SRWLMagFldU([harmB3])
+und3.per = undper  #period length [m]
+und3.nPer = numper #number of periods (will be rounded to integer)
+
+harmB4 = SRWLMagFldH() #magnetic field harmonic
+harmB4.n = 1 #harmonic number
+harmB4.h_or_v = 'v' #magnetic field plane: horzontal ('h') or vertical ('v')
+harmB4.B = magf + 3*magf_step #magnetic field amplitude [T]
+harmB4.ph = rn.uniform(0, 2*np.pi)
+und4 = SRWLMagFldU([harmB4])
+und4.per = undper  #period length [m]
+und4.nPer = numper #number of periods (will be rounded to integer)
+
+harmB5 = SRWLMagFldH() #magnetic field harmonic
+harmB5.n = 1 #harmonic number
+harmB5.h_or_v = 'v' #magnetic field plane: horzontal ('h') or vertical ('v')
+harmB5.B = magf + 4*magf_step #magnetic field amplitude [T]
+harmB5.ph = rn.uniform(0, 2*np.pi)
+und5 = SRWLMagFldU([harmB5])
+und5.per = undper  #period length [m]
+und5.nPer = numper #number of periods (will be rounded to integer)
+
 K = 0.965 * magf * undper * 100
 print("K = ",K)
 
+#magFldCnt = SRWLMagFldC([und1, und2, und3, und4, und5], 
+#                        array('d', [0, 0, 0, 0, 0]), 
+#                        array('d', [0, 0, 0, 0, 0]), 
+#                        array('d', [0, numper*undper+2*undper*rn.uniform(1, 2), 2*numper*undper+4*undper*rn.uniform(1, 2), 3*numper*undper+6*undper*rn.uniform(1, 2), 4*numper*undper+8*undper*rn.uniform(1, 2)])) #Container of all Field Elements
+magFldCnt = SRWLMagFldC([und1, und2, und3, und4, und5], 
+                        array('d', [0, 0, 0, 0, 0]), 
+                        array('d', [0, 0, 0, 0, 0]), 
+                        array('d', [0, numper*undper+3*undper, 2*numper*undper+6*undper, 3*numper*undper+9*undper, 4*numper*undper+12*undper])) #Container of all Field Elements
+
+#magFldCnt = SRWLMagFldC([und1, und2, und3], array('d', [0, 0, 0]), array('d', [0, 0, 0]), array('d', [0, numper*undper+2*undper*rn.uniform(1, 2), 2*numper*undper+4*undper*rn.uniform(1, 2)])) #Container of all Field Elements
 #magFldCnt = SRWLMagFldC([und1, und2], array('d', [0, 0]), array('d', [0, 0]), array('d', [0, numper*undper+3*undper])) #Container of all Field Elements
-magFldCnt = SRWLMagFldC([und1], array('d', [0]), array('d', [0]), array('d', [0])) #Container of all Field Elements
+#magFldCnt = SRWLMagFldC([und1], array('d', [0]), array('d', [0]), array('d', [0])) #Container of all Field Elements
 
 #***********Electron Beam
 eBeam = SRWLPartBeam()
@@ -106,10 +143,10 @@ arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, sampFactN
 #***********UR Stokes Parameters (mesh) for Spectral Flux
 
 wfr1 = SRWLWfr() #For spectrum vs photon energy
-wfr1.allocate(500, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
+wfr1.allocate(2000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
 wfr1.mesh.zStart = 22. #Longitudinal Position [m] at which SR has to be calculated
-wfr1.mesh.eStart = 3500. #Initial Photon Energy [eV]
-wfr1.mesh.eFin = 3800#4300. #Final Photon Energy [eV]
+wfr1.mesh.eStart = 1200 #Initial Photon Energy [eV]
+wfr1.mesh.eFin = 1800#4300. #Final Photon Energy [eV]
 #wfr1.avgPhotEn= #4205
 a = 0.002
 wfr1.mesh.xStart = -a #Initial Horizontal Position [m]
@@ -133,6 +170,7 @@ print('   Performing Electric Field (spectrum vs photon energy) calculation ... 
 srwl.CalcElecFieldSR(wfr1, 0, magFldCnt, arPrecPar)
 print('done')
 
+
 #print('   Performing Electric Field (wavefront at fixed photon energy) calculation ... ', end='')
 #srwl.CalcElecFieldSR(wfr2, 0, magFldCnt, arPrecPar)
 #print('done')
@@ -143,8 +181,34 @@ arI1 = array('f', [0]*wfr1.mesh.ne)
 srwl.CalcIntFromElecField(arI1, wfr1, 6, 0, 0, wfr1.mesh.eStart, wfr1.mesh.xStart, wfr1.mesh.yStart)
 print('done')
 
+
 print('   Plotting the results (blocks script execution; close any graph windows to proceed) ... ', end='')
-uti_plot1d(arI1, [wfr1.mesh.eStart, wfr1.mesh.eFin, wfr1.mesh.ne], ['Photon Energy [eV]', 'Intensity [ph/s/.1%bw/mm^2]', 'On-Axis Spectrum'])
+
+#uti_plot1d(arI1, [wfr1.mesh.eStart, wfr1.mesh.eFin, wfr1.mesh.ne], ['Photon Energy [eV]', 'Intensity [ph/s/.1%bw/mm^2]', 'On-Axis Spectrum'])
+E = np.linspace(wfr1.mesh.eStart, wfr1.mesh.eFin, wfr1.mesh.ne)
+plt.figure(figsize=(1.5*4,1.5*3))
+plt.plot(E, arI1, color='blue')
+plt.xlabel(r'$E, [эВ]$', fontsize=14, labelpad = 0.0)
+y = plt.ylabel(r'$I, [\gamma/с/0.1\%пп/мм^{2}]$', fontsize=14, labelpad = 0.0, rotation=90)
+plt.title('')
+#y.set_rotation(0)
+ax = plt.gca()
+ax.spines['right'].set_color('none')
+ax.spines['top'].set_color('none')
+ax.xaxis.set_ticks_position('bottom')
+ax.spines['top'].set_position(('axes',0))
+ax.yaxis.set_ticks_position('left')
+ax.spines['top'].set_position(('data',0))
+ax.xaxis.set_label_coords(0.95, -0.08)
+ax.yaxis.set_label_coords(-0.05, 0.7)
+plt.xticks([1200, 1300, 1400, 1500, 1600, 1700, 1800],fontsize=12)
+        #  [r'$-\pi$', r'$-\pi/2$', r'$0$', r'$+\pi/2$', r'$+\pi$'])
+
+plt.yticks([1e14,2e14,3e14,4e14,5e14,6e14,7e14], fontsize=12)
+plt.ylim(0, 7e14)
+plt.xlim(wfr1.mesh.eStart, wfr1.mesh.eFin)
+plt.savefig('/home/andrei/Documents/SKIF_XAS_beamline/TeXDoc/pic/' +'spec_SRW'+'.pdf')
+plt.show()
 
 #            ######### Intensity #######
 #print('   Extracting Intensity from calculated Electric Field ... ', end='')
@@ -178,7 +242,7 @@ partTraj = SRWLPrtTrj()
 partTraj.partInitCond = part
 partTraj.allocate(npTraj, True)
 partTraj.ctStart = -0.45 #Start Time for the calculation
-partTraj.ctEnd = 0.45#magFldCnt.arMagFld[0].rz
+partTraj.ctEnd = 3.75#magFldCnt.arMagFld[0].rz
 
 #**********************Calculation (SRWLIB function call)
 print('   Performing calculation ... ', end='')
