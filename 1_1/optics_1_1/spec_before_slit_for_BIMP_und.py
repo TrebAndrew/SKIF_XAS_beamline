@@ -263,8 +263,8 @@ prParPost =                 [ 0,  0,  1.,  0,  0, 1.0, 1.0, 1.0,  1.0, 0,  0,   
 #                 [ppSLIT, ppDrift_SLIT_MCh, ppSLIT_BEFOUR_MCh, prPar0, prPar0,ppDrift_AFTER_MCh])
 #optBL = SRWLOptC([opCr1,  opCr2], 
 #                 [prPar0, prPar0, prParPost])
-optBL = SRWLOptC([Drift_SLIT_MCh, opCr1,  opCr2], 
-                 [ppDrift_SLIT_MCh, prPar0, prPar0, prParPost])
+#optBL = SRWLOptC([Drift_SLIT_MCh, opCr1,  opCr2], 
+#                 [ppDrift_SLIT_MCh, prPar0, prPar0, prParPost])
 #///////////WAVEFRONT PROPOGATION//////#
 '''
 afile = open(wfrPathName + wfr1FileName, 'rb')
@@ -274,7 +274,7 @@ afile.close()
 afile = open(wfrPathName + wfr2FileName, 'rb')
 wfr2 =  pickle.load(afile)
 afile.close()
-'''
+
 print('   Simulating Electric Field Wavefront Propagation ... ', end='')
 t0 = time.time();
 srwl.PropagElecField(wfr2, optBL)
@@ -292,7 +292,7 @@ arI1 = array('f', [0]*wfr1.mesh.ne)
 srwl.CalcIntFromElecField(arI1, wfr1, 6, 2, 0, wfr1.mesh.eStart, wfr1.mesh.xStart, wfr1.mesh.yStart)
 uti_plot1d(arI1, [wfr1.mesh.eStart, wfr1.mesh.eFin, wfr1.mesh.ne], ['Photon Energy [eV]', 'Intensity [ph/s/.1%bw/mm^2]', 'On-Axis Spectrum'])
 
-
+'''
 
 
 
