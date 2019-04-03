@@ -174,7 +174,7 @@ print('done')
 #   <1st Crystal of DCM>
 #   <2nd Crystal of DCM>
 #   <Drift>
-
+'''
 #C(400) Crystal Constants:
 dSpC400 = 3.1355713563754857#(Si(111))#0.89178 #Crystal reflecting planes d-spacing for C(400) crystal
 #psi0rC400 = -0.17530e-04; psi0iC400 = 0.21089e-07 #Real and imaginary parts of 0-th Fourier component of crystal polarizability
@@ -185,12 +185,24 @@ psihbrC400 = psihrC400; psihbiC400 = psihiC400 #Real and imaginary parts of -h-t
 thickCryst = 10e-03 #0.5e-03 #Thickness of each crystal [m]
 angAsCryst = 0 #Asymmetry angle of each crystal [rad]
 
+'''
+
+#Diamond(111) Crystal Constants:
+dSpC400 = 2.0592929401455575#(Diamond(111))#0.89178 #Crystal reflecting planes d-spacing for Diamond(111) crystal
+#psi0rC400 = -0.17530e-04; psi0iC400 = 0.21089e-07 #Real and imaginary parts of 0-th Fourier component of crystal polarizability
+psi0rC400 = -7.4441e-6; psi0iC400 = 2.9887e-9#-0.21732e-04; psi0iC400 = 0.28005e-07 #Real and imaginary parts of 0-th Fourier component of crystal polarizability
+#psihrC400 = -0.45300e-05; psihiC400 = 0.20314E-07 #Real and imaginary parts of h-th Fourier component of crystal polarizability
+psihrC400 = 2.707e-6;   psihiC400 = 2.0807e-9#-0.54377e-05; psihiC400 = 0.25934E-07 #Real and imaginary parts of h-th Fourier component of crystal polarizability
+psihbrC400 = psihrC400; psihbiC400 = psihiC400 #Real and imaginary parts of -h-th Fourier component of crystal polarizability
+thickCryst = 1000e-06 #0.5e-03 #Thickness of each crystal [m]
+angAsCryst = 0 #Asymmetry angle of each crystal [rad]
 #1st Crystal:
 opCr1 = SRWLOptCryst(_d_sp=dSpC400, _psi0r=psi0rC400,
                      _psi0i=psi0iC400, _psi_hr=psihrC400, _psi_hi=psihiC400, _psi_hbr=psihbrC400, _psi_hbi=psihbiC400,
-                     _tc=thickCryst, _ang_as=angAsCryst)
+                     _tc=thickCryst, _ang_as=angAsCryst, _uc=2)
 #Find appropriate orientation of the 1st crystal and the corresponding output beam frame (in the incident beam frame):
-orientDataCr1 = opCr1.find_orient(wfr1.avgPhotEn-12)
+
+orientDataCr1 = opCr1.find_orient(wfr1.avgPhotEn+123)
 orientCr1 = orientDataCr1[0] #1st crystal orientation
 tCr1 = orientCr1[0]; nCr1 = orientCr1[2] # Tangential and Normal vectors to crystal surface
 #print('   1st crystal orientation:'); print('   t=', tCr1, 's=', orientCr1[1], 'n=', nCr1)
@@ -263,10 +275,10 @@ prParPost =                 [ 0,  0,  1.,  0,  0, 1.0, 1.0, 1.0,  1.0, 0,  0,   
 #                 [ppSLIT, ppDrift_SLIT_MCh, ppSLIT_BEFOUR_MCh, prPar0, prPar0,ppDrift_AFTER_MCh])
 #optBL = SRWLOptC([opCr1,  opCr2], 
 #                 [prPar0, prPar0, prParPost])
-#optBL = SRWLOptC([Drift_SLIT_MCh, opCr1,  opCr2], 
-#                 [ppDrift_SLIT_MCh, prPar0, prPar0, prParPost])
+optBL = SRWLOptC([Drift_SLIT_MCh, opCr1], 
+                 [ppDrift_SLIT_MCh, prPar0,prParPost])
 #///////////WAVEFRONT PROPOGATION//////#
-'''
+
 afile = open(wfrPathName + wfr1FileName, 'rb')
 wfr1 =  pickle.load(afile)
 afile.close()
@@ -291,8 +303,6 @@ print('   Extracting Intensity from calculated Electric Field(Spectral Flux) ...
 arI1 = array('f', [0]*wfr1.mesh.ne)
 srwl.CalcIntFromElecField(arI1, wfr1, 6, 2, 0, wfr1.mesh.eStart, wfr1.mesh.xStart, wfr1.mesh.yStart)
 uti_plot1d(arI1, [wfr1.mesh.eStart, wfr1.mesh.eFin, wfr1.mesh.ne], ['Photon Energy [eV]', 'Intensity [ph/s/.1%bw/mm^2]', 'On-Axis Spectrum'])
-
-'''
 
 
 
