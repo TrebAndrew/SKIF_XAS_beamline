@@ -64,6 +64,7 @@ afile.close()
 print('finishing extracting')
 
             ######### Spectrum #######
+'''
 print('   Extracting Intensity from calculated Electric Field(Spectral Flux) ... ', end='')
 arI1 = array('f', [0]*wfr1.mesh.ne)
 srwl.CalcIntFromElecField(arI1, wfr1, 6, 2, 0, wfr1.mesh.eStart, wfr1.mesh.xStart, wfr1.mesh.yStart)
@@ -75,15 +76,17 @@ arI6 = array('f', [0]*wfr6.mesh.ne)
 srwl.CalcIntFromElecField(arI6, wfr6, 6, 2, 0, wfr6.mesh.eStart, wfr6.mesh.xStart, wfr6.mesh.yStart)
 uti_plot1d(arI1, [wfr6.mesh.eStart, wfr6.mesh.eFin, wfr6.mesh.ne], ['Photon Energy [eV]', 'Intensity [ph/s/.1%bw/mm^2]', 'On-Axis Spectrum'])
 print('done')
+'''
 #%%
             ######### Intensity #######
+A = 1e6/distance
+
 print('   Extracting Intensity from calculated Electric Field ... ', end='')
 arI2 = array('f', [0]*wfr2.mesh.nx*wfr2.mesh.ny) #"flat" array to take 2D intensity data
 srwl.CalcIntFromElecField(arI2, wfr2, 6, 0, 3, wfr2.mesh.eStart, 0, 0)
-A = 1e6/distance
 uti_plot2d(arI2, [A*wfr2.mesh.xStart, A*wfr2.mesh.xFin, wfr2.mesh.nx], [A*wfr2.mesh.yStart, A*wfr2.mesh.yFin, wfr2.mesh.ny], [r'$Horizontal Position [\mu rad]$', r'$Vertical Position [\mu rad]$', 'Intensity at ' + str(wfr2.mesh.eStart) + ' eV'])
     
-
+'''
 arI2x = array('f', [0]*wfr2.mesh.nx) #array to take 1D intensity data (vs X)
 srwl.CalcIntFromElecField(arI2x, wfr2, 6, 0, 1, wfr2.mesh.eStart, 0, 0)
 uti_plot1d(arI2x, [A*wfr2.mesh.xStart, A*wfr2.mesh.xFin, wfr2.mesh.nx], ['Horizontal Position [mm]', 'Intensity [ph/s/.1%bw/mm^2]', 'Intensity at ' + str(wfr2.mesh.eStart) + ' eV\n(horizontal cut at x = 0)'])
@@ -91,32 +94,27 @@ uti_plot1d(arI2x, [A*wfr2.mesh.xStart, A*wfr2.mesh.xFin, wfr2.mesh.nx], ['Horizo
 arI2y = array('f', [0]*wfr2.mesh.ny) #array to take 1D intensity data (vs Y)
 srwl.CalcIntFromElecField(arI2y, wfr2, 6, 0, 2, wfr2.mesh.eStart, 0, 0)
 uti_plot1d(arI2y, [1000*wfr2.mesh.yStart, 1000*wfr2.mesh.yFin, wfr2.mesh.ny], ['Vertical Position [mm]', 'Intensity [ph/s/.1%bw/mm^2]', 'Intensity at ' + str(wfr2.mesh.eStart) + ' eV\n(vertical cut at y = 0)'])
-    
-x = np.linspace(A*wfr2.mesh.xStart, A*wfr2.mesh.xFin, wfr2.mesh.nx)
-sigma = skf.calc_bandwidth(x, arI2x)
-
-uti_plot_show() #show all graphs (and block execution)
-print('done')
-
 '''
+
 print('   Extracting Intensity from calculated Electric Field ... ', end='')
 arI3 = array('f', [0]*wfr3.mesh.nx*wfr3.mesh.ny) #"flat" array to take 2D intensity data
 srwl.CalcIntFromElecField(arI3, wfr3, 6, 0, 3, wfr3.mesh.eStart, 0, 0)
-uti_plot2d(arI3, [1000*wfr3.mesh.xStart, 1000*wfr3.mesh.xFin, wfr3.mesh.nx], [1000*wfr3.mesh.yStart, 1000*wfr3.mesh.yFin, wfr3.mesh.ny], ['Horizontal Position [mm]', 'Vertical Position [mm]', 'Intensity at ' + str(wfr3.mesh.eStart) + ' eV'])
+uti_plot2d(arI3, [A*wfr3.mesh.xStart, A*wfr3.mesh.xFin, wfr3.mesh.nx], [A*wfr3.mesh.yStart, A*wfr3.mesh.yFin, wfr3.mesh.ny], ['Horizontal Position [mm]', 'Vertical Position [mm]', 'Intensity at ' + str(wfr3.mesh.eStart) + ' eV'])
 print('done')
 
 print('   Extracting Intensity from calculated Electric Field ... ', end='')
 arI4 = array('f', [0]*wfr4.mesh.nx*wfr4.mesh.ny) #"flat" array to take 2D intensity data
 srwl.CalcIntFromElecField(arI4, wfr4, 6, 0, 3, wfr4.mesh.eStart, 0, 0)
-uti_plot2d(arI4, [1000*wfr4.mesh.xStart, 1000*wfr4.mesh.xFin, wfr4.mesh.nx], [1000*wfr4.mesh.yStart, 1000*wfr4.mesh.yFin, wfr4.mesh.ny], ['Horizontal Position [mm]', 'Vertical Position [mm]', 'Intensity at ' + str(wfr4.mesh.eStart) + ' eV'])
+uti_plot2d(arI4, [A*wfr4.mesh.xStart, A*wfr4.mesh.xFin, wfr4.mesh.nx], [A*wfr4.mesh.yStart, A*wfr4.mesh.yFin, wfr4.mesh.ny], ['Horizontal Position [mm]', 'Vertical Position [mm]', 'Intensity at ' + str(wfr4.mesh.eStart) + ' eV'])
 print('done')
 
 print('   Extracting Intensity from calculated Electric Field ... ', end='')
 arI5 = array('f', [0]*wfr5.mesh.nx*wfr5.mesh.ny) #"flat" array to take 2D intensity data
 srwl.CalcIntFromElecField(arI5, wfr5, 6, 0, 3, wfr5.mesh.eStart, 0, 0)
-uti_plot2d(arI5, [1000*wfr5.mesh.xStart, 1000*wfr5.mesh.xFin, wfr5.mesh.nx], [1000*wfr5.mesh.yStart, 1000*wfr5.mesh.yFin, wfr5.mesh.ny], ['Horizontal Position [mm]', 'Vertical Position [mm]', 'Intensity at ' + str(wfr5.mesh.eStart) + ' eV'])
+uti_plot2d(arI5, [A*wfr5.mesh.xStart, A*wfr5.mesh.xFin, wfr5.mesh.nx], [A*wfr5.mesh.yStart, A*wfr5.mesh.yFin, wfr5.mesh.ny], ['Horizontal Position [mm]', 'Vertical Position [mm]', 'Intensity at ' + str(wfr5.mesh.eStart) + ' eV'])
 print('done')
-'''
+uti_plot_show() #show all graphs (and block execution)
+print('done')
 #%% 
     
        ######### Power Intensity ###########
@@ -129,7 +127,7 @@ uti_plot2d(stkP.arS, plotMeshX, plotMeshY, [r'$Horizontal Position [\mu rad]$', 
 print(np.sum(stkP.arS)*(1e3*(stkP.mesh.xFin - stkP.mesh.xStart )/stkP.mesh.nx)**2)            
 
 powDenVsX = array('f', [0]*stkP.mesh.nx)
-for i in range(stkP.mesh.nx): powDenVsX[i] = stkP.arS[stkP.mesh.nx*int(stkP.mesh.ny*0.5) + i]
+for i in range(stkP.mesh.nx): powDenVsX[i] = stkP.arS[int(stkP.mesh.ny*0.5) + i*stkP.mesh.nx]
 uti_plot1d(powDenVsX, plotMeshX, [r'$Horizontal Position [\mu rad]$', 'Power Density [W/mm^2]', 'Power Density\n(horizontal cut at y = 0)'])
 
 powDenVsY = array('f', [0]*stkP.mesh.ny)
@@ -148,7 +146,6 @@ afile.close()
 arI1 = array('f', [0]*wfr1.mesh.ne)
 srwl.CalcIntFromElecField(arI1, wfr1, 6, 0, 0, wfr1.mesh.eStart, wfr1.mesh.xStart, wfr1.mesh.yStart)
 E1 = np.linspace(wfr1.mesh.eStart, wfr1.mesh.eFin, wfr1.mesh.ne)
-
 E, spec = skf.renorm_wfr(wfr1, elec_fld_units='W/mm^2/eV')
 
 plt.figure(figsize=(1.5*10,1.5*3))
@@ -159,7 +156,56 @@ spec = spec[:len(T)]
 E = E[:len(T)]
 skf.skf_plot(E, spec*T, color='red', elec_fld_units='W/mm^2/eV', grid=True)
 
-print('absorbed power = ', round(np.sum(spec) - np.sum(spec*T)), 'W')
+print('absorbed power = ', round(np.sum(spec) - np.sum(spec*T)), '[W/mm^2]')
+
+sigma_x, sigma_y = skf.calc_bandwidth(wfr2)
+print('sigma_x_11 = ', round(sigma_x,3),'[urad] \t','sigma_y_11 = ', round(sigma_y,3),'[urad]')
+
+sigma_x, sigma_y = skf.calc_bandwidth(wfr3)
+print('sigma_x_13 = ', round(sigma_x,3),'[urad] \t','sigma_y_13 = ', round(sigma_y,3),'[urad]')
+
+sigma_x, sigma_y = skf.calc_bandwidth(wfr4)
+print('sigma_x_17 = ', round(sigma_x,3),'[urad] \t','sigma_y_17 = ', round(sigma_y,3),'[urad]')
+
+sigma_x, sigma_y = skf.calc_bandwidth(wfr5)
+print('sigma_x_23 = ', round(sigma_x,3),'[urad] \t','sigma_y_23 = ', round(sigma_y,3),'[urad]')
+
+cmap_ph = plt.get_cmap('hsv')
+    # linear
+#plt.subplot(221)
+#%%
+wfr = deepcopy(wfr2)
+#plt.figure(1)
+#cmap_ph = plt.get_cmap('viridis')
+#arI = array('f', [0]*wfr.mesh.nx*wfr.mesh.ny) #"flat" 2D array to take intensity data
+#srwl.CalcIntFromElecField(arI, wfr, 6, 0, 3, wfr.mesh.eStart, 0, 0)
+#x = np.linspace(A*wfr.mesh.xStart, A*wfr.mesh.xFin, wfr.mesh.nx)
+#y = np.linspace(A*wfr.mesh.yStart, A*wfr.mesh.yFin, wfr.mesh.ny)
+#z = []
+#Z = []
+#i = 0 
+#j = 0
+#
+#
+#for j in range(len(y)):
+#    for i in range(len(x)):
+#        z.extend([arI[j*len(x) + i]])
+#    Z.append(z)
+#    z = []
+#    
+#plt.pcolormesh(x, y, Z, cmap=cmap_ph)
+#plt.show()
+    
+skf.skf_subplot_XY(wfr, save_fig=True, figure_name='11 harm')
+
+
+
+
+
+
+
+
+
 
 
 

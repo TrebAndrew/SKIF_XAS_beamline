@@ -27,9 +27,9 @@ e_ = 1.60218e-19 #elementary charge
 
 #harmonics number
 harm2 = 11
-harm3 = 14
-harm4 = 19
-harm5 = 21
+harm3 = 13
+harm4 = 17
+harm5 = 23
 
 
 #undulator parameters
@@ -42,7 +42,7 @@ PathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example d
 FileName = 'undulator_traj.trj' #file name for output electrom traj data
 
 wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data sub-folder name
-wfr1FileName = 'spec1_1_i.wfr'   #for spectrum
+wfr1FileName = 'spec1_1_i.wfr' #for spectrum
 wfr2FileName = 'wfr_harm2.wfr' #for harm2
 wfr3FileName = 'wfr_harm3.wfr' #for harm3
 wfr4FileName = 'wfr_harm4.wfr' #for harm4
@@ -174,10 +174,10 @@ wfr3.allocate(1, mesh_wfr, mesh_wfr) #Numbers of points vs Photon Energy, Horizo
 wfr3.mesh.zStart = distance  #Longitudinal Position [m] at which SR has to be calculated
 wfr3.mesh.eStart = round(harm3*E1)#4205 #Initial Photon Energy [eV]
 wfr3.mesh.eFin = wfr3.mesh.eStart #Final Photon Energy [eV]
-wfr3.mesh.xStart = -a #Initial Horizontal Position [m]
-wfr3.mesh.xFin = a #Final Horizontal Position [m]
-wfr3.mesh.yStart = -a #Initial Vertical Position [m]
-wfr3.mesh.yFin = a #Final Vertical Position [m]
+wfr3.mesh.xStart = -a*distance*1e-6 #Initial Horizontal Position [m]
+wfr3.mesh.xFin = a*distance*1e-6 #Final Horizontal Position [m]
+wfr3.mesh.yStart = -a*distance*1e-6 #Initial Vertical Position [m]
+wfr3.mesh.yFin = a*distance*1e-6 #Final Vertical Position [m]
 wfr3.partBeam = eBeam
 
 wfr4 = SRWLWfr() #For intensity distribution at fixed photon energy
@@ -185,10 +185,10 @@ wfr4.allocate(1, mesh_wfr, mesh_wfr) #Numbers of points vs Photon Energy, Horizo
 wfr4.mesh.zStart = distance  #Longitudinal Position [m] at which SR has to be calculated
 wfr4.mesh.eStart = round(harm4*E1)#4205 #Initial Photon Energy [eV]
 wfr4.mesh.eFin = wfr4.mesh.eStart #Final Photon Energy [eV]
-wfr4.mesh.xStart = -a #Initial Horizontal Position [m]
-wfr4.mesh.xFin = a #Final Horizontal Position [m]
-wfr4.mesh.yStart = -a #Initial Vertical Position [m]
-wfr4.mesh.yFin = a #Final Vertical Position [m]
+wfr4.mesh.xStart = -a*distance*1e-6 #Initial Horizontal Position [m]
+wfr4.mesh.xFin = a*distance*1e-6 #Final Horizontal Position [m]
+wfr4.mesh.yStart = -a*distance*1e-6 #Initial Vertical Position [m]
+wfr4.mesh.yFin = a*distance*1e-6 #Final Vertical Position [m]
 wfr4.partBeam = eBeam
 
 wfr5 = SRWLWfr() #For intensity distribution at fixed photon energy
@@ -196,10 +196,10 @@ wfr5.allocate(1, mesh_wfr, mesh_wfr) #Numbers of points vs Photon Energy, Horizo
 wfr5.mesh.zStart = distance  #Longitudinal Position [m] at which SR has to be calculated
 wfr5.mesh.eStart = round(harm5*E1)#4205 #Initial Photon Energy [eV]
 wfr5.mesh.eFin = wfr5.mesh.eStart #Final Photon Energy [eV]
-wfr5.mesh.xStart = -a #Initial Horizontal Position [m]
-wfr5.mesh.xFin = a #Final Horizontal Position [m]
-wfr5.mesh.yStart = -a #Initial Vertical Position [m]
-wfr5.mesh.yFin = a #Final Vertical Position [m]
+wfr5.mesh.xStart = -a*distance*1e-6 #Initial Horizontal Position [m]
+wfr5.mesh.xFin = a*distance*1e-6 #Final Horizontal Position [m]
+wfr5.mesh.yStart = -a*distance*1e-6 #Initial Vertical Position [m]
+wfr5.mesh.yFin = a*distance*1e-6 #Final Vertical Position [m]
 wfr5.partBeam = eBeam
 
 stkP = SRWLStokes() #for power density
@@ -214,7 +214,7 @@ wfrContainer = [wfr1, wfr2, wfr3, wfr4, wfr5, wfr6]#, stkP]
 
 #%%
 somelist = wfrContainer
-somelist = [x for x in somelist if x not in [stkP, wfr3, wfr4, wfr5, wfr6]]
+somelist = [x for x in somelist if x not in [stkP, wfr6]]
 #%%
             #### Electric field calculation #####
 for wfr in somelist:
@@ -259,8 +259,6 @@ print('done')
 arI2x = array('f', [0]*wfr2.mesh.nx) #array to take 1D intensity data (vs X)
 srwl.CalcIntFromElecField(arI2x, wfr2, 6, 0, 1, wfr2.mesh.eStart, 0, 0)
 x = np.linspace(A*wfr2.mesh.xStart, A*wfr2.mesh.xFin, wfr2.mesh.nx)
-sigma = skf.calc_bandwidth(x, arI2x)
-print("sigma = ", sigma, "mkrad")
 
 #%%
             ######## Power ########
@@ -279,10 +277,11 @@ srwl.CalcPowDenSR(stkP, eBeam, 0, magFldCnt, arPrecP)
 #srwl.CalcPowDenSR(stkPx, eBeam, 0, magFldCnt, arPrecP)
 #srwl.CalcPowDenSR(stkPy, eBeam, 0, magFldCnt, arPrecP)
 print('done')
+
 afile = open(wfrPathName + stkPFileName, 'wb')
 pickle.dump(stkP, afile)
 afile.close()
-'''
+
 #%% 
 print('saving to the files')
 #*****************Saving to files
@@ -291,7 +290,7 @@ for (wfr, fname) in zip(wfrContainer, wfrFileName):
     afile = open(wfrPathName + fname, 'wb')
     pickle.dump(wfr, afile)
     afile.close()
-'''
+
 #%%
 numPer = 40 #Number of ID Periods (without counting for terminations)
 xcID = 0 #Transverse Coordinates of ID Center [m]
