@@ -83,17 +83,17 @@ def pycry_trans(crystal='diamond', Emin=None, Emax=None, ne=None):
     
     return(np.array(y))
     
-def renorm_wfr(wfr, elec_fld_units=None):
+def renorm_wfr(wfr, elec_fld_units=None, emittance=0):
     arI = array('f', [0]*wfr.mesh.ne)
     E = np.linspace(wfr.mesh.eStart, wfr.mesh.eFin, wfr.mesh.ne)
     
     if elec_fld_units is None:
-        srwl.CalcIntFromElecField(arI, wfr, 6, 0, 0, wfr.mesh.eStart, wfr.mesh.xStart, wfr.mesh.yStart)
+        srwl.CalcIntFromElecField(arI, wfr, 6, emittance, 0, wfr.mesh.eStart, wfr.mesh.xStart, wfr.mesh.yStart)
     elif elec_fld_units is 'ph/s/mm^2/eV':
-        srwl.CalcIntFromElecField(arI, wfr, 6, 0, 0, wfr.mesh.eStart, wfr.mesh.xStart, wfr.mesh.yStart)
+        srwl.CalcIntFromElecField(arI, wfr, 6, emittance, 0, wfr.mesh.eStart, wfr.mesh.xStart, wfr.mesh.yStart)
         arI = arI/E/1e-3 #* ((wfr.mesh.eFin-wfr.mesh.eStart)/wfr.mesh.ne)
     elif elec_fld_units=='W/mm^2/eV':
-        srwl.CalcIntFromElecField(arI, wfr, 6, 0, 0, wfr.mesh.eStart, wfr.mesh.xStart, wfr.mesh.yStart)
+        srwl.CalcIntFromElecField(arI, wfr, 6, emittance, 0, wfr.mesh.eStart, wfr.mesh.xStart, wfr.mesh.yStart)
         arI = arI*E*e_/E/1e-3#*((wfr.mesh.eFin - wfr.mesh.eStart) / wfr.mesh.ne)
     elif elec_fld_units is 'ph/s/eV':
         srwl.CalcIntFromElecField(arI, wfr, 6, 2, 0, wfr.mesh.eStart, wfr.mesh.xStart, wfr.mesh.yStart)
@@ -148,15 +148,15 @@ def skf_plot(x, y, color='blue', elec_fld_units=None, grid=False, log_x=False, l
         ax.set_yscale('log')
         plt.ylim(0.1, np.max(y))
     else:
-        plt.ylim(0)#, np.max(y))
+        plt.ylim(0, np.max(y))
         plt.xlim(0, np.max(x))
 
     if save_fig is True:
         plt.savefig(path_name + file_name, dpi=350)#, bbox_inches='tight')
         
-    plt.show()
+#    plt.show()
 
-def skf_subplot_XY(wfr, save_fig=False, figure_name=None, units='mm'):
+def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='mm', fourth_plot=None, three_first=1):
     path_name = '/home/andrei/Documents/9_term/diplom/beamlines/1_1/'
     z = []
     Z = []
@@ -170,11 +170,11 @@ def skf_subplot_XY(wfr, save_fig=False, figure_name=None, units='mm'):
     elif units == 'urad':
         A = 1e6/wfr.mesh.zStart
         xy_unit=r'$[\mu rad]$'
-
+    ########
     plt.subplot(221)  
     cmap_ph = plt.get_cmap('viridis')
     arI = array('f', [0]*wfr.mesh.nx*wfr.mesh.ny) #"flat" 2D array to take intensity data
-    srwl.CalcIntFromElecField(arI, wfr, 6, 0, 3, wfr.mesh.eStart, 0, 0)
+    srwl.CalcIntFromElecField(arI, wfr, 6, three_first, 3, wfr.mesh.eStart, 0, 0)
     x = np.linspace(A*wfr.mesh.xStart, A*wfr.mesh.xFin, wfr.mesh.nx)
     y = np.linspace(A*wfr.mesh.yStart, A*wfr.mesh.yFin, wfr.mesh.ny)
     
@@ -187,14 +187,49 @@ def skf_subplot_XY(wfr, save_fig=False, figure_name=None, units='mm'):
     plt.pcolormesh(x, y, Z, cmap=cmap_ph)  
     plt.ylabel(r'$Vertical Position$' + xy_unit, fontsize=14, labelpad = 0.0, rotation=90)
     plt.xlabel(r'$Horizontal Position$' + xy_unit, fontsize=14, labelpad = 0.0)
-    plt.title('Intensity at ' + str(wfr.mesh.eStart) + ' eV', fontsize=14)
+    plt.title('Multiple electron Intensity at ' + str(wfr.mesh.eStart) + ' eV', fontsize=14)
     plt.xlim(A*wfr.mesh.xStart,  A*wfr.mesh.xFin)
     plt.ylim(A*wfr.mesh.yStart, A*wfr.mesh.yFin)
-
-    
+    #########
+    if fourth_plot is not None:
+        plt.subplot(224)
+#        Z=[]
+#        z=[]
+#        cmap_ph = plt.get_cmap('viridis')
+#        arI = array('f', [0]*wfr.mesh.nx*wfr.mesh.ny) #"flat" 2D array to take intensity data
+#        srwl.CalcIntFromElecField(arI, wfr, 6, fourth_plot, 3, wfr.mesh.eStart, 0, 0)
+#        x = np.linspace(A*wfr.mesh.xStart, A*wfr.mesh.xFin, wfr.mesh.nx)
+#        y = np.linspace(A*wfr.mesh.yStart, A*wfr.mesh.yFin, wfr.mesh.ny)
+#        
+#        for j in range(len(y)):
+#            for i in range(len(x)):
+#                z.extend([arI[j*len(x) + i]])
+#            Z.append(z)
+#            z = []
+#    
+#        plt.pcolormesh(x, y, Z, cmap=cmap_ph)  
+#        plt.ylabel(r'$Vertical Position$' + xy_unit, fontsize=14, labelpad = 0.0, rotation=90)
+#        plt.xlabel(r'$Horizontal Position$' + xy_unit, fontsize=14, labelpad = 0.0)
+#        if fourth_plot==5 or fourth_plot==6:
+#            plt.title('Single electron Phase at ' + str(wfr.mesh.eStart) + ' eV', fontsize=14)
+#        elif fourth_plot==0:
+#            plt.title('Single electron Intensity at ' + str(wfr.mesh.eStart) + ' eV', fontsize=14)
+#        plt.xlim(A*wfr.mesh.xStart,  A*wfr.mesh.xFin)
+#        plt.ylim(A*wfr.mesh.yStart, A*wfr.mesh.yFin)
+        arIx = array('f', [0]*wfr.mesh.nx) #array to take 1D intensity data (vs X)
+        srwl.CalcIntFromElecField(arIx, wfr, 6, 0, 1, wfr.mesh.eStart, 0, 0)
+        x = np.linspace(A*wfr.mesh.xStart, A*wfr.mesh.xFin, wfr.mesh.nx)
+        plt.plot(x, arIx, color='blue')
+        plt.ylabel(r'$I, [\gamma/с/мм^2/0.1\%ПП]$', fontsize=14, labelpad = 0.0, rotation=90)
+        plt.xlabel(r'$Horizontal Position$' + xy_unit, fontsize=14, labelpad = 0.0)
+        plt.grid(True)
+        plt.xlim(A*wfr.mesh.xStart,  A*wfr.mesh.xFin)
+        plt.ylim(0)
+        
+    ########
     plt.subplot(223)
     arIx = array('f', [0]*wfr.mesh.nx) #array to take 1D intensity data (vs X)
-    srwl.CalcIntFromElecField(arIx, wfr, 6, 0, 1, wfr.mesh.eStart, 0, 0)
+    srwl.CalcIntFromElecField(arIx, wfr, 6, three_first, 1, wfr.mesh.eStart, 0, 0)
     x = np.linspace(A*wfr.mesh.xStart, A*wfr.mesh.xFin, wfr.mesh.nx)
     plt.plot(x, arIx, color='blue')
     plt.ylabel(r'$I, [\gamma/с/мм^2/0.1\%ПП]$', fontsize=14, labelpad = 0.0, rotation=90)
@@ -202,10 +237,10 @@ def skf_subplot_XY(wfr, save_fig=False, figure_name=None, units='mm'):
     plt.grid(True)
     plt.xlim(A*wfr.mesh.xStart,  A*wfr.mesh.xFin)
     plt.ylim(0)
-    
+    ########
     plt.subplot(222)
     arIy = array('f', [0]*wfr.mesh.ny) #array to take 1D intensity data (vs X)
-    srwl.CalcIntFromElecField(arIy, wfr, 6, 0, 2, wfr.mesh.eStart, 0, 0)
+    srwl.CalcIntFromElecField(arIy, wfr, 6, three_first, 2, wfr.mesh.eStart, 0, 0)
     y = np.linspace(A*wfr.mesh.yStart, A*wfr.mesh.yFin, wfr.mesh.ny)
     plt.plot(arIy,y, color='blue')
     plt.xlabel(r'$I, [\gamma/с/мм^2/0.1\%ПП]$', fontsize=14, labelpad = 0.0, rotation=0)
@@ -214,16 +249,92 @@ def skf_subplot_XY(wfr, save_fig=False, figure_name=None, units='mm'):
     plt.ylim(A*wfr.mesh.yStart, A*wfr.mesh.yFin)
     plt.xlim(0)
 
+       
     if save_fig is True:
         plt.savefig(path_name + figure_name, dpi=150)#, bbox_inches='tight')
+    plt.show()
         
-def skf_plot_spec(wfr1, crystal=True):
+def skf_power_subplot_XY(stkP, save_fig=False, figure_name=None, units='mm', elec_fld_calc=0):
+    path_name = '/home/andrei/Documents/9_term/diplom/beamlines/1_1/'
+    z = []
+    Z = []
+    i = 0 
+    j = 0 
+    
+#    plotMeshX = [A*stkP.mesh.xStart, A*stkP.mesh.xFin, stkP.mesh.nx]
+#    plotMeshY = [A*stkP.mesh.yStart, A*stkP.mesh.yFin, stkP.mesh.ny]
+#    
+#    uti_plot2d(stkP.arS, plotMeshX, plotMeshY, [r'$Horizontal Position [\mu rad]$', r'$Vertical Position [\mu rad]$', 'Power Density'])
+#    print(np.sum(stkP.arS)*(1e3*(stkP.mesh.xFin - stkP.mesh.xStart )/stkP.mesh.nx)**2)            
+#    
+#    powDenVsX = array('f', [0]*stkP.mesh.nx)
+#    for i in range(stkP.mesh.nx): powDenVsX[i] = stkP.arS[int(stkP.mesh.ny*0.5) + i*stkP.mesh.nx]
+#    uti_plot1d(powDenVsX, plotMeshX, [r'$Horizontal Position [\mu rad]$', 'Power Density [W/mm^2]', 'Power Density\n(horizontal cut at y = 0)'])
+#    
+#    powDenVsY = array('f', [0]*stkP.mesh.ny)
+#    for i in range(stkP.mesh.ny): powDenVsY[i] = stkP.arS[int(stkP.mesh.nx*0.5) + i*stkP.mesh.ny]
+#    uti_plot1d(powDenVsY, plotMeshY, [r'$Vertical Position [\mu rad]$', 'Power Density [W/mm^2]', 'Power Density\n(vertical cut at x = 0)'])
+
+    plt.figure(figsize=(1.5*8,1.5*8))
+    plt.subplots_adjust(wspace=0.2, hspace=0.2)
+    if units == 'mm': 
+        A = 1e3
+        xy_unit=r'$[mm]$'
+    elif units == 'urad':
+        A = 1e6/stkP.mesh.zStart
+        xy_unit=r'$[\mu rad]$'
+
+    plt.subplot(221)  
+    cmap_ph = plt.get_cmap('viridis')
+    
+    x = np.linspace(A*stkP.mesh.xStart, A*stkP.mesh.xFin, stkP.mesh.nx)
+    y = np.linspace(A*stkP.mesh.yStart, A*stkP.mesh.yFin, stkP.mesh.ny)
+    
+    for j in range(len(y)):
+        for i in range(len(x)):
+            z.extend([stkP.arS[j*len(x) + i]])
+        Z.append(z)
+        z = []
+    Z = np.array(Z)
+    plt.pcolormesh(x, y, Z, cmap=cmap_ph)  
+    plt.ylabel(r'$Vertical Position$' + xy_unit, fontsize=14, labelpad = 0.0, rotation=90)
+    plt.xlabel(r'$Horizontal Position$' + xy_unit, fontsize=14, labelpad = 0.0)
+    plt.title('Power density', fontsize=14)#    plt.xlim(A*wfr.mesh.xStart,  A*wfr.mesh.xFin)
+#    plt.ylim(A*wfr.mesh.yStart, A*wfr.mesh.yFin)
+
+    
+    plt.subplot(223)
+    x = np.linspace(A*stkP.mesh.xStart, A*stkP.mesh.xFin, stkP.mesh.nx)
+    #arIx = array('f', [0]*stkP.mesh.nx)
+    #for i in range(stkP.mesh.nx): arIx[i] = stkP.arS[int(stkP.mesh.ny*0.5) + i*stkP.mesh.nx]
+    plt.plot(x, Z[int(stkP.mesh.nx*0.5),:], color='blue')
+    plt.ylabel(r'$I, [Вт/мм^2]$', fontsize=14, labelpad = 0.0, rotation=90)
+    plt.xlabel(r'$Horizontal Position$' + xy_unit, fontsize=14, labelpad = 0.0)
+    plt.grid(True)
+    plt.xlim(A*stkP.mesh.xStart,  A*stkP.mesh.xFin)
+#    plt.ylim(0)
+    
+    plt.subplot(222)
+    y = np.linspace(A*stkP.mesh.yStart, A*stkP.mesh.yFin, stkP.mesh.ny)
+#    arIy = array('f', [0]*stkP.mesh.ny)
+    #for i in range(stkP.mesh.ny): arIy[i] = stkP.arS[int(stkP.mesh.nx*0.5) + i*stkP.mesh.ny]
+    plt.plot(Z[:,int(stkP.mesh.ny*0.5)], y, color='blue')
+    plt.xlabel(r'$I, [Вт/мм^2]$', fontsize=14, labelpad = 0.0, rotation=0)
+    plt.ylabel(r'$Vertical Position$' + xy_unit, fontsize=14, labelpad = 0.0, rotation=90)
+    plt.grid(True)
+    #plt.ylim(A*stkP.mesh.yStart, A*stkP.mesh.yFin)
+#    plt.xlim(0)
+
+    if save_fig is True:
+        plt.savefig(path_name + figure_name, dpi=150)#, bbox_inches='tight')
+    
+def skf_plot_spec(wfr1, dep_type=0, crystal=False):
     
     plt.figure(figsize=(1.5*10,1.5*3))
-    arI1 = array('f', [0]*wfr1.mesh.ne)
-    srwl.CalcIntFromElecField(arI1, wfr1, 6, 0, 0, wfr1.mesh.eStart, wfr1.mesh.xStart, wfr1.mesh.yStart)
-    E1 = np.linspace(wfr1.mesh.eStart, wfr1.mesh.eFin, wfr1.mesh.ne)
-    E, spec = skf.renorm_wfr(wfr1, elec_fld_units='W/mm^2/eV')
+    #arI1 = array('f', [0]*wfr1.mesh.ne)
+    #srwl.CalcIntFromElecField(arI1, wfr1, 6, dep_type, 0, wfr1.mesh.eStart, wfr1.mesh.xStart, wfr1.mesh.yStart)
+    #E1 = np.linspace(wfr1.mesh.eStart, wfr1.mesh.eFin, wfr1.mesh.ne)
+    E, spec = skf.renorm_wfr(wfr1, elec_fld_units='W/mm^2/eV', emittance=dep_type)
     skf.skf_plot(E, spec, elec_fld_units='W/mm^2/eV')
 
     if crystal is True:
@@ -241,6 +352,8 @@ def skf_plot_spec(wfr1, crystal=True):
         clip_on=False,
         transform=plt.gca().transAxes)
         plt.show()
+    plt.show()
+    
 
 
 

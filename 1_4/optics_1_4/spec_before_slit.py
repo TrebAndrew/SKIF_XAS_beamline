@@ -13,7 +13,7 @@ print('SRWLIB Extended Example # 6:')
 print('Calculating spectral flux of undulator radiation by finite-emittance electron beam collected through a finite aperture and power density distribution of this radiation (integrated over all photon energies)')
 
 #**********************Input Parameters:
-wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/fields/' #example data sub-folder name
+wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_4/fields_1_4/' #example data sub-folder name
 wfr1FileName = 'wfr1_for_tapered_und.wfr' #file name for output UR flux data
 wfr2FileName = 'wfr2_for_tapered_und.wfr'
 #***********Electron Beam

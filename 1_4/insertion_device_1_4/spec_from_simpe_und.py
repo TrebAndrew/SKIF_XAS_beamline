@@ -10,6 +10,10 @@ from uti_plot import *
 import os
 import sys
 import pickle
+import random as rn
+import numpy as np
+import matplotlib.pyplot as plt
+import SKIF_lib as skf
 
 print('SKIF Extended Example # 1:')
 print('Create an undulator structure. Calculate !two! electric field files otimised for extracting spectrum and intensity. Save it to files using pickle lib')
@@ -135,17 +139,19 @@ print('   Performing Electric Field (wavefront at fixed photon energy) calculati
 srwl.CalcElecFieldSR(wfr2, 0, magFldCnt, arPrecPar)
 print('done')
 
-#%% 
-#*****************Saving to files
-afile = open(wfrPathName + wfr1FileName, 'wb')
-pickle.dump(wfr1, afile)
-afile.close()
 
-afile = open(wfrPathName + wfr2FileName, 'wb')
-pickle.dump(wfr2, afile)
-afile.close()
-
-print('   finish')
+skf.skf_plot_spec(wfr1)
+##%% 
+##*****************Saving to files
+#afile = open(wfrPathName + wfr1FileName, 'wb')
+#pickle.dump(wfr1, afile)
+#afile.close()
+#
+#afile = open(wfrPathName + wfr2FileName, 'wb')
+#pickle.dump(wfr2, afile)
+#afile.close()
+#
+#print('   finish')
 
 
 

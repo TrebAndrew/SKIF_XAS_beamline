@@ -202,15 +202,17 @@ print('   Performing Electric Field (wavefront at fixed photon energy) calculati
 srwl.CalcElecFieldSR(wfr2, 0, magFldCnt, arPrecPar)
 print('done')
 
-#%% 
-#*****************Saving to files
-afile = open(wfrPathName + wfr1FileName, 'wb')
-pickle.dump(wfr1, afile)
-afile.close()
+skf.skf_plot_spec(wfr1)
 
-afile = open(wfrPathName + wfr2FileName, 'wb')
-pickle.dump(wfr2, afile)
-afile.close()
+##%% 
+##*****************Saving to files
+#afile = open(wfrPathName + wfr1FileName, 'wb')
+#pickle.dump(wfr1, afile)
+#afile.close()
+#
+#afile = open(wfrPathName + wfr2FileName, 'wb')
+#pickle.dump(wfr2, afile)
+#afile.close()
 
 numPer = 40 #Number of ID Periods (without counting for terminations)
 xcID = 0 #Transverse Coordinates of ID Center [m]
