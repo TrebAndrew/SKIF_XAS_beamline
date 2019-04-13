@@ -1,1 +1,1 @@
-# SKIF_XAS_beamline
+SKIF_beamlines
