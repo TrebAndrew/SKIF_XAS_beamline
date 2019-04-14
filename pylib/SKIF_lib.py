@@ -57,8 +57,7 @@ def pycry_trans(crystal='diamond', Emin=None, Emax=None, ne=None):
     for x in lines:
         Y.append(x.split('\t')[0])
     f.close()
-    
-    
+        
     X_ = [0]*(len(X)-1)
     Y_ = [0]*(len(X)-1)
     for i in range(len(X)-1):
@@ -80,7 +79,6 @@ def pycry_trans(crystal='diamond', Emin=None, Emax=None, ne=None):
                 y.append(y_[i])
                 j = j + 1
             j = 0
-    
     return(np.array(y))
     
 def renorm_wfr(wfr, elec_fld_units=None, emittance=0):
@@ -105,7 +103,9 @@ def renorm_wfr(wfr, elec_fld_units=None, emittance=0):
     return E, arI  
     
     
-def skf_plot(x, y, color='blue', elec_fld_units=None, grid=False, log_x=False, linewidth=1, save_fig=False, file_name=None):
+def skf_plot(x, y, color='blue', elec_fld_units=None, grid=False, log_x=False, 
+             linewidth=1, save_fig=False, file_name=None, show=True):
+    
     path_name = '/home/andrei/Documents/9_term/diplom/beamlines/1_1/'
     plt.plot(x, y, color=color, linewidth=linewidth)
     plt.xlabel(r'$E, [эВ]$', fontsize=14, labelpad = 0.0)
@@ -125,7 +125,7 @@ def skf_plot(x, y, color='blue', elec_fld_units=None, grid=False, log_x=False, l
     elif elec_fld_units == 'W/eV':
         plt.ylabel(r'$I, [Вт/эВ]$', fontsize=14, labelpad = 0.0, rotation=90)  
     
-    plt.title('')
+    plt.title('On-axis spectrum')
     #y.set_rotation(0)
     ax = plt.gca()
     ax.spines['right'].set_color('none')
@@ -136,27 +136,24 @@ def skf_plot(x, y, color='blue', elec_fld_units=None, grid=False, log_x=False, l
     ax.spines['top'].set_position(('data',0))
     ax.xaxis.set_label_coords(0.95, -0.08)
     ax.yaxis.set_label_coords(-0.07, 0.8)
-    
-    #plt.xticks([1200, 1300, 1400, 1500, 1600, 1700, 1800],fontsize=12)
-            #  [r'$-\pi$', r'$-\pi/2$', r'$0$', r'$+\pi/2$', r'$+\pi$'])
-    #plt.xticks(fontsize=12)
-    #plt.yticks(fontsize=12)
-    #plt.yticks([1e14,2e14,3e14,4e14,5e14,6e14,7e14], fontsize=12)
+
     if grid is True:
         plt.grid()
+    
     if log_x is True:
         ax.set_yscale('log')
         plt.ylim(0.1, np.max(y))
     else:
+        plt.xlim(np.min(x), np.max(x))
         plt.ylim(0, np.max(y))
-        plt.xlim(0, np.max(x))
 
     if save_fig is True:
         plt.savefig(path_name + file_name, dpi=350)#, bbox_inches='tight')
         
-#    plt.show()
+    if show is True:
+        plt.show()
 
-def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='mm', fourth_plot=None, three_first=1):
+def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='mm', fourth_plot=None, three_first=1, show=True):
     path_name = '/home/andrei/Documents/9_term/diplom/beamlines/1_1/'
     z = []
     Z = []
@@ -252,7 +249,8 @@ def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='mm', fourth
        
     if save_fig is True:
         plt.savefig(path_name + figure_name, dpi=150)#, bbox_inches='tight')
-    plt.show()
+    if show is True:
+        plt.show()
         
 def skf_power_subplot_XY(stkP, save_fig=False, figure_name=None, units='mm', elec_fld_calc=0):
     path_name = '/home/andrei/Documents/9_term/diplom/beamlines/1_1/'
@@ -260,20 +258,6 @@ def skf_power_subplot_XY(stkP, save_fig=False, figure_name=None, units='mm', ele
     Z = []
     i = 0 
     j = 0 
-    
-#    plotMeshX = [A*stkP.mesh.xStart, A*stkP.mesh.xFin, stkP.mesh.nx]
-#    plotMeshY = [A*stkP.mesh.yStart, A*stkP.mesh.yFin, stkP.mesh.ny]
-#    
-#    uti_plot2d(stkP.arS, plotMeshX, plotMeshY, [r'$Horizontal Position [\mu rad]$', r'$Vertical Position [\mu rad]$', 'Power Density'])
-#    print(np.sum(stkP.arS)*(1e3*(stkP.mesh.xFin - stkP.mesh.xStart )/stkP.mesh.nx)**2)            
-#    
-#    powDenVsX = array('f', [0]*stkP.mesh.nx)
-#    for i in range(stkP.mesh.nx): powDenVsX[i] = stkP.arS[int(stkP.mesh.ny*0.5) + i*stkP.mesh.nx]
-#    uti_plot1d(powDenVsX, plotMeshX, [r'$Horizontal Position [\mu rad]$', 'Power Density [W/mm^2]', 'Power Density\n(horizontal cut at y = 0)'])
-#    
-#    powDenVsY = array('f', [0]*stkP.mesh.ny)
-#    for i in range(stkP.mesh.ny): powDenVsY[i] = stkP.arS[int(stkP.mesh.nx*0.5) + i*stkP.mesh.ny]
-#    uti_plot1d(powDenVsY, plotMeshY, [r'$Vertical Position [\mu rad]$', 'Power Density [W/mm^2]', 'Power Density\n(vertical cut at x = 0)'])
 
     plt.figure(figsize=(1.5*8,1.5*8))
     plt.subplots_adjust(wspace=0.2, hspace=0.2)
@@ -283,6 +267,9 @@ def skf_power_subplot_XY(stkP, save_fig=False, figure_name=None, units='mm', ele
     elif units == 'urad':
         A = 1e6/stkP.mesh.zStart
         xy_unit=r'$[\mu rad]$'
+    else:
+        print('\n !Error! units must be mm or urad')
+        return 0
 
     plt.subplot(221)  
     cmap_ph = plt.get_cmap('viridis')
@@ -299,31 +286,29 @@ def skf_power_subplot_XY(stkP, save_fig=False, figure_name=None, units='mm', ele
     plt.pcolormesh(x, y, Z, cmap=cmap_ph)  
     plt.ylabel(r'$Vertical Position$' + xy_unit, fontsize=14, labelpad = 0.0, rotation=90)
     plt.xlabel(r'$Horizontal Position$' + xy_unit, fontsize=14, labelpad = 0.0)
-    plt.title('Power density', fontsize=14)#    plt.xlim(A*wfr.mesh.xStart,  A*wfr.mesh.xFin)
-#    plt.ylim(A*wfr.mesh.yStart, A*wfr.mesh.yFin)
+    plt.title('Power density', fontsize=14)
+    plt.ylim(A*stkP.mesh.yStart, A*stkP.mesh.yFin)
 
     
     plt.subplot(223)
     x = np.linspace(A*stkP.mesh.xStart, A*stkP.mesh.xFin, stkP.mesh.nx)
-    #arIx = array('f', [0]*stkP.mesh.nx)
-    #for i in range(stkP.mesh.nx): arIx[i] = stkP.arS[int(stkP.mesh.ny*0.5) + i*stkP.mesh.nx]
     plt.plot(x, Z[int(stkP.mesh.nx*0.5),:], color='blue')
     plt.ylabel(r'$I, [Вт/мм^2]$', fontsize=14, labelpad = 0.0, rotation=90)
     plt.xlabel(r'$Horizontal Position$' + xy_unit, fontsize=14, labelpad = 0.0)
     plt.grid(True)
     plt.xlim(A*stkP.mesh.xStart,  A*stkP.mesh.xFin)
-#    plt.ylim(0)
+    plt.ylim(0)
     
     plt.subplot(222)
     y = np.linspace(A*stkP.mesh.yStart, A*stkP.mesh.yFin, stkP.mesh.ny)
-#    arIy = array('f', [0]*stkP.mesh.ny)
-    #for i in range(stkP.mesh.ny): arIy[i] = stkP.arS[int(stkP.mesh.nx*0.5) + i*stkP.mesh.ny]
     plt.plot(Z[:,int(stkP.mesh.ny*0.5)], y, color='blue')
     plt.xlabel(r'$I, [Вт/мм^2]$', fontsize=14, labelpad = 0.0, rotation=0)
     plt.ylabel(r'$Vertical Position$' + xy_unit, fontsize=14, labelpad = 0.0, rotation=90)
     plt.grid(True)
-    #plt.ylim(A*stkP.mesh.yStart, A*stkP.mesh.yFin)
-#    plt.xlim(0)
+    plt.ylim(A*stkP.mesh.yStart, A*stkP.mesh.yFin)
+    plt.xlim(0)
+    
+    print('max power density on axis = ', round(np.max(stkP.arS),1), '[W/mm^2]')
 
     if save_fig is True:
         plt.savefig(path_name + figure_name, dpi=150)#, bbox_inches='tight')
@@ -336,7 +321,7 @@ def skf_plot_spec(wfr1, dep_type=0, crystal=False):
     #E1 = np.linspace(wfr1.mesh.eStart, wfr1.mesh.eFin, wfr1.mesh.ne)
     E, spec = skf.renorm_wfr(wfr1, elec_fld_units='W/mm^2/eV', emittance=dep_type)
     skf.skf_plot(E, spec, elec_fld_units='W/mm^2/eV')
-
+    plt.show()
     if crystal is True:
         T = skf.pycry_trans(crystal='diamond', Emin=wfr1.mesh.eStart, Emax=wfr1.mesh.eFin, ne=wfr1.mesh.ne)
         spec = spec[:len(T)]
@@ -351,8 +336,7 @@ def skf_plot_spec(wfr1, dep_type=0, crystal=False):
         rotation=0,
         clip_on=False,
         transform=plt.gca().transAxes)
-        plt.show()
-    plt.show()
+#        plt.show()
     
 
 
