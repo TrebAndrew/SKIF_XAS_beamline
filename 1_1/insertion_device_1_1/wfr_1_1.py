@@ -47,7 +47,7 @@ wfr1FileName = 'wfr_harm1.wfr' #for harm1
 wfr2FileName = 'wfr_harm2.wfr' #for harm2
 wfr3FileName = 'wfr_harm3.wfr' #for harm3
 wfr4FileName = 'wfr_harm4.wfr' #for harm4
-stkPFileName = 'harm5.wfr'#for power dens
+stkPFileName = 'stkP.wfr'#for power density
 
 wfrFileName = [wfr1FileName, wfr2FileName, wfr3FileName, wfr4FileName]#, stkPFileName]
 
@@ -127,7 +127,7 @@ sampFactNxNyForProp = 0 #sampling factor for adjusting nx, ny (effective if > 0)
 arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, sampFactNxNyForProp]
 #%%
 
-mesh_wfr = 100
+mesh_wfr = 150
 distance = 25. #[m]
 a = 0.001 #[m]
 
@@ -190,10 +190,10 @@ for wfr in wfrContainer:
 
 #%%
             ######### Intensity Ploting#######
-#skf.skf_wfr_subplot_XY(wfr1, fourth_plot=0)
-#skf.skf_wfr_subplot_XY(wfr2, fourth_plot=0)
-#skf.skf_wfr_subplot_XY(wfr3, fourth_plot=0)
-#skf.skf_wfr_subplot_XY(wfr4, fourth_plot=0)
+skf.skf_wfr_subplot_XY(wfr1, fourth_plot=0)
+skf.skf_wfr_subplot_XY(wfr2, fourth_plot=0)
+skf.skf_wfr_subplot_XY(wfr3, fourth_plot=0)
+skf.skf_wfr_subplot_XY(wfr4, fourth_plot=0)
 #%% 
 print('saving to the files')
 #*****************Saving to files
