@@ -26,10 +26,11 @@ gamma = 3./0.51099890221e-03 #relative energy E_electron/m_e [GeV/Gev]
 e_ = 1.60218e-19 #elementary charge
 
 #harmonics number
-harm1 = '11'
-harm2 = '13'
-harm3 = '17'
-harm4 = '23'
+harm1 = 11
+harm2 = 13
+harm3 = 17
+harm4 = 23
+harm = [harm1, harm2, harm3, harm4]
 
 #undulator parameters
 Length = 2.3 # m
@@ -92,6 +93,15 @@ filepath='/home/andrei/Documents/SKIF_XAS_beamline/TechReports/pic/'
 #skf.skf_wfr_subplot_XY(wfr2, save_fig=True, figure_name='13_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
 #skf.skf_wfr_subplot_XY(wfr3, save_fig=True, figure_name='17_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
 #skf.skf_wfr_subplot_XY(wfr4, save_fig=True, figure_name='23_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
+
+wfr = [wfr1, wfr2, wfr3, wfr4]
+HARM = []
+for (fld, n) in zip(wfr, harm): 
+    sigma_x_mm, sigma_y_mm   = skf.calc_bandwidth(fld, units='mm')
+    sigma_x_rad, sigma_y_rad = skf.calc_bandwidth(fld, units='urad')
+    HARM.append([int(n), sigma_x_mm, sigma_y_mm, sigma_x_rad, sigma_y_rad])
+np.savetxt("/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/tabl/RMS_before.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
+np.savetxt("/home/andrei/Documents/diploma/TexPresent/pic/RMS_before.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
 #%%
 #sigma_x, sigma_y = skf.calc_bandwidth(wfr1, units='urad') #calculates sigma fot the electric field distribution 
 #print('sigma_x_11 = ', round(sigma_x,3),'[urad] \t','sigma_y_11 = ', round(sigma_y,3),'[urad]')
@@ -106,7 +116,7 @@ filepath='/home/andrei/Documents/SKIF_XAS_beamline/TechReports/pic/'
 #skf.skf_plot_spec(spec1) #function to draw spectrum
 #skf.skf_plot_spec(spec2) #function to draw spectrum
 #%%
-path_name = '/home/andrei/Documents/SKIF_XAS_beamline/TechReports/pic/'
+path_name = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/pic/'
 figure_name = 'power_dens.pdf'
 skf.skf_power_subplot_XY(stkP, units='urad', figure_name=figure_name, path_name=path_name, save_fig=True) #function to power density distribution
 #%% Drawing spectrum absorption characteristic
@@ -123,11 +133,11 @@ skf.skf_plot(E2, full_spec, color='pink', elec_fld_units='W/mm^2/eV', grid=True,
 file_path = '/home/andrei/Documents/SKIF_XAS_beamline/crystals_data/diamond_T/'
 file_name = 'diamond_T_100.txt'
 X, T = skf.read_crystal_trans(file_path, file_name)
-X_100, T_100 = skf.read_crystal_trans(file_name='diamond_T_100.txt')
-X_480, T_480 = skf.read_crystal_trans(file_name='diamond_T_480.txt')
-X_568, T_568 = skf.read_crystal_trans(file_name='diamond_T_568.txt')
-X_742, T_742 = skf.read_crystal_trans(file_name='diamond_T_742.txt')
-X_1004, T_1004 = skf.read_crystal_trans(file_name='diamond_T_1004.txt')
+X_100, T_100 = skf.read_crystal_trans(file_path,file_name='diamond_T_100.txt')
+X_480, T_480 = skf.read_crystal_trans(file_path,file_name='diamond_T_480.txt')
+X_568, T_568 = skf.read_crystal_trans(file_path,file_name='diamond_T_568.txt')
+X_742, T_742 = skf.read_crystal_trans(file_path,file_name='diamond_T_742.txt')
+X_1004, T_1004 = skf.read_crystal_trans(file_path,file_name='diamond_T_1004.txt')
 
 skf.skf_plot(E, spec*T_100, color='red', elec_fld_units='W/mm^2/eV', grid=True, linewidth=2, show=False)
 W = (np.sum(spec) - np.sum(spec*T_100))*((spec1.mesh.eFin - spec1.mesh.eStart) / spec1.mesh.ne)
@@ -138,26 +148,27 @@ W1 = (np.sum(spec*T_100*(z1/(z1+1))**2) - np.sum(spec*T_100*T_480*(z1/(z1+1))**2
 skf.skf_plot(E, spec*(T_100*T_480*T_568)*(z1/(z1+2))**2, color='red', elec_fld_units='W/mm^2/eV', grid=True, linewidth=2, show=False)
 W2 = (np.sum(spec*(T_100*T_480)*(z1/(z1+2))**2) - np.sum(spec*(T_100*T_480*T_568)*(z1/(z1+2))**2))*((spec1.mesh.eFin - spec1.mesh.eStart) / spec1.mesh.ne)
 
-skf.skf_plot(E, spec*(T_100*T_480*T_568*T_742)*(z1/(z1+3))**2, color='blue', elec_fld_units='W/mm^2/eV', grid=True, linewidth=2, show=False)
+skf.skf_plot(E, spec*(T_100*T_480*T_568*T_742)*(z1/(z1+3))**2, color='black', elec_fld_units='W/mm^2/eV', grid=True, linewidth=2, show=False)
 W3 = (np.sum(spec*(T_100*T_480*T_568)*(z1/(z1+3))**2) - np.sum(spec*(T_100*T_480*T_568*T_742)*(z1/(z1+3))**2))*((spec1.mesh.eFin - spec1.mesh.eStart) / spec1.mesh.ne)
 
-skf.skf_plot(E, spec*(T_100*T_480*T_568*T_742*T_1004)*(z1/(z1+4))**2, color='black', elec_fld_units='W/mm^2/eV', grid=True, linewidth=3, show=True)
-W4 = (np.sum(spec*T_100*T_480*T_568*T_742*(z1/(z1+4))**2) - np.sum(spec*T_100*T_480*T_568*T_742*T_1004*(z1/(z1+4))**2))*((spec1.mesh.eFin - spec1.mesh.eStart) / spec1.mesh.ne)
+#skf.skf_plot(E, spec*(T_100*T_480*T_568*T_742*T_1004)*(z1/(z1+4))**2, color='black', elec_fld_units='W/mm^2/eV', 
+#             grid=True, linewidth=3, show=False)
+#W4 = (np.sum(spec*T_100*T_480*T_568*T_742*(z1/(z1+4))**2) - np.sum(spec*T_100*T_480*T_568*T_742*T_1004*(z1/(z1+4))**2))*((spec1.mesh.eFin - spec1.mesh.eStart) / spec1.mesh.ne)
 
 full_W = np.sum(full_spec)*((spec2.mesh.eFin - spec2.mesh.eStart) / spec2.mesh.ne)
-left_W = (np.sum(spec*T_100*T_480*T_568*T_742*T_1004*(z1/(z1+4))**2))*((spec1.mesh.eFin - spec1.mesh.eStart) / spec1.mesh.ne)
+left_W = (np.sum(spec*T_100*T_480*T_568*T_742*(z1/(z1+4))**2))*((spec1.mesh.eFin - spec1.mesh.eStart) / spec1.mesh.ne)
 
 
 t = (r"$W_F \approx {} \; [Вт/мм^2]\; падающая\; на\; алмазное\; окно$".format(round(full_W,1)) + "\n"
      r"$W_a \approx {} \; [Вт/мм^2]\; поглощенная\; в\; алмазном\; окне$".format(round(W,1)) + "\n"
-     r"$W1_a \approx {} \; [Вт/мм^2] \; поглощенная\; в\; CCM1$".format(round(W1,1)) + "\n"
-     r"$W2_a \approx {} \; [Вт/мм^2] \; поглощенная\; в\; CCM2$".format(round(W2,1)) + "\n"
-     r"$W3_a \approx {} \; [Вт/мм^2] \; поглощенная\; в\; CCM3$".format(round(W3,1)) + "\n"
-     r"$W4_a \approx {} \; [Вт/мм^2] \; поглощенная\; в\; CCM4$".format(round(W4,1)) + "\n"
+     r"$W1_a \approx {} \; [Вт/мм^2] \; поглощенная\; в\; Cr1$".format(round(W1,1)) + "\n"
+     r"$W2_a \approx {} \; [Вт/мм^2] \; поглощенная\; в\; Cr2$".format(round(W2,1)) + "\n"
+     r"$W3_a \approx {} \; [Вт/мм^2] \; поглощенная\; в\; Cr3$".format(round(W3,1)) + "\n"
+     #r"$W4_a \approx {} \; [Вт/мм^2] \; поглощенная\; в\; CCM4$".format(round(W4,1)) + "\n"
      r"$W_L \approx {} \; [Вт/мм^2] \; падающая\; на\; DCM$".format(round(left_W,1)) + "\n") 
 
-plt.text(0.5, 0.59, t,
-         {'color': 'black', 'fontsize': 16},
+plt.text(0.45, 0.59, t,
+         {'color': 'black', 'fontsize': 18},
          horizontalalignment='left',
          verticalalignment='center',
          rotation=0,
@@ -166,8 +177,11 @@ plt.text(0.5, 0.59, t,
 plt.ylim(0, 1.2)
 plt.xlim(0, 60000)
 plt.savefig('/home/andrei/Documents/9_term/diplom/beamlines/1_1/spec.png', dpi=350)#, bbox_inches='tight')
-filepath='/home/andrei/Documents/SKIF_XAS_beamline/TechReports/pic/'
+filepath='/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/pic/'
 plt.savefig(filepath + 'spec.pdf', dpi=250)#, bbox_inches='tight')
+filepath='/home/andrei/Documents/diploma/TexPresent/pic/'
+plt.savefig(filepath + 'full_spec.pdf', dpi=250)#, bbox_inches='tight')
+
 
 plt.show()
 
@@ -380,3 +394,10 @@ skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name='11_harm_after_crystal.p
 skf.skf_wfr_subplot_XY(wfr2, save_fig=True, figure_name='13_harm_after_crystal.pdf', fourth_plot=1, show=False, file_path=filepath)
 skf.skf_wfr_subplot_XY(wfr3, save_fig=True, figure_name='17_harm_after_crystal.pdf', fourth_plot=1, show=False, file_path=filepath)
 skf.skf_wfr_subplot_XY(wfr4, save_fig=True, figure_name='23_harm_after_crystal.pdf', fourth_plot=1, show=False, file_path=filepath)
+
+HARM = []
+for (fld, n) in zip(wfr, harm): 
+    sigma_x_mm, sigma_y_mm   = skf.calc_bandwidth(fld, units='mm')
+    sigma_x_rad, sigma_y_rad = skf.calc_bandwidth(fld, units='urad')
+    HARM.append([int(n), sigma_x_mm, sigma_y_mm, sigma_x_rad, sigma_y_rad])
+numpy.savetxt("/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/tabl/RMS_before.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')

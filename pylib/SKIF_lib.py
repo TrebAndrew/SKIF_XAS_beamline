@@ -1,6 +1,6 @@
 '''	
 SKIF lib
-Andrei Trebushinin
+@author: Andrei Trebushini
 '''
 
 '''error debug functions must be added'''
@@ -42,6 +42,39 @@ def calc_bandwidth(wfr, units):
     sigma_y = np.sqrt(np.sum((x)**2 * arIy)) #std formula
     
     return(sigma_x, sigma_y)
+    
+def calc_FWHM(wfr, units):
+    '''
+    Calculate bandwidth of a given wavefront
+    :wfr:    SRWLWfr object 
+    :units: units of x and y coordinates mm or urad
+    ''' 
+    if units == 'mm': 
+        A = 1e3
+        xy_unit=r'$[mm]$'
+    elif units == 'urad': #reperesentation in angles
+        A = 1e6/wfr.mesh.zStart
+        xy_unit=r'$[\mu rad]$'
+    
+    arIx = array('f', [0]*wfr.mesh.nx) #"flat" array to take 2D intensity data
+    srwl.CalcIntFromElecField(arIx, wfr, 6, 1, 1, wfr.mesh.eStart, 0, 0)
+    x = np.linspace(A*wfr.mesh.xStart, A*wfr.mesh.xFin, wfr.mesh.nx)
+    difference = np.max(arIx) - np.min(arIx)
+    HM = difference / 2
+    nearest = (np.abs(arIx - HM)).argmin()
+    max_index = np.max(np.where(arIx == np.amax(arIx)))
+    FWHM_x = 2*(np.abs(x[nearest] - x[max_index]))
+    
+    arIy = array('f', [0]*wfr.mesh.ny) #"flat" array to take 2D intensity data
+    srwl.CalcIntFromElecField(arIy, wfr, 6, 1, 2, wfr.mesh.eStart, 0, 0)
+    y = np.linspace(A*wfr.mesh.yStart, A*wfr.mesh.yFin, wfr.mesh.ny)
+    difference = np.max(arIy) - np.min(arIy)
+    HM = difference / 2
+    nearest = (np.abs(arIy - HM)).argmin()
+    max_index = np.max(np.where(arIy == np.amax(arIy)))
+    FWHM_y = 2*(np.abs(y[nearest] - y[max_index]))
+    
+    return(FWHM_x, FWHM_y)
     
 def pycry_trans(crystal='diamond', Emin=None, Emax=None, ne=None):
     '''
@@ -147,7 +180,7 @@ def renorm_wfr(wfr, elec_fld_units=None, emittance=0):
     
     
 def skf_plot(x, y, color='blue', elec_fld_units=None, grid=True, log_x=False, 
-             linewidth=1, save_fig=False, figure_name=None, show=True):
+             linewidth=1, save_fig=False, figure_name=None, show=True, file_path=None):
     '''
     Plot a graph with x and y. Optimised for spectra plotting although may be used for other dependencies.
     :x: 1d array 
@@ -161,10 +194,11 @@ def skf_plot(x, y, color='blue', elec_fld_units=None, grid=True, log_x=False,
     :figure_name: filename of the saved file
     :show:      draw the graph of not
     '''
-    
-    path_name = '/home/andrei/Documents/9_term/diplom/beamlines/1_1/'
+    #plt.figure(figsize=(1.5*4,1.5*3))
+    if file_path is None:
+        file_path = '/home/andrei/Documents/9_term/diplom/beamlines/1_4/'
     plt.plot(x, y, color=color, linewidth=linewidth)
-    plt.xlabel(r'$E, [эВ]$', fontsize=14, labelpad = 0.0)
+    plt.xlabel(r'$E, [эВ]$', fontsize=18, labelpad = 0.0)
     
     if elec_fld_units is None:
         plt.ylabel(r'$a.u.$', fontsize=14, labelpad = 0.0, rotation=90)
@@ -176,12 +210,12 @@ def skf_plot(x, y, color='blue', elec_fld_units=None, grid=True, log_x=False,
         plt.ylabel(r'$I, [\gamma/с/0.1\%ПП]$', fontsize=14, labelpad = 0.0, rotation=90)
     
     elif elec_fld_units == 'W/mm^2/eV':
-        plt.ylabel(r'$I, [Вт/мм^2/эВ]$', fontsize=14, labelpad = 0.0, rotation=90)
+        plt.ylabel(r'$I, [Вт/мм^2/эВ]$', fontsize=18, labelpad = 0.0, rotation=90)
     
     elif elec_fld_units == 'W/eV':
         plt.ylabel(r'$I, [Вт/эВ]$', fontsize=14, labelpad = 0.0, rotation=90)  
     
-    plt.title('On-axis spectrum')
+    #plt.title('On-axis spectrum')
     #y.set_rotation(0)
     ax = plt.gca()
     ax.spines['right'].set_color('none')
@@ -190,9 +224,11 @@ def skf_plot(x, y, color='blue', elec_fld_units=None, grid=True, log_x=False,
     ax.spines['top'].set_position(('axes',0))
     ax.yaxis.set_ticks_position('left')
     ax.spines['top'].set_position(('data',0))
-    ax.xaxis.set_label_coords(0.95, -0.08)
-    ax.yaxis.set_label_coords(-0.07, 0.8)
+    ax.xaxis.set_label_coords(0.95, -0.12)
+    ax.yaxis.set_label_coords(-0.05, 0.8)
 
+    plt.xticks(fontsize=18)
+    plt.yticks(fontsize=18)
     if grid is True:
         plt.grid()
     
@@ -202,15 +238,14 @@ def skf_plot(x, y, color='blue', elec_fld_units=None, grid=True, log_x=False,
     else:
         plt.xlim(np.min(x), np.max(x))
         plt.ylim(0, np.max(y))
-
+    plt.tight_layout()
     if save_fig is True:
-        plt.savefig(path_name + file_name, dpi=350)#, bbox_inches='tight')
+        plt.savefig(file_path + figure_name)#, bbox_inches='tight')
         
-    if show is True:
-        plt.show()
+#    if show is True:
+#        plt.show()
 
-def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='urad', 
-                       fourth_plot=None, three_first=1, show=True, file_path=None):
+def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='urad', fourth_plot=None, three_first=1, show=True, file_path=None):
     '''
     In development
     Draw a plot with four subplots with wfr field distribution. The fourth is for arbitrary dependence.

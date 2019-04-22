@@ -32,13 +32,13 @@ disty =  []
 
 PER = 150
 NumPIECE = 5
-undper = 0.018 # [m]
+undper = 0.02 # [m]
 numper = PER/NumPIECE
-magf = 1 #[T]
-magf_step = 0.5/100
+magf = 1.0 #[T]
+magf_step = (1.5/100)*magf
 
 Bx = 1 #Peak Horizontal field [T]
-By = 1 + magf_step #+ (NumPIECE-1)*magf_step#Peak Vertical field [T]
+By = magf # + magf_step #+ (NumPIECE-1)*magf_step#Peak Vertical field [T]
 phBx = 0#Initial Phase of the Horizontal field component
 phBy = 0 #Initial Phase of the Vertical field component
 sBx = 1 #Symmetry of the Horizontal field component vs Longitudinal position
@@ -47,8 +47,9 @@ xcID = -0.00 #Transverse Coordinates of Undulator Center [m]
 ycID = -0.0
 zcID = 0 #Longitudinal Coordinate of Undulator Center [m]
 
-for i in range(NumPIECE):
-    B2 = By + i*magf_step
+for i in range(NumPIECE-7, NumPIECE-2):
+    B2 = By + (i-1)*magf_step
+    print(B2)
     #phBx = rn.uniform(0, 2*np.pi)
     und = SRWLMagFldU([SRWLMagFldH(1, 'h', B2, phBx, sBx, 1)], undper, numper)#, SRWLMagFldH(1, 'h', B2, phBx, sBx, 1)], undPer, numPer) #Ellipsoidal Undulator
     undarr.append(und)
@@ -122,10 +123,10 @@ arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, sampFactN
 
 
 wfr1 = SRWLWfr() #For spectrum vs photon energy (Spectral Flux)
-wfr1.allocate(2000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
+wfr1.allocate(4000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
 wfr1.mesh.zStart = 25. #Longitudinal Position [m] at which SR has to be calculated
-wfr1.mesh.eStart = 5500. #Initial Photon Energy [eV]
-wfr1.mesh.eFin = 6000. #Final Photon Energy [eV]
+wfr1.mesh.eStart = 4300. #Initial Photon Energy [eV]
+wfr1.mesh.eFin = 5200. #Final Photon Energy [eV]
 a = 0.0002
 wfr1.mesh.xStart = -a #Initial Horizontal Position [m]
 wfr1.mesh.xFin = a #Final Horizontal Position [m]
@@ -141,7 +142,8 @@ srwl.CalcElecFieldSR(wfr1, 0, magFldCnt, arPrecPar)
 print('done')
 
 E, spec = skf.renorm_wfr(wfr1, elec_fld_units='W/mm^2/eV', emittance=0)
-skf.skf_plot(E, spec, elec_fld_units='W/mm^2/eV', color='blue', grid=True, linewidth=1)
+skf.skf_plot(E, spec, elec_fld_units='W/mm^2/eV', color='blue', grid=True, 
+             linewidth=1, save_fig=True, figure_name='sim_und_spec.pdf', file_path='/home/andrei/Documents/diploma/TexPresent/pic/')
 
 ##%% 
 #*****************Saving to files
@@ -164,7 +166,7 @@ stkP.mesh.xStart = -a*A#*distance*1e-6#-0.02 #initial horizontal position [m]
 stkP.mesh.xFin = a*A#*distance*1e-6#0.02 #final horizontal position [m]
 stkP.mesh.yStart = -b*A#*distance*1e-6#-0.015 #initial vertical position [m]
 stkP.mesh.yFin = b*A#*distance*1e-6#0.015 #final vertical position [m]
-
+'''
 print('   Performing Power Density calculation (from field) ... ', end='')
 srwl.CalcPowDenSR(stkP, eBeam, 0, magFldCnt, arPrecP)
 print('done')
@@ -174,10 +176,10 @@ skf.skf_power_subplot_XY(stkP, units='urad')
 afile = open(wfrPathName + stkPFileName, 'wb')
 pickle.dump(stkP, afile)
 afile.close()
-
+'''
 
 #%% ###### Trajectory #######
-'''
+
 numPer = 40 #Number of ID Periods (without counting for terminations)
 xcID = 0 #Transverse Coordinates of ID Center [m]
 ycID = 0
@@ -201,8 +203,8 @@ arPrecPar = [1] #General Precision parameters for Trajectory calculation:
 partTraj = SRWLPrtTrj()
 partTraj.partInitCond = part
 partTraj.allocate(npTraj, True)
-partTraj.ctStart = -1.45 #Start Time for the calculation
-partTraj.ctEnd = 2.0#magFldCnt.arMagFld[0].rz
+partTraj.ctStart = -1.9 #Start Time for the calculation
+partTraj.ctEnd = 1.9#magFldCnt.arMagFld[0].rz
 
 #**********************Calculation (SRWLIB function call)
 print('   Performing calculation ... ', end='')
@@ -218,4 +220,3 @@ for i in range(partTraj.np):
     
 uti_plot1d(partTraj.arX, ctMesh, ['ct [m]', 'Horizontal Position [mm]'])
 uti_plot1d(partTraj.arY, ctMesh, ['ct [m]', 'Vertical Position [mm]'])
-'''

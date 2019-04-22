@@ -6,6 +6,7 @@
 
 #harmonic numbers 11-th, 13-th, 17-th and 23-th
 #############################################################################
+'''@author: Andrei Trebushini'''
 
 from __future__ import print_function #Python 2.7 compatibility
 from srwlib import *

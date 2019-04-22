@@ -14,8 +14,8 @@ print('Calculating spectral flux of undulator radiation by finite-emittance elec
 
 #**********************Input Parameters:
 wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_4/fields_1_4/' #example data sub-folder name
-wfr1FileName = 'wfr1_for_tapered_und.wfr' #file name for output UR flux data
-wfr2FileName = 'wfr2_for_tapered_und.wfr'
+spec1FileName = 'spec_sectional_1_4.wfr' #file name for output UR flux data
+stkPFileName = 'stkP_sectional_1_4.wfr'#for power densitys
 #***********Electron Beam
 eBeam = SRWLPartBeam()
 eBeam.Iavg = 0.4 #average current [A]
@@ -97,14 +97,16 @@ wfr2.partBeam = eBeam
 #sys.exit(0)
 #**********************Calculation (SRWLIB function calls)
 '''
-afile = open(wfrPathName + wfr1FileName, 'rb')
+afile = open(wfrPathName + spec1FileName, 'rb')
 wfr1 =  pickle.load(afile)
 afile.close()
-
-afile = open(wfrPathName + wfr2FileName, 'rb')
+'''
+afile = open(wfrPathName + spec2FileName, 'rb')
 wfr2 =  pickle.load(afile)
 afile.close()
 
+
+'''
             ######### Spectrum #######
 print('   Extracting Intensity from calculated Electric Field(Spectral Flux) ... ', end='')
 arI1 = array('f', [0]*wfr1.mesh.ne)
@@ -115,7 +117,7 @@ print('   Plotting the results (blocks script execution; close any graph windows
 #uti_plot1d(arI1, [wfr1.mesh.eStart, wfr1.mesh.eFin, wfr1.mesh.ne], ['Photon Energy [eV]', 'Intensity [ph/s/.1%bw/mm^2]', 'On-Axis Spectrum'])
 
 
-
+'''
             ######### Intensity #######
 print('   Extracting Intensity from calculated Electric Field ... ', end='')
 arI2 = array('f', [0]*wfr2.mesh.nx*wfr2.mesh.ny) #"flat" array to take 2D intensity data
@@ -139,4 +141,4 @@ uti_plot_show() #show all graphs (and block execution)
 print('done')
 
 uti_plot1d(arI1, [wfr1.mesh.eStart, wfr1.mesh.eFin, wfr1.mesh.ne], ['Photon Energy [eV]', 'Intensity [ph/s/.1%bw/mm^2]', 'On-Axis Spectrum'])
-
+'''

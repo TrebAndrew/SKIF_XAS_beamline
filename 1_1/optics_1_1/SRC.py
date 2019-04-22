@@ -39,6 +39,20 @@ wfr4FileName = 'wfr_harm3.wfr' #for harm4
 wfr5FileName = 'wfr_harm4.wfr' #for harm5
 stkPFileName = 'stkP.wfr'#for power density
 
+
+#x = np.linspace(-5,5, 10000)
+#sigma = 1
+#arIx = (1./np.sqrt(2*np.pi*sigma**2))*np.exp(-x**2 / (2*sigma**2))
+#plt.plot(x,arIx)
+#
+#difference = np.max(arIx) - np.min(arIx)
+#HM = difference / 2
+#nearest = (np.abs(arIx - HM)).argmin()
+#print(x[nearest])
+#max_index = np.max(np.where(arIx == np.amax(arIx)))#arIx.index(np.max(arIx))
+#print(max_index)
+#FWHM_x = 2*(np.abs(x[nearest] - x[max_index]))
+#print(FWHM_x/2.355)
 #%%
 print('extracting wfr from files')
 afile = open(wfrPathName + spec1FileName, 'rb')
@@ -70,6 +84,12 @@ afile = open(wfrPathName + stkPFileName, 'rb')
 stkP =  pickle.load(afile)
 afile.close()
 print('finishing extracting')
+
+x, y= skf.calc_FWHM(wfr1, units='urad')
+rms_x, rms_y = skf.calc_bandwidth(wfr1, units='urad')
+#print(x,y)
+#print(2.335*rms_x, 2.335*rms_y)
+#%%
 #%%
             ######### Spectrum #######
 #skf.skf_plot_spec(spec1)
@@ -77,11 +97,11 @@ print('finishing extracting')
 
 #%%
             ######### Intensity #######
-filepath='/home/andrei/Documents/SKIF_XAS_beamline/TechReports/pic/'
-skf.skf_wfr_subplot_XY(wfr1, fourth_plot=0, save_fig=True, file_path=filepath, figure_name='11_harm_befoure_optics.pdf')
-skf.skf_wfr_subplot_XY(wfr2, fourth_plot=0, save_fig=True, file_path=filepath, figure_name='13_harm_befoure_optics.pdf', show=False)
-skf.skf_wfr_subplot_XY(wfr3, fourth_plot=0, save_fig=True, file_path=filepath, figure_name='17_harm_befoure_optics.pdf', show=False)
-skf.skf_wfr_subplot_XY(wfr4, fourth_plot=0, save_fig=True, file_path=filepath, figure_name='23_harm_befoure_optics.pdf', show=False)
+filepath='/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/pic'
+skf.skf_wfr_subplot_XY(wfr1, fourth_plot=0, save_fig=False, file_path=filepath, figure_name='11_harm_befoure_optics.pdf')
+#skf.skf_wfr_subplot_XY(wfr2, fourth_plot=0, save_fig=True, file_path=filepath, figure_name='13_harm_befoure_optics.pdf', show=False)
+#skf.skf_wfr_subplot_XY(wfr3, fourth_plot=0, save_fig=True, file_path=filepath, figure_name='17_harm_befoure_optics.pdf', show=False)
+#skf.skf_wfr_subplot_XY(wfr4, fourth_plot=0, save_fig=True, file_path=filepath, figure_name='23_harm_befoure_optics.pdf', show=False)
 #%% 
     
 ######### Power density ###########
