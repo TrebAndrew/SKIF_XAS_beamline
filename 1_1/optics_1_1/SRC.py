@@ -85,7 +85,7 @@ stkP =  pickle.load(afile)
 afile.close()
 print('finishing extracting')
 
-x, y= skf.calc_FWHM(wfr1, units='urad')
+x, y = skf.calc_FWHM(wfr1, units='urad')
 rms_x, rms_y = skf.calc_bandwidth(wfr1, units='urad')
 #print(x,y)
 #print(2.335*rms_x, 2.335*rms_y)
@@ -106,10 +106,9 @@ skf.skf_wfr_subplot_XY(wfr1, fourth_plot=0, save_fig=False, file_path=filepath, 
     
 ######### Power density ###########
             
-#skf.skf_power_subplot_XY(stkP, units='mm')
+skf.skf_power_subplot_XY(stkP, wfr=spec2, units='mm')
 #plt.savefig('/home/andrei/Documents/9_term/diplom/beamlines/1_1/power.png', dpi=350)#, bbox_inches='tight')
-#
-
+plt.savefig('/home/andrei/Documents/diploma/TexPresent/pic/power_dens.pdf')#, bbox_inches='tight')
 #%%
 
 
