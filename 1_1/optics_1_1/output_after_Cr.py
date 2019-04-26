@@ -22,7 +22,7 @@ print('Extracts two electric fields from files. Plots intensity distributions an
 
 speed_of_light = 299792458 #[m/s]
 h_bar = 6.582119514e-16 #[eV*s]
-h = 4.135667662e-15
+h = 4.135667662e-15 #[eV*s]
 gamma = 3./0.51099890221e-03 #relative energy E_electron/m_e [GeV/Gev]
 e_ = 1.60218e-19 #elementary charge
 
@@ -39,7 +39,8 @@ undper = 0.018 # m
 numper = 128
 magf = 1.36  
 #**********************Input Parameters:
-wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data sub-folder name
+path_ = skf.get_SKIF_directory()
+wfrPathName = path_ + '/1_1/fields_1_1/' #example data sub-folder name
 spec1FileName = 'wfr_spec1_1_4.wfr' #for spec1
 spec2FileName = 'wfr_spec2_1_4.wfr' #for spec2
 wfr1FileName = 'wfr_harm1_after_Cr.wfr' #for harm2
@@ -99,7 +100,7 @@ skf.skf_plot(E, spec, elec_fld_units='W/mm^2/eV', color='pink', grid=True, linew
 E2, full_spec = skf.renorm_wfr(spec1, elec_fld_units='W/mm^2/eV')
 skf.skf_plot(E2, full_spec, color='pink', elec_fld_units='W/mm^2/eV', grid=True, linewidth=1, show=False)
 
-file_path = '/home/andrei/Documents/SKIF_XAS_beamline/crystals_data/diamond_T/'
+file_path = path_ + '/crystals_data/diamond_T/'
 file_name = 'diamond_T_100.txt'
 X, T = skf.read_crystal_trans(file_path, file_name)
 X_100, T_100 = skf.read_crystal_trans(file_path,file_name='diamond_T_100.txt')
@@ -145,11 +146,11 @@ plt.text(0.45, 0.59, t,
          transform=plt.gca().transAxes)
 plt.ylim(0, 1.2)
 plt.xlim(0, 60000)
-plt.savefig('/home/andrei/Documents/9_term/diplom/beamlines/1_1/spec.png', dpi=350)#, bbox_inches='tight')
-filepath='/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/pic/'
+#plt.savefig('/home/andrei/Documents/9_term/diplom/beamlines/1_1/spec.png', dpi=350)#, bbox_inches='tight')
+filepath=path + '/1_1/TechReports/inter1/pic/'
 plt.savefig(filepath + 'spec.pdf', dpi=250)#, bbox_inches='tight')
-filepath='/home/andrei/Documents/diploma/TexPresent/pic/'
-plt.savefig(filepath + 'full_spec.pdf', dpi=250)#, bbox_inches='tight')
+#filepath='/home/andrei/Documents/diploma/TexPresent/pic/'
+#plt.savefig(filepath + 'full_spec.pdf', dpi=250)#, bbox_inches='tight')
 plt.show()
 
 #%%Parameters extraction
@@ -162,24 +163,32 @@ for (fld, n) in zip(wfr, harm):
     sigma_x_mm, sigma_y_mm   = skf.calc_bandwidth(fld, units='mm')
     sigma_x_rad, sigma_y_rad = skf.calc_bandwidth(fld, units='urad')
     HARM.append([int(n), sigma_x_mm, sigma_y_mm, sigma_x_rad, sigma_y_rad])
-np.savetxt("/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/tabl/RMS_after.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
+np.savetxt(path + "/1_1/TechReports/inter1/tabl/RMS_after.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
 
 #%% Load angles of the Cr
-Monchr_ang = np.loadtxt("/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/tabl/Cr_angles.csv", delimiter=',')#grad
+Monchr_ang = np.loadtxt(path + "/1_1/TechReports/inter1/tabl/Cr_angles.csv", delimiter=',')#grad
 #print(Monchr_ang)
 #%%
-Darvin_curve = np.loadtxt("/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/tabl/Darvin_curve.csv", delimiter=',')#urad
-print(Darvin_curve)
+Darvin_curve_diamond = np.loadtxt(path + "/1_1/TechReports/inter1/tabl/Darvin_curve_diamond.csv", delimiter=',')#urad
+print(Darvin_curve_diamond)
+#%%
+Darvin_curve_selicon = np.loadtxt(path + "/1_1/TechReports/inter1/tabl/Darvin_curve_selicon.csv", delimiter=',')#urad
+print(Darvin_curve_selicon)
 #%%Save beam parameter to a file E, lambda, dE/E, RMS, Flux(ph/s), Flux(ph/s/0.1%bw)
 wfr = [wfr1, wfr2, wfr3, wfr4]
 harm = [harm1, harm2, harm3, harm4]
 HARM = []
+dE_E=4*[0]
+dE_E[0] = Darvin_curve_diamond[0][1]*1e-6/np.abs(np.tan((90.0-Monchr_ang[0][1])*np.pi/180))#relative bandwidth
+dE_E[1] = Darvin_curve_diamond[1][1]*1e-6/np.abs(np.tan((90.0-Monchr_ang[1][1])*np.pi/180))#relative bandwidth
+dE_E[2] = Darvin_curve_diamond[2][1]*1e-6/np.abs(np.tan((90.0-Monchr_ang[2][1])*np.pi/180))#relative bandwidth
+dE_E[3] = Darvin_curve_selicon[0][1]*1e-6/np.abs(np.tan((90.0-Monchr_ang[0][1])*np.pi/180))#relative bandwidth
 
-for (fld, angle, fwhm, n) in zip(wfr, Monchr_ang, Darvin_curve, harm):
+for (fld, n, bwth) in zip(wfr, harm, dE_E):
     sigma_x_mm, sigma_y_mm   = skf.calc_bandwidth(fld, units='mm')
     sigma_x_rad, sigma_y_rad = skf.calc_bandwidth(fld, units='urad')
 #    print(angle[1])
-    dE_E = fwhm[1]*1e-6/np.abs(np.tan((90.0-angle[1])*np.pi/180))#relative bandwidth
+    #dE_E = fwhm[1]*1e-6/np.abs(np.tan((90.0-angle[1])*np.pi/180))#relative bandwidth
     
     E = np.linspace(fld.mesh.eStart, fld.mesh.eFin, fld.mesh.ne) #energy range
     arI = array('f', [0]*fld.mesh.nx*fld.mesh.ny) #"flat" 2D array to take intensity data
@@ -187,14 +196,11 @@ for (fld, angle, fwhm, n) in zip(wfr, Monchr_ang, Darvin_curve, harm):
     
     F = np.sum(arI)*(fld.mesh.yFin - fld.mesh.yStart)*(fld.mesh.yFin - fld.mesh.yStart)/fld.mesh.nx/fld.mesh.ny#ph/s/0.1bw
     arI = arI/E/1e-3 #ph/s/eV
-    TotF = np.sum(arI)*dE_E*fld.avgPhotEn
-    #print(TotF)
-    HARM.append([int(n), fld.avgPhotEn,  h*speed_of_light*1e9/fld.avgPhotEn, sigma_x_mm, sigma_y_mm, sigma_x_rad, sigma_y_rad, TotF, F])
-np.savetxt("/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/tabl/ph_beam_par_after_cr.csv", HARM, fmt='%10.d,%10.3f,%10.4f,%10.3f,%10.3f,%10.3f,%10.3f,%.2E,%.2E', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
-
-     
-
-
+    TotF = np.sum(arI)*bwth*fld.avgPhotEn
+    HARM.append([int(n), fld.avgPhotEn,  h*speed_of_light*1e9/fld.avgPhotEn, TotF, F])
+np.savetxt(path + "/1_1/TechReports/inter1/tabl" + "/ph_beam_par_after_cr.csv", 
+           HARM, fmt='%10.d,%10.0f,%10.4f,%.2e,%.2e', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
+#%%
 
 
 

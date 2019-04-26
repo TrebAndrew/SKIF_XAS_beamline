@@ -100,21 +100,26 @@
 \begin{document}
 
 \section{Отчёт по техническому заданию для станции 1-1. Итерация 1.}
+\subsection{Входные параметры моделирования}
+
 \subsection{Задача №1}
 \textit{Источник - СП ондулятор (параметры ондулятора во вложении, параметры электронного пучка актуализировать у отв. лиц). Оценить размеры и расходимость источника для рабочих гармоник (11-й, 13-й, 17-й и 23-й)}\\
 См. рис.~\ref{fig:before_crystal}
 При параметрах электронного пучка\\
 \begin{table}[h!]
 	\centering
-	\begin{tabular}{ccccc}
+	\begin{tabular}{cccccccc}
 		\hline
 		\toprule
-		\rule{0pt}{3ex}   $\sigma_x, [m]$ & $\sigma_{x'}, [rad]$ & $\sigma_y, [m]$     & $\sigma_{y'}, [rad]$ & $\Delta E / E$      \\ \hline
-		\rule{0pt}{3ex}   $33.0 \times 10^{-6}$  & $2.65 \times 10^{-6}$  &  $8.6 \times 10^{-7}$ & $5.0 \times 10^{-7}$   & $8.6 \times 10^{-4}$ \\
-		\hline	
+		\rule{0pt}{3ex}   $\sigma_x, [m]$ & $\sigma_{x'}, [rad]$ & $\sigma_y, [m]$     & $\sigma_{y'}, [rad]$ \\ \hline
+		\rule{0pt}{3ex}   $33.0 \times 10^{-6}$  & $2.65 \times 10^{-6}$  &  $8.6 \times 10^{-7}$ & $5.0 \times 10^{-7}$   \\
+		\hline	\hline
+		\rule{0pt}{3ex}   $\Delta E / E$ & $\beta_x,[m]$ & $\beta_y,[m]$   & $I,[mA]$\\ \hline
+		\rule{0pt}{3ex}	 $8.6 \times 10^{-4}$ & $12.49$ & $1.99$ & $400$ \\ \hline
 		\toprule
 		\rule{0pt}{4ex}
 	\end{tabular}
+	\caption{Пространственные и угловые размеры электронного пучка. Бета функция. Ток}
 \end{table}
 
 
@@ -139,7 +144,7 @@
 		input-decimal-markers = .5
 	}
 	\renewcommand*\dtlrealalign{S}
-	\caption{Сечение пучка}
+	\caption{Сечение пучка на входе в первую апертуру (25 м)}
 	\centering
 	\DTLdisplaydb{RMS_before}
 \end{table}
@@ -248,6 +253,32 @@ headers={
 \subsection{Задача №5}
 \textit{Рассчитать тепловую нагрузку оставшегося прямого пучка на двукристальный кремниевый 111 монохроматор, расположенный в удалённом хатче (см. схему), а также сечение пучка на выходе из монохроматора. Оценить необходимость и тип охлаждения.}\\
 Тепловые нагрузки см. на рис.~\ref{fig:absorb_spec}.
+
+\DTLloaddb
+[
+noheader,
+keys={},
+headers={
+	\shortstack{$n_{harm}$},
+	\shortstack{$E, eV$},
+	\shortstack{$\lambda, [nm]$},
+	\shortstack{$ph/s$},
+	\shortstack{$ph/s/0.1\%$}}
+]
+{ph_beam_par_after_cr}{tabl/ph_beam_par_after_cr.csv}
+\begin{table}[h!]
+	\sisetup{
+		parse-numbers   = false,
+		table-number-alignment = right,
+		table-figures-integer = 4,
+		table-figures-decimal = 4,
+		input-decimal-markers = .5
+	}
+	\renewcommand*\dtlrealalign{S}
+	\caption{Сечение пучка на входе в первую апертуру (25 м)}
+	\centering
+	\DTLdisplaydb{ph_beam_par_after_cr}
+\end{table}
 
 \begin{figure}[htbp]
 	\centering  
