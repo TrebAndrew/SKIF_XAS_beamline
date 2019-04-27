@@ -39,7 +39,13 @@ undper = 0.018 # m
 numper = 128
 magf = 1.36  
 #**********************Input Parameters:
-wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data sub-folder name
+SKIF_path = skf.get_SKIF_directory() #get SKIF project root directory
+TablesPath = skf.path_in_project('/1_1/TechReports/tabl/')#, your_sys='Mac OC')
+FigPath = skf.path_in_project('/1_1/TechReports/pic/')
+wfrPath = skf.path_in_project('/1_1/fields_1_1/')
+Diamond_T_path = skf.path_in_project('/crystals_data/diamond_T/')
+
+wfrPathName = SKIF_path + '/1_1/fields_1_1/' #example data sub-folder name
 spec1FileName = 'wfr_spec1_1_4.wfr' #for spec1
 spec2FileName = 'wfr_spec2_1_4.wfr' #for spec2
 wfr1FileName = 'wfr_harm1.wfr' #for harm2
@@ -90,7 +96,7 @@ absorb = False
 print('finishing extracting')
 A = 1e6/wfr1.mesh.zStart #scaling facor for the transferring xy distribution from [m] to [rad] 
 
-filepath='/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/pic/'
+filepath= SKIF_path + FigPath
 skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name='11_harm_before_crystal.pdf', fourth_plot=5, show=False, file_path=filepath) #function to draw xy distribution
 skf.skf_wfr_subplot_XY(wfr2, save_fig=True, figure_name='13_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
 skf.skf_wfr_subplot_XY(wfr3, save_fig=True, figure_name='17_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
@@ -103,8 +109,8 @@ for (fld, n) in zip(wfr, harm):
     sigma_x_mm, sigma_y_mm   = skf.calc_bandwidth(fld, units='mm')
     sigma_x_rad, sigma_y_rad = skf.calc_bandwidth(fld, units='urad')
     HARM.append([int(n), sigma_x_mm, sigma_y_mm, sigma_x_rad, sigma_y_rad])
-np.savetxt("/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/tabl/RMS_before.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
-np.savetxt("/home/andrei/Documents/diploma/TexPresent/pic/RMS_before.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
+np.savetxt(SKIF_path + TablesPath + "RMS_before.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
+np.savetxt(SKIF_path + TablesPath + "RMS_before.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
 #%%
 sigma_x, sigma_y = skf.calc_bandwidth(wfr1, units='urad') #calculates sigma fot the electric field distribution 
 print('sigma_x_11 = ', round(sigma_x,3),'[urad] \t','sigma_y_11 = ', round(sigma_y,3),'[urad]')
@@ -133,7 +139,7 @@ if absorb is True:
     E2, full_spec = skf.renorm_wfr(spec1, elec_fld_units='W/mm^2/eV')
     skf.skf_plot(E2, full_spec, color='pink', elec_fld_units='W/mm^2/eV', grid=True, linewidth=1, show=False)
     
-    file_path = '/home/andrei/Documents/SKIF_XAS_beamline/crystals_data/diamond_T/'
+    file_path = SKIF_path + Diamond_T_path
     file_name = 'diamond_T_100.txt'
     X, T = skf.read_crystal_trans(file_path, file_name)
     X_100, T_100 = skf.read_crystal_trans(file_path,file_name='diamond_T_100.txt')
@@ -179,10 +185,10 @@ if absorb is True:
              transform=plt.gca().transAxes)
     plt.ylim(0, 1.2)
     plt.xlim(0, 60000)
-    plt.savefig('/home/andrei/Documents/9_term/diplom/beamlines/1_1/spec.png', dpi=350)#, bbox_inches='tight')
-    filepath='/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/pic/'
+    plt.savefig(SKIF_path + FigPath + 'spec.png', dpi=350)#, bbox_inches='tight')
+    filepath=SKIF_path + FigPath 
     plt.savefig(filepath + 'spec.pdf', dpi=250)#, bbox_inches='tight')
-    filepath='/home/andrei/Documents/diploma/TexPresent/pic/'
+    filepath= SKIF_path + FigPath
     plt.savefig(filepath + 'full_spec.pdf', dpi=250)#, bbox_inches='tight')
     
     
@@ -409,16 +415,6 @@ print('done; lasted', round(time.time() - t0), 's')
 wfrContainer = [wfr1, wfr2, wfr3, wfr4]
 angleContainer = [angle1, angle2, angle3, angle4]
 harmContainer = [harm1, harm2, harm3, harm4]
-#%% Saving to a file output beam parameter
-wfr = [wfr1, wfr2, wfr3, wfr4]
-harm = [harm1, harm2, harm3, harm4]
-HARM = []
-for (fld, n) in zip(wfr, harm): 
-    E  = fld.avgPhotEn()
-    lambda_ = h/E
-    HARM.append([int(n), E, lambda_, ])
-np.savetxt("/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/tabl/RMS_after.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
-
 
 #%%
 for (wfr, angle, harm) in zip(wfrContainer, angleContainer, harmContainer):
@@ -435,17 +431,17 @@ HARM = []
     
 for (angle, n) in zip(angleContainer, harm): 
     HARM.append([int(n), angle])
-np.savetxt("/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/tabl/Cr_angles.csv", HARM, fmt='%10.d,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
+np.savetxt(SKIF_path + TablesPath + 'Cr_angles.csv', HARM, fmt='%10.d,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
 
 
 #%% Drawing part of the code (after propogation)
-filepath='/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/pic/'
+filepath = SKIF_path + FigPath
 skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name='11_harm_after_crystal.pdf', fourth_plot=5, show=False, file_path=filepath)
 skf.skf_wfr_subplot_XY(wfr2, save_fig=True, figure_name='13_harm_after_crystal.pdf', fourth_plot=1, show=False, file_path=filepath)
 skf.skf_wfr_subplot_XY(wfr3, save_fig=True, figure_name='17_harm_after_crystal.pdf', fourth_plot=1, show=False, file_path=filepath)
 skf.skf_wfr_subplot_XY(wfr4, save_fig=True, figure_name='23_harm_after_crystal.pdf', fourth_plot=1, show=False, file_path=filepath)
 #%%
-wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data sub-folder name
+wfrPathName = SKIF_path + '/1_1/fields_1_1/' #example data sub-folder name
 wfr1FileName = 'wfr_harm1_after_Cr.wfr' #for harm2
 wfr2FileName = 'wfr_harm2_after_Cr.wfr' #for harm3
 wfr3FileName = 'wfr_harm3_after_Cr.wfr' #for harm4

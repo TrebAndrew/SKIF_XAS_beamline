@@ -15,6 +15,8 @@ import random as rn
 import numpy as np
 import matplotlib.pyplot as plt
 import SKIF_lib as skf #special labrary for the SKIF project. Add the directory to your PYTHONPATH
+import platform
+
 
 print('SKIF Extended Example for 1-1 # 3:')
 print('Extracts two electric fields from files. Plots intensity distributions and spectra.\n' 
@@ -39,8 +41,13 @@ undper = 0.018 # m
 numper = 128
 magf = 1.36  
 #**********************Input Parameters:
-path_ = skf.get_SKIF_directory()
-wfrPathName = path_ + '/1_1/fields_1_1/' #example data sub-folder name
+SKIF_path = skf.get_SKIF_directory() #get SKIF project root directory
+TablesPath = skf.path_in_project('/1_1/TechReports/tabl/')#, your_sys='Mac OC')
+FigPath = skf.path_in_project('/1_1/TechReports/pic/')
+wfrPath = skf.path_in_project('/1_1/fields_1_1/')
+Diamond_T_path = skf.path_in_project('/crystals_data/diamond_T/')
+
+wfrPathName = SKIF_path + wfrPath #example data sub-folder name
 spec1FileName = 'wfr_spec1_1_4.wfr' #for spec1
 spec2FileName = 'wfr_spec2_1_4.wfr' #for spec2
 wfr1FileName = 'wfr_harm1_after_Cr.wfr' #for harm2
@@ -100,7 +107,7 @@ skf.skf_plot(E, spec, elec_fld_units='W/mm^2/eV', color='pink', grid=True, linew
 E2, full_spec = skf.renorm_wfr(spec1, elec_fld_units='W/mm^2/eV')
 skf.skf_plot(E2, full_spec, color='pink', elec_fld_units='W/mm^2/eV', grid=True, linewidth=1, show=False)
 
-file_path = path_ + '/crystals_data/diamond_T/'
+file_path = SKIF_path + Diamond_T_path
 file_name = 'diamond_T_100.txt'
 X, T = skf.read_crystal_trans(file_path, file_name)
 X_100, T_100 = skf.read_crystal_trans(file_path,file_name='diamond_T_100.txt')
@@ -146,11 +153,7 @@ plt.text(0.45, 0.59, t,
          transform=plt.gca().transAxes)
 plt.ylim(0, 1.2)
 plt.xlim(0, 60000)
-#plt.savefig('/home/andrei/Documents/9_term/diplom/beamlines/1_1/spec.png', dpi=350)#, bbox_inches='tight')
-filepath=path + '/1_1/TechReports/inter1/pic/'
-plt.savefig(filepath + 'spec.pdf', dpi=250)#, bbox_inches='tight')
-#filepath='/home/andrei/Documents/diploma/TexPresent/pic/'
-#plt.savefig(filepath + 'full_spec.pdf', dpi=250)#, bbox_inches='tight')
+plt.savefig(SKIF_path + FigPath + 'spec.pdf', dpi=250)#, bbox_inches='tight')
 plt.show()
 
 #%%Parameters extraction
@@ -163,16 +166,16 @@ for (fld, n) in zip(wfr, harm):
     sigma_x_mm, sigma_y_mm   = skf.calc_bandwidth(fld, units='mm')
     sigma_x_rad, sigma_y_rad = skf.calc_bandwidth(fld, units='urad')
     HARM.append([int(n), sigma_x_mm, sigma_y_mm, sigma_x_rad, sigma_y_rad])
-np.savetxt(path + "/1_1/TechReports/inter1/tabl/RMS_after.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
+np.savetxt(SKIF_path + TablesPath + "RMS_after.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
 
 #%% Load angles of the Cr
-Monchr_ang = np.loadtxt(path + "/1_1/TechReports/inter1/tabl/Cr_angles.csv", delimiter=',')#grad
+Monchr_ang = np.loadtxt(SKIF_path + TablesPath + "Cr_angles.csv", delimiter=',')#grad
 #print(Monchr_ang)
 #%%
-Darvin_curve_diamond = np.loadtxt(path + "/1_1/TechReports/inter1/tabl/Darvin_curve_diamond.csv", delimiter=',')#urad
+Darvin_curve_diamond = np.loadtxt(SKIF_path + TablesPath + "Darvin_curve_diamond.csv", delimiter=',')#urad
 print(Darvin_curve_diamond)
 #%%
-Darvin_curve_selicon = np.loadtxt(path + "/1_1/TechReports/inter1/tabl/Darvin_curve_selicon.csv", delimiter=',')#urad
+Darvin_curve_selicon = np.loadtxt(SKIF_path + TablesPath + "Darvin_curve_selicon.csv", delimiter=',')#urad
 print(Darvin_curve_selicon)
 #%%Save beam parameter to a file E, lambda, dE/E, RMS, Flux(ph/s), Flux(ph/s/0.1%bw)
 wfr = [wfr1, wfr2, wfr3, wfr4]
@@ -198,7 +201,7 @@ for (fld, n, bwth) in zip(wfr, harm, dE_E):
     arI = arI/E/1e-3 #ph/s/eV
     TotF = np.sum(arI)*bwth*fld.avgPhotEn
     HARM.append([int(n), fld.avgPhotEn,  h*speed_of_light*1e9/fld.avgPhotEn, TotF, F])
-np.savetxt(path + "/1_1/TechReports/inter1/tabl" + "/ph_beam_par_after_cr.csv", 
+np.savetxt(SKIF_path + TablesPath +  "ph_beam_par_after_cr.csv", 
            HARM, fmt='%10.d,%10.0f,%10.4f,%.2e,%.2e', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
 #%%
 

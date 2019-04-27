@@ -9,8 +9,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from srwlib import *
 from uti_plot import *
-#import SKIF_lib as skf
+import SKIF_lib as skf
 import os
+import platform
 
 speed_of_light = 299792458 #[m/s]
 h_bar = 6.582119514e-16 #[eV*s]
@@ -27,6 +28,25 @@ def get_SKIF_directory():
         path = path[:-12]
     print('Your project name is ' + path + '\n', 'edit the skf.get_SKIF_directory if it is needed')
     return path
+
+def path_in_project(path, your_sys=None):
+    if your_sys is None:
+        if platform.system() == 'Linux':# or your_sys is 'Linux':
+            s = path.replace('\\', '/')
+        if platform.system() == 'Window':# or your_sys is 'Window':
+            s = path.replace('/', '\\')
+    
+    elif your_sys is not None:
+        if your_sys == 'Linux':# or your_sys is 'Linux':
+            s = path.replace('\\', '/')
+        if your_sys == 'Window':# or your_sys is 'Window':
+            s = path.replace('/', '\\')
+    else:
+        print('male sure you are using right system, not Mac OS :).' 
+             + 'Change this function wisely')
+    
+    return s
+    
 
 def calc_bandwidth(wfr, units):
     '''

@@ -30,7 +30,13 @@ e_ = 1.60218e-19 #elementary charge
 distance = 20.
 a = 10
 #**********************Input Parameters:
-wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data sub-folder name
+SKIF_path = skf.get_SKIF_directory() #get SKIF project root directory
+TablesPath = skf.path_in_project('/1_1/TechReports/tabl/')#, your_sys='Mac OC')
+FigPath = skf.path_in_project('/1_1/TechReports/pic/')
+wfrPath = skf.path_in_project('/1_1/fields_1_1/')
+Diamond_T_path = skf.path_in_project('/crystals_data/diamond_T/')
+
+wfrPathName = SKIF_path + '/1_1/fields_1_1/' #example data sub-folder name
 spec1FileName = 'wfr_spec1_1_4.wfr' #for spec1
 spec2FileName = 'wfr_spec2_1_4.wfr' #for spec2
 wfr2FileName = 'wfr_harm1.wfr' #for harm2
@@ -97,18 +103,16 @@ rms_x, rms_y = skf.calc_bandwidth(wfr1, units='urad')
 
 #%%
             ######### Intensity #######
-filepath='/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/pic'
-skf.skf_wfr_subplot_XY(wfr1, fourth_plot=0, save_fig=False, file_path=filepath, figure_name='11_harm_befoure_optics.pdf')
-#skf.skf_wfr_subplot_XY(wfr2, fourth_plot=0, save_fig=True, file_path=filepath, figure_name='13_harm_befoure_optics.pdf', show=False)
-#skf.skf_wfr_subplot_XY(wfr3, fourth_plot=0, save_fig=True, file_path=filepath, figure_name='17_harm_befoure_optics.pdf', show=False)
-#skf.skf_wfr_subplot_XY(wfr4, fourth_plot=0, save_fig=True, file_path=filepath, figure_name='23_harm_befoure_optics.pdf', show=False)
+skf.skf_wfr_subplot_XY(wfr1, fourth_plot=0, save_fig=False, file_path=SKIF_path + FigPath, figure_name='11_harm_befoure_optics.pdf')
+skf.skf_wfr_subplot_XY(wfr2, fourth_plot=0, save_fig=True, file_path=SKIF_path + FigPath, figure_name='13_harm_befoure_optics.pdf', show=False)
+skf.skf_wfr_subplot_XY(wfr3, fourth_plot=0, save_fig=True, file_path=SKIF_path + FigPath, figure_name='17_harm_befoure_optics.pdf', show=False)
+skf.skf_wfr_subplot_XY(wfr4, fourth_plot=0, save_fig=True, file_path=SKIF_path + FigPath, figure_name='23_harm_befoure_optics.pdf', show=False)
 #%% 
     
 ######### Power density ###########
             
 skf.skf_power_subplot_XY(stkP, wfr=spec2, units='mm')
-#plt.savefig('/home/andrei/Documents/9_term/diplom/beamlines/1_1/power.png', dpi=350)#, bbox_inches='tight')
-plt.savefig('/home/andrei/Documents/diploma/TexPresent/pic/power_dens.pdf')#, bbox_inches='tight')
+plt.savefig(SKIF_path + FigPath + 'power_dens.pdf')#, bbox_inches='tight')
 #%%
 
 
