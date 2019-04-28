@@ -5,11 +5,11 @@ Created on Tue Apr  9 14:29:45 2019
 """
 
 #############################################################################
-#Beamline 1-1 $$ insertion device
+#Beamline 1-2 $$ insertion device
 #Create a undulator magnetic structure. Calculate and save two spectra. Calculate the power density distribution.
 #v0.2
 
-#harmonic numbers 11-th, 13-th, 17-th and 23-th
+#harmonic numbers 5-th, 7-th, 9-th and 13-th
 #############################################################################
 
 from __future__ import print_function #Python 2.7 compatibility
@@ -23,8 +23,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import SKIF_lib as skf
 
-print('SKIF 1-1 beamline')
-print('Create an undulator for 1-1 station.')
+print('SKIF 1-2 beamline')
+print('Create an undulator for 1-2 station.')
+station = '1_2'
 
 speed_of_light = 299792458 #[m/s]
 h_bar = 6.582119514e-16 #[eV*s]
@@ -32,36 +33,31 @@ gamma = 3./0.51099890221e-03 #relative energy E_electron/m_e [GeV/Gev]
 e_ = 1.60218e-19 #elementary charge
 
 #harmonics number
-harm1 = 11
-harm2 = 13
-harm3 = 17
-harm4 = 23
+harm1 = 5
+harm2 = 7
+harm3 = 9
+harm4 = 13
 
 #undulator parameters
-Length = 2.3 # [m]
-undper = 0.018 # [m]
+Length = 2 # [m]
+undper = 0.0156 # [m]
 numper = 128
-magf = 1.36 # [T]
+magf = 1.06 # [T]
+
 
 #**********************Output files
-PathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data sub-folder name
-FileName = 'undulator_traj.trj' #file name for output electrom traj data
-
-wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data sub-folder name
-wfr1FileName = 'wfr_harm1.wfr' #for harm1
-wfr2FileName = 'wfr_harm2.wfr' #for harm2
-wfr3FileName = 'wfr_harm3.wfr' #for harm3
-wfr4FileName = 'wfr_harm4.wfr' #for harm4
-stkPFileName = 'harm5.wfr'#for power dens
- 
-
+SKIF_path = skf.get_SKIF_directory() #get SKIF project root directory
+TablesPath = skf.path_in_project('/' + station + '/TechReports/tabl/')#, your_sys='Mac OC')
+FigPath = skf.path_in_project('/' + station + '/TechReports/pic/')
+wfrPath = skf.path_in_project('/' + station + '/fields_' + station + '/')
+Diamond_T_path = skf.path_in_project('/' + station + '/crystals_data_' + station + '/diamond_T/')
 #**********************Output files
-PathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data folder name
+PathName = SKIF_path + wfrPath#example data sub-folder name
 FileName = 'undulator_traj.trj' #file name for output electrom traj data
 
-wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data folder name
-spec1FileName = 'wfr_spec1_1_4.wfr' #for spec1
-spec2FileName = 'wfr_spec2_1_4.wfr' #for spec2
+wfrPathName = SKIF_path + wfrPath #example data sub-folder name
+spec1FileName = 'wfr_spec1_1_2.wfr' #for spec1
+spec2FileName = 'wfr_spec2_1_2.wfr' #for spec2
 stkPFileName = 'stkP.wfr'#for power density
 
 wfrFileName = [spec1FileName, spec2FileName]#, stkPFileName]

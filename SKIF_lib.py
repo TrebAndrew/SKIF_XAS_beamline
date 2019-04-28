@@ -488,7 +488,7 @@ def skf_power_subplot_XY(stkP, wfr=None,save_fig=False, figure_name=None, units=
     plt.xlim(0)
     plt.xticks(fontsize=18)
     plt.yticks(fontsize=18)
-    a = plt.text(np.max(Z)*0.15, A*stkP.mesh.yFin*0.8, r'$W_m = {} [W/mm^2]$'.format(round(np.max(stkP.arS),1)), fontsize=24)
+    a = plt.text(np.max(Z)*0.15, A*stkP.mesh.yFin*0.8, r'$W_m = {} [W/mm^2]$'.format(round(np.max(stkP.arS))), fontsize=24)
     #########
     if wfr is not None:
         plt.subplot(224) 
@@ -496,7 +496,8 @@ def skf_power_subplot_XY(stkP, wfr=None,save_fig=False, figure_name=None, units=
         skf.skf_plot(E, spec, elec_fld_units='ph/s/mm^2/0.1%bw', scale_x = 1000)
         plt.xticks(fontsize=18)
         plt.yticks(fontsize=18)  
-    print('max power density on axis = ', round(np.max(stkP.arS),1), '[W/mm^2]')
+    
+    print('max power density on axis = ', round(np.max(stkP.arS), 1), '[W/mm^2]')
 
     if save_fig is True:
         plt.savefig(path_name + figure_name, dpi=150)#, bbox_inches='tight')

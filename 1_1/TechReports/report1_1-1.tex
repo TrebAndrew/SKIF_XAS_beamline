@@ -161,7 +161,7 @@
 	\centering  
 	\begin{minipage}{0.49\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{pic/bragg_R.pdf}
+		\includegraphics[width=\textwidth]{pic/Diamond_bragg_R.pdf}
 		\caption{}
 		\label{fig:bragg_R}
 	\end{minipage}\hfill
@@ -200,26 +200,31 @@
 \textbf{Пустые промежутки между кристаллами:} $1m$\\
 Тепловые нагрузки см. на рис.~\ref{fig:absorb_spec}\\
 Ниже приведены значения поперечных сечений пучка, значения проекций, а также эффективные толщины кристаллов алмазных монохроматоров\\
-11 harmonic  $angle =  -77.98 [deg]$ at energy $14461.0$ eV\\ 
-$\sigma_x =  0.11 [mm]$\\ 
-$\sigma_y =  0.079 [mm]$\\ 
-$proj_x  =  0.527 [mm]$\\ 
-$Cr_{effective}  =  480.0 [\mu m]$\\
-13 harmonic  $angle =  -79.85 [deg]$ at energy $17091.0$ eV\\ 
-$\sigma_x =  0.11 [mm]$\\ 
-$\sigma_y =  0.08 [mm]$\\ 
-$proj_x  =  0.622 [mm]$\\ 
-$Cr_{effective}  =  568.0 [\mu m]$\\
-17 harmonic  $angle =  -82.26 [deg]$ at energy $22350.0$ eV\\ 
-$\sigma_x =  0.108 [mm]$\\ 
-$\sigma_y =  0.084 [mm]$\\ 
-$proj_x  =  0.8 [mm]$\\ 
-$Cr_{effective}  =  742.0 [\mu m]$\\
-23 harmonic  $angle =  -84.28 [deg]$ at energy $30238.0$ eV\\ 
-$\sigma_x =  0.109 [mm]$\\ 
-$\sigma_y =  0.095 [mm]$\\ 
-$proj_x  =  1.096 [mm]$\\ 
-$Cr_{effective}  =  1004.0 [\mu m]$\\
+
+\DTLloaddb
+[
+noheader,
+keys={},
+headers={
+	\shortstack{$n_{harm}$},
+	\shortstack{$\theta_{cr}, grad$},
+	\shortstack{$d_{eff}, \mu m$},
+	\shortstack{$S_{proj}, mm$}}
+]
+{Cr_angles}{tabl/Cr_angles.csv}
+\begin{table}[h!]
+	\sisetup{
+		parse-numbers   = false,
+		table-number-alignment = right,
+		table-figures-integer = 4,
+		table-figures-decimal = 4,
+		input-decimal-markers = .5
+	}
+	\renewcommand*\dtlrealalign{S}
+	\caption{Номер гармоники, ориентация кристалла, эффективная толщина CCM кристалла, проекция пучка(горизонтальная)) }
+	\centering
+	\DTLdisplaydb{Cr_angles}
+\end{table}
 
 \subsection{Задача №5}
 \textit{Рассчитать сечение пучков, покидающих алмазные монохроматоры.}\\

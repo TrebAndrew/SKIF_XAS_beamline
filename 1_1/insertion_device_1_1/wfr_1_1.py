@@ -40,10 +40,15 @@ numper = 128
 magf = 1.36 # [T]
 
 #**********************Output files
-PathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data sub-folder name
+SKIF_path = skf.get_SKIF_directory() #get SKIF project root directory
+TablesPath = skf.path_in_project('/1_1/TechReports/tabl/')#, your_sys='Mac OC')
+FigPath = skf.path_in_project('/1_1/TechReports/pic/')
+wfrPath = skf.path_in_project('/1_1/fields_1_1/')
+
+PathName = SKIF_path + wfrPath #example data sub-folder name
 FileName = 'undulator_traj.trj' #file name for output electrom traj data
 
-wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data sub-folder name
+wfrPathName = SKIF_path + wfrPath #example data sub-folder name
 wfr1FileName = 'wfr_harm1.wfr' #for harm1
 wfr2FileName = 'wfr_harm2.wfr' #for harm2
 wfr3FileName = 'wfr_harm3.wfr' #for harm3

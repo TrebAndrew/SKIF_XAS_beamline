@@ -1,10 +1,10 @@
 #############################################################################
-#Beamline 1-1 $$ insertion device
+#Beamline 1-2 $$ insertion device
 #Create a undulator magnetic structure. Calculate and save wave fronts at desired harmonics. 
 #Calculate spectrum
 #v0.2
 
-#harmonic numbers 11-th, 13-th, 17-th and 23-th
+#harmonic numbers 5-th, 7-th, 9-th and 13-th
 #############################################################################
 
 from __future__ import print_function #Python 2.7 compatibility
@@ -18,8 +18,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import SKIF_lib as skf
 
-print('1-1 beamline')
-print('Create an undulator for 1-1 station.')
+print('1-2 beamline')
+print('Create an undulator for 1-2 station.')
+station = '1_2'
 
 speed_of_light = 299792458 #[m/s]
 h_bar = 6.582119514e-16 #[eV*s]
@@ -27,27 +28,33 @@ gamma = 3./0.51099890221e-03 #relative energy E_electron/m_e [GeV/Gev]
 e_ = 1.60218e-19 #elementary charge
 
 #harmonics number
-harm1 = 11
-harm2 = 13
-harm3 = 17
-harm4 = 23
+harm1 = 5
+harm2 = 7
+harm3 = 9
+harm4 = 13
 
 #undulator parameters
-Length = 2.3 # [m]
-undper = 0.018 # [m]
+Length = 2 # [m]
+undper = 0.0156 # [m]
 numper = 128
-magf = 1.36 # [T]
+magf = 1.06 # [T]
 
 #**********************Output files
-PathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data sub-folder name
+SKIF_path = skf.get_SKIF_directory() #get SKIF project root directory
+TablesPath = skf.path_in_project('/' + station + '/TechReports/tabl/')#, your_sys='Mac OC')
+FigPath = skf.path_in_project('/' + station + '/TechReports/pic/')
+wfrPath = skf.path_in_project('/' + station + '/fields_' + station + '/')
+Diamond_T_path = skf.path_in_project('/' + station + '/crystals_data_' + station + '/diamond_T/')
+
+PathName = SKIF_path + wfrPath #example data sub-folder name
 FileName = 'undulator_traj.trj' #file name for output electrom traj data
 
-wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data sub-folder name
+wfrPathName = SKIF_path + wfrPath #example data sub-folder name
 wfr1FileName = 'wfr_harm1.wfr' #for harm1
 wfr2FileName = 'wfr_harm2.wfr' #for harm2
 wfr3FileName = 'wfr_harm3.wfr' #for harm3
 wfr4FileName = 'wfr_harm4.wfr' #for harm4
-stkPFileName = 'harm5.wfr'#for power dens
+stkPFileName = 'stkP.wfr'#for power dens
 
 wfrFileName = [wfr1FileName, wfr2FileName, wfr3FileName, wfr4FileName]#, stkPFileName]
 
@@ -60,10 +67,10 @@ harmB1.B = magf #magnetic field amplitude [T]
 und1 = SRWLMagFldU([harmB1])
 und1.per = undper  #period length [m]
 und1.nPer = numper #number of periods (will be rounded to integer)
-
+#%%
 K = 0.9336 * magf * undper * 100 #undulator parameter
 E1 = round(4*np.pi*speed_of_light*h_bar*gamma**2/(undper*(1 + K**2/2)), 2) #energy of the first harmonic
-
+#%%
 print("K = ", K)#, "\n", 'Delta_theta_{} = '.format(11), Delta_theta)
 
 for i in range(1, 25, 2):
@@ -127,7 +134,7 @@ sampFactNxNyForProp = 0 #sampling factor for adjusting nx, ny (effective if > 0)
 arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, sampFactNxNyForProp]
 #%%
 
-mesh_wfr = 100
+mesh_wfr = 150
 distance = 25. #[m]
 a = 0.001 #[m]
 
@@ -204,7 +211,7 @@ for (wfr, fname) in zip(wfrContainer, wfrFileName):
     afile.close()
 
 #%%
-'''
+
 numPer = 40 #Number of ID Periods (without counting for terminations)
 xcID = 0 #Transverse Coordinates of ID Center [m]
 ycID = 0
@@ -252,7 +259,7 @@ afile = open(PathName + FileName, 'wb')
 pickle.dump(partTraj, afile)
 afile.close()
 
-'''
+
 
 
 
