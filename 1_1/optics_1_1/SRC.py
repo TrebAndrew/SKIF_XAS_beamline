@@ -103,16 +103,16 @@ rms_x, rms_y = skf.calc_bandwidth(wfr1, units='urad')
 
 #%%
             ######### Intensity #######
-skf.skf_wfr_subplot_XY(wfr1, fourth_plot=0, save_fig=False, file_path=SKIF_path + FigPath, figure_name='11_harm_befoure_optics.pdf')
-skf.skf_wfr_subplot_XY(wfr2, fourth_plot=0, save_fig=True, file_path=SKIF_path + FigPath, figure_name='13_harm_befoure_optics.pdf', show=False)
-skf.skf_wfr_subplot_XY(wfr3, fourth_plot=0, save_fig=True, file_path=SKIF_path + FigPath, figure_name='17_harm_befoure_optics.pdf', show=False)
-skf.skf_wfr_subplot_XY(wfr4, fourth_plot=0, save_fig=True, file_path=SKIF_path + FigPath, figure_name='23_harm_befoure_optics.pdf', show=False)
+#skf.skf_wfr_subplot_XY(wfr1, fourth_plot=0, save_fig=False, file_path=SKIF_path + FigPath, figure_name='11_harm_befoure_optics.pdf')
+#skf.skf_wfr_subplot_XY(wfr2, fourth_plot=0, save_fig=True, file_path=SKIF_path + FigPath, figure_name='13_harm_befoure_optics.pdf', show=False)
+#skf.skf_wfr_subplot_XY(wfr3, fourth_plot=0, save_fig=True, file_path=SKIF_path + FigPath, figure_name='17_harm_befoure_optics.pdf', show=False)
+#skf.skf_wfr_subplot_XY(wfr4, fourth_plot=0, save_fig=True, file_path=SKIF_path + FigPath, figure_name='23_harm_befoure_optics.pdf', show=False)
 #%% 
     
 ######### Power density ###########
             
 skf.skf_power_subplot_XY(stkP, wfr=spec2, units='mm')
-plt.savefig(SKIF_path + FigPath + 'power_dens.pdf')#, bbox_inches='tight')
+#plt.savefig(SKIF_path + FigPath + 'power_dens.pdf')#, bbox_inches='tight')
 #%%
 
 
