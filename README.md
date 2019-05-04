@@ -2,7 +2,7 @@ SKIF_beamlines
 
 --- Install Spyder on your Linux, Window or Mac OSX machine https://docs.spyder-ide.org/installation.html
 
---- Install SRW code on your computer. Follow the instruction on the GitHub page https://github.com/ochubar/SRW . There are separate instruction for Window, Linux and MAc OSX systems.
+--- Install SRW code on your computer. Follow the instruction on the GitHub page https://github.com/ochubar/SRW . There are separate instructions for Window, Linux and MAc OSX systems.
 
 --- As soon as you install the code and able to run Chubar's SRW examples (try it!) you are ready to adjust the environment for SKIF lib.
 
