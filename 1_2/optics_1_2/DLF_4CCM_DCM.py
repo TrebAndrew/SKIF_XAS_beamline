@@ -54,11 +54,12 @@ Diamond_T_path = skf.path_in_project('/' + station + '/crystals_data_' + station
 wfrPathName = SKIF_path + '/' + station + '/fields_' + station + '/' #example data sub-folder name
 spec1FileName = 'wfr_spec1_' + station + '.wfr' #for spec1
 spec2FileName = 'wfr_spec2_' + station + '.wfr' #for spec2
-wfr1FileName = 'wfr_harm1.wfr' #for harm2
-wfr2FileName = 'wfr_harm2.wfr' #for harm3
-wfr3FileName = 'wfr_harm3.wfr' #for harm4
-wfr4FileName = 'wfr_harm4.wfr' #for harm5
+wfr1FileName = 'wfr_harm1.wfr' #for harm1
+wfr2FileName = 'wfr_harm2.wfr' #for harm2
+wfr3FileName = 'wfr_harm3.wfr' #for harm3
+wfr4FileName = 'wfr_harm4.wfr' #for harm4
 stkPFileName = 'stkP.wfr'#for power density
+
 K = 0.9336 * magf * undper * 100 #undulator parameter
 E1 = round(4*np.pi*speed_of_light*h_bar*gamma**2/(undper*(1 + K**2/2)), 2) #energy of the first harmonic
 for i in range(1, 25, 2):
@@ -101,11 +102,12 @@ absorb = False
 print('finishing extracting')
 A = 1e6/wfr1.mesh.zStart #scaling facor for the transferring xy distribution from [m] to [rad] 
 
+save=False
 filepath= SKIF_path + FigPath
-skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name=h1 +'_harm_before_crystal.pdf', fourth_plot=5, show=False, file_path=filepath) #function to draw xy distribution
-skf.skf_wfr_subplot_XY(wfr2, save_fig=True, figure_name=h2 +'_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
-skf.skf_wfr_subplot_XY(wfr3, save_fig=True, figure_name=h3 +'_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
-skf.skf_wfr_subplot_XY(wfr4, save_fig=True, figure_name=h4 +'_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
+skf.skf_wfr_subplot_XY(wfr1, save_fig=save, figure_name=h1 +'_harm_before_crystal.pdf', fourth_plot=5, show=False, file_path=filepath) #function to draw xy distribution
+skf.skf_wfr_subplot_XY(wfr2, save_fig=save, figure_name=h2 +'_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
+skf.skf_wfr_subplot_XY(wfr3, save_fig=save, figure_name=h3 +'_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
+skf.skf_wfr_subplot_XY(wfr4, save_fig=save, figure_name=h4 +'_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
 
 #%%
 wfr = [wfr1, wfr2, wfr3, wfr4]
@@ -146,7 +148,8 @@ psihbrC400 = psihrC400; psihbiC400 = psihiC400 #Real and imaginary parts of -h-t
 thickCryst = 100e-06 #0.5e-03 #Thickness of each crystal [m]
 angAsCryst = 0 #Asymmetry angle of each crystal [rad]
 
-#1st Crystal:
+#1st Crystal: (for harm 11)
+
 distance = wfr1.mesh.zStart 
 opCr1 = SRWLOptCryst(_d_sp=dSpC400, _psi0r=psi0rC400,
                      _psi0i=psi0iC400, _psi_hr=psihrC400, _psi_hi=psihiC400, _psi_hbr=psihbrC400, _psi_hbi=psihbiC400,
@@ -156,75 +159,48 @@ opCr1 = SRWLOptCryst(_d_sp=dSpC400, _psi0r=psi0rC400,
 orientDataCr1 = opCr1.find_orient(wfr1.avgPhotEn)
 orientCr1 = orientDataCr1[0] #1st crystal orientation
 tCr1 = orientCr1[0]; nCr1 = orientCr1[2] # Tangential and Normal vectors to crystal surface
-print('   1st crystal orientation:');# print(' t=', tCr1,'\n', 's=', orientCr1[1],'\n', 'n=', nCr1,'\n')
-#Set crystal orientation:
 opCr1.set_orient(nCr1[0], nCr1[1], nCr1[2], tCr1[0], tCr1[1])
-angle1 = round(np.arctan(nCr1[1]/nCr1[2])*180/np.pi,8)
-#sigma_x_11,sigma_y_11 = skf.calc_bandwidth(wfr1, units='urad')
-#print('   angle_11 = ', round(angle1,2), r'[deg]','\n', 
-#      'sigma_x_11 = ', round(sigma_x_11*(distance+1)*1e-3,3), r'[mm]','\n', 
-#      'beam_proj  = ', round((sigma_x_11*(distance+1)*1e-3 / np.cos(angle1*np.pi/180)),3), r'[mm]','\n')
-
 orientOutFrCr1 = orientDataCr1[1] #Orientation (coordinates of base vectors) of the output beam frame 
 rxCr1 = orientOutFrCr1[0]; ryCr1 = orientOutFrCr1[1]; rzCr1 = orientOutFrCr1[2] #Horizontal, Vertical and Longitudinal base vectors of the output beam frame
-#print('   1st crystal output beam frame:'); print('   ex=', rxCr1, 'ey=', ryCr1, 'ez=', rzCr1)
 TrM = [rxCr1, ryCr1, rzCr1] #Input/Output beam transformation matrix (for debugging)
-#print('   Beam frame transformation matrix (from the begining of opt. scheme to output of current element):')
-#uti_math.matr_print(TrM)
+angle1 = round(np.arctan(nCr1[1]/nCr1[2])*180/np.pi,8)
 
-#2st Crystal:
+#%%
+#2st Crystal: (for harm 13)
+
 opCr2 = SRWLOptCryst(_d_sp=dSpC400, _psi0r=psi0rC400,
                      _psi0i=psi0iC400, _psi_hr=psihrC400, _psi_hi=psihiC400, _psi_hbr=psihbrC400, _psi_hbi=psihbiC400,
                      _tc=thickCryst, _ang_as=angAsCryst, _uc=1)
 #Find appropriate orientation of the 1st crystal and the corresponding output beam frame (in the incident beam frame):
-
 orientDataCr2 = opCr2.find_orient(wfr3.avgPhotEn)
-orientCr2 = orientDataCr2[0] #1st crystal orientation
+orientCr2 = orientDataCr2[0] #2st crystal orientation
 tCr2 = orientCr2[0]; nCr2 = orientCr2[2] # Tangential and Normal vectors to crystal surface
-print('   2st crystal orientation:');# print(' t=', tCr2,'\n', 's=', orientCr2[1],'\n', 'n=', nCr2,'\n')
 #Set crystal orientation:
 opCr2.set_orient(nCr2[0], nCr2[1], nCr2[2], tCr2[0], tCr2[1])
-
-angle2 = round(np.arctan(nCr2[1]/nCr2[2])*180/np.pi,8)
-#sigma_x_13,sigma_y_13 = skf.calc_bandwidth(wfr1)
-#print('   angle_13 = ', round(angle2,1), r'[deg]','\n', 
-#      'sigma_x_13 = ', round(sigma_x_13*(distance+2)*1e-3,3), r'[mm]','\n', 
-#      'beam_proj  = ', round(abs(sigma_x_13*(distance+2)*1e-3/np.cos(angle2*np.pi/180)),3), r'[mm]','\n')
-
 orientOutFrCr2 = orientDataCr2[1] #Orientation (coordinates of base vectors) of the output beam frame 
 rxCr2 = orientOutFrCr2[0]; ryCr2 = orientOutFrCr2[1]; rzCr2 = orientOutFrCr2[2] #Horizontal, Vertical and Longitudinal base vectors of the output beam frame
-#print('   1st crystal output beam frame:'); print('   ex=', rxCr1, 'ey=', ryCr1, 'ez=', rzCr1)
 TrM = [rxCr2, ryCr2, rzCr2] #Input/Output beam transformation matrix (for debugging)
-#print('   Beam frame transformation matrix (from the begining of opt. scheme to output of current element):')
-#uti_math.matr_print(TrM)
-
-#4st Crystal:
+angle2 = round(np.arctan(nCr2[1]/nCr2[2])*180/np.pi,8)
+#%%
+#3st Crystal: (for harm 23)
 
 opCr3 = SRWLOptCryst(_d_sp=dSpC400, _psi0r=psi0rC400,
                      _psi0i=psi0iC400, _psi_hr=psihrC400, _psi_hi=psihiC400, _psi_hbr=psihbrC400, _psi_hbi=psihbiC400,
                      _tc=thickCryst, _ang_as=angAsCryst, _uc=1)
 #Find appropriate orientation of the 1st crystal and the corresponding output beam frame (in the incident beam frame):
-
-orientDataCr4 = opCr3.find_orient(wfr4.avgPhotEn)
-orientCr4 = orientDataCr4[0] #1st crystal orientation
-tCr4 = orientCr4[0]; nCr4 = orientCr4[2] # Tangential and Normal vectors to crystal surface
-print('   4st crystal orientation:');# print(' t=', tCr4,'\n', 's=', orientCr4[1],'\n', 'n=', nCr4,'\n')
+orientDataCr3 = opCr3.find_orient(wfr4.avgPhotEn)
+orientCr3 = orientDataCr3[0] #1st crystal orientation
+tCr3 = orientCr3[0]; nCr3 = orientCr3[2] # Tangential and Normal vectors to crystal surface
+#print('   3st crystal orientation:');# print(' t=', tCr4,'\n', 's=', orientCr4[1],'\n', 'n=', nCr4,'\n')
 #Set crystal orientation:
-opCr3.set_orient(nCr4[0], nCr4[1], nCr4[2], tCr4[0], tCr4[1])
-angle3 = round(np.arctan(nCr4[1]/nCr4[2])*180/np.pi,8)
-#sigma_x_23, sigma_y_23 = skf.calc_bandwidth(wfr3)
-#print('   angle_23 = ', round(angle4,1), r'[deg]','\n', 
-#      'sigma_x_23 = ', round(sigma_x_17*(distance+4)*1e-3,3), r'[mm]','\n', 
-#      'beam_proj =', round(abs(sigma_x_23*(distance+4)*1e-3/np.cos(angle4*np.pi/180)),3), r'[mm]','\n')
+opCr3.set_orient(nCr3[0], nCr3[1], nCr3[2], tCr3[0], tCr3[1])
+orientOutFrCr3 = orientDataCr3[1] #Orientation (coordinates of base vectors) of the output beam frame 
+rxCr3 = orientOutFrCr3[0]; ryCr3 = orientOutFrCr3[1]; rzCr3 = orientOutFrCr3[2] #Horizontal, Vertical and Longitudinal base vectors of the output beam frame
+TrM = [rxCr3, ryCr3, rzCr3] #Input/Output beam transformation matrix (for debugging)
+angle3 = round(np.arctan(nCr3[1]/nCr3[2])*180/np.pi,8)
 
-orientOutFrCr4 = orientDataCr4[1] #Orientation (coordinates of base vectors) of the output beam frame 
-rxCr4 = orientOutFrCr4[0]; ryCr4 = orientOutFrCr4[1]; rzCr4 = orientOutFrCr4[2] #Horizontal, Vertical and Longitudinal base vectors of the output beam frame
-#print('   1st crystal output beam frame:'); print('   ex=', rxCr1, 'ey=', ryCr1, 'ez=', rzCr1)
-TrM = [rxCr4, ryCr4, rzCr4] #Input/Output beam transformation matrix (for debugging)
-#print('   Beam frame transformation matrix (from the begining of opt. scheme to output of current element):')
-#uti_math.matr_print(TrM)
 
-#%% Double Crystal Monochromator
+#%% Double Crystal Monochromator (for harm 17)
 ###
 #C(400) Crystal Constants:
 dSpC400 = 3.1355713563754857 #Crystal reflecting planes d-spacing for C(400) crystal
@@ -247,7 +223,7 @@ tCr1 = orientCr1[0]; nCr1 = orientCr1[2] # Tangential and Normal vectors to crys
 #print('   1st crystal orientation:'); print('   t=', tCr1, 's=', orientCr1[1], 'n=', nCr1)
 #Set crystal orientation:
 DCM_Cr1.set_orient(nCr1[0], nCr1[1], nCr1[2], tCr1[0], tCr1[1])
-angle3 = round(np.arctan(nCr1[1]/nCr1[2])*180/np.pi,8)
+angleDCM_Cr1 = round(np.arctan(nCr1[1]/nCr1[2])*180/np.pi,8)
 orientOutFrCr1 = orientDataCr1[1] #Orientation (coordinates of base vectors) of the output beam frame 
 rxCr1 = orientOutFrCr1[0]; ryCr1 = orientOutFrCr1[1]; rzCr1 = orientOutFrCr1[2] #Horizontal, Vertical and Longitudinal base vectors of the output beam frame
 #print('   1st crystal output beam frame:'); print('   ex=', rxCr1, 'ey=', ryCr1, 'ez=', rzCr1)
@@ -279,8 +255,8 @@ uti_math.matr_print(TrM)
 #***************** Optical Elements and Propagation Parameters
 distance = wfr1.mesh.zStart 
 sigma_x_mm, sigma_y_mm   = skf.calc_bandwidth(wfr1, units='mm')
-slit_x = 2.5*sigma_x_mm#4*sigma_x*distance*1e-3 # mm
-slit_y = 2.5*sigma_y_mm
+slit_x = 2*sigma_x_mm#4*sigma_x*distance*1e-3 # mm
+slit_y = 2*sigma_y_mm
 
 #Drift_AFTER_Cr   = SRWLOptD(1.) #Drift from diamond filter
 Drift_BEFORE_Cr1 = SRWLOptD(1.) #Drift from the first diamond(111) CCM for 5 harmonic
@@ -352,34 +328,41 @@ srwl.PropagElecField(wfr4, optBL4)
 print('done; lasted', round(time.time() - t0), 's')
 #%%
 wfrContainer = [wfr1, wfr2, wfr3, wfr4]
-angleContainer = [angle1, angle2, angle3, angle4]
+angleContainer = [angle1, angleDCM_Cr1, angle2, angle3]
+EffCrThick = []
+projContainer = []
 harmContainer = [harm1, harm2, harm3, harm4]
 
-#%%
 for (wfr, angle, harm) in zip(wfrContainer, angleContainer, harmContainer):
     sigma_x, sigma_y = skf.calc_bandwidth(wfr, units='mm')
     print(harm, 'harmonic ','$angle = ', round(angle, 2), r'[deg]$', 'at energy $' + str(wfr.mesh.eStart) + '$ eV' + '\\\\', '\n', 
-      '$\sigma_x = ', round(sigma_x, 3), r'[mm]$\\','\n',
-      '$\sigma_y = ', round(sigma_y, 3), r'[mm]$\\','\n',
-      '$proj_x  = ', round((sigma_x / np.cos(angle*np.pi/180)),3), r'[mm]$\\','\n',
-      '$Cr_{effective}  = ', round((100 / np.cos(angle*np.pi/180))), r'[\mu m]$\\',)
-#%%Save angles to a file
-wfr =  [wfr1, wfr2, wfr3, wfr4]
-harm = [harm1, harm2, harm3, harm4]
-L_eff = 
+    '$Cr_{effective}  = ', round((100 / np.cos(angle*np.pi/180))), r'[\mu m]$\\',)
+    '$proj_x  = ', round((sigma_x / np.cos(angle*np.pi/180)),3), r'[mm]$\\','\n',
+    EffCrThick.append(round((100 / np.cos(angle*np.pi/180))))
+    projContainer.append(round((sigma_x / np.cos(angle*np.pi/180)),3))
+
+print(EffCrThick)
+print(projContainer)
+#angleContainer.append(angleDCM_Cr1)
+#harmContainer.append(harm3)
+EffCrThick[1] = 0
+#Save angles to a file
+#wfr =  [wfr1, wfr2, wfr3, wfr4]
+#harm = [harm1, harm2, harm3, harm4]
 HARM = []
     
-for (angle, n) in zip(angleContainer, harm): 
-    HARM.append([int(n), angle])
-np.savetxt(SKIF_path + TablesPath + 'Cr_angles.csv', HARM, fmt='%10.d,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
+for (angle, n, thick, proj) in zip(angleContainer, harmContainer, EffCrThick, projContainer): 
+    HARM.append([int(n), angle, thick, proj])
+np.savetxt(SKIF_path + TablesPath + 'Cr_angles.csv', HARM, fmt='%10.d,%10.3f,%10.d,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
 
 
 #%% Drawing part of the code (after propogation)
+save=False
 filepath = SKIF_path + FigPath
-skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name=h1+'_harm_after_crystal.pdf', fourth_plot=5, show=False, file_path=filepath)
-skf.skf_wfr_subplot_XY(wfr2, save_fig=True, figure_name=h2+'_harm_after_crystal.pdf', fourth_plot=1, show=False, file_path=filepath)
-skf.skf_wfr_subplot_XY(wfr3, save_fig=True, figure_name=h3+'_harm_after_crystal.pdf', fourth_plot=1, show=False, file_path=filepath)
-skf.skf_wfr_subplot_XY(wfr4, save_fig=True, figure_name=h4+'_harm_after_crystal.pdf', fourth_plot=1, show=False, file_path=filepath)
+skf.skf_wfr_subplot_XY(wfr1, save_fig=save, figure_name=h1+'_harm_after_crystal.pdf', fourth_plot=5, show=False, file_path=filepath)
+skf.skf_wfr_subplot_XY(wfr2, save_fig=save, figure_name=h2+'_harm_after_crystal.pdf', fourth_plot=1, show=False, file_path=filepath)
+skf.skf_wfr_subplot_XY(wfr3, save_fig=save, figure_name=h3+'_harm_after_crystal.pdf', fourth_plot=1, show=False, file_path=filepath)
+skf.skf_wfr_subplot_XY(wfr4, save_fig=save, figure_name=h4+'_harm_after_crystal.pdf', fourth_plot=1, show=False, file_path=filepath)
 #%%
 wfrPathName = SKIF_path + '/' + station + '/fields_' + station + '/' #example data sub-folder name
 wfr1FileName = 'wfr_harm1_after_Cr.wfr' #for harm2

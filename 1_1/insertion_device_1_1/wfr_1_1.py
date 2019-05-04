@@ -21,6 +21,7 @@ import SKIF_lib as skf
 
 print('1-1 beamline')
 print('Create an undulator for 1-1 station.')
+station = '1_1'
 
 speed_of_light = 299792458 #[m/s]
 h_bar = 6.582119514e-16 #[eV*s]
@@ -41,18 +42,18 @@ magf = 1.36 # [T]
 
 #**********************Output files
 SKIF_path = skf.get_SKIF_directory() #get SKIF project root directory
-TablesPath = skf.path_in_project('/1_1/TechReports/tabl/')#, your_sys='Mac OC')
-FigPath = skf.path_in_project('/1_1/TechReports/pic/')
-wfrPath = skf.path_in_project('/1_1/fields_1_1/')
+TablesPath = skf.path_in_project('/' + station + '/TechReports/tabl/')#, your_sys='Mac OC')
+FigPath = skf.path_in_project('/' + station + '/TechReports/pic/')
+wfrPath = skf.path_in_project('/' + station + '/fields_' + station + '/')
+Diamond_T_path = skf.path_in_project('/' + station + '/crystals_data_' + station + '/diamond_T/')
 
-PathName = SKIF_path + wfrPath #example data sub-folder name
-FileName = 'undulator_traj.trj' #file name for output electrom traj data
-
-wfrPathName = SKIF_path + wfrPath #example data sub-folder name
-wfr1FileName = 'wfr_harm1.wfr' #for harm1
-wfr2FileName = 'wfr_harm2.wfr' #for harm2
-wfr3FileName = 'wfr_harm3.wfr' #for harm3
-wfr4FileName = 'wfr_harm4.wfr' #for harm4
+wfrPathName = SKIF_path + '/' + station + '/fields_' + station + '/' #example data sub-folder name
+spec1FileName = 'wfr_spec1_' + station + '.wfr' #for spec1
+spec2FileName = 'wfr_spec2_' + station + '.wfr' #for spec2
+wfr1FileName = 'wfr_harm1.wfr' #for harm 11 for CCD
+wfr2FileName = 'wfr_harm2.wfr' #for harm 13 for CCD
+wfr3FileName = 'wfr_harm3.wfr' #for harm 17 for DCM
+wfr4FileName = 'wfr_harm4.wfr' #for harm 23 for CCD
 stkPFileName = 'stkP.wfr'#for power density
 
 wfrFileName = [wfr1FileName, wfr2FileName, wfr3FileName, wfr4FileName]#, stkPFileName]

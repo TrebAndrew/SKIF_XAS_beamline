@@ -19,6 +19,7 @@ import SKIF_lib as skf #special labrary for the SKIF project. Add the directory 
 print('SKIF Extended Example for 1-1 # 3:')
 print('Extracts two electric fields from files. Plots intensity distributions and spectra.\n' 
       'Propagates electric field files through CCMs and the DCM')
+station = '1_1'
 
 speed_of_light = 299792458 #[m/s]
 h_bar = 6.582119514e-16 #[eV*s]
@@ -40,14 +41,14 @@ numper = 128
 magf = 1.36  
 #**********************Input Parameters:
 SKIF_path = skf.get_SKIF_directory() #get SKIF project root directory
-TablesPath = skf.path_in_project('/1_1/TechReports/tabl/')#, your_sys='Mac OC')
-FigPath = skf.path_in_project('/1_1/TechReports/pic/')
-wfrPath = skf.path_in_project('/1_1/fields_1_1/')
-Diamond_T_path = skf.path_in_project('/crystals_data/diamond_T/')
+TablesPath = skf.path_in_project('/' + station + '/TechReports/tabl/')#, your_sys='Mac OC')
+FigPath = skf.path_in_project('/' + station + '/TechReports/pic/')
+wfrPath = skf.path_in_project('/' + station + '/fields_' + station + '/')
+Diamond_T_path = skf.path_in_project('/' + station + '/crystals_data_' + station + '/diamond_T/')
 
-wfrPathName = SKIF_path + '/1_1/fields_1_1/' #example data sub-folder name
-spec1FileName = 'wfr_spec1_1_4.wfr' #for spec1
-spec2FileName = 'wfr_spec2_1_4.wfr' #for spec2
+wfrPathName = SKIF_path + '/' + station + '/fields_' + station + '/' #example data sub-folder name
+spec1FileName = 'wfr_spec1_' + station + '.wfr' #for spec1
+spec2FileName = 'wfr_spec2_' + station + '.wfr' #for spec2
 wfr1FileName = 'wfr_harm1.wfr' #for harm 11 for CCD
 wfr2FileName = 'wfr_harm2.wfr' #for harm 13 for CCD
 wfr3FileName = 'wfr_harm3.wfr' #for harm 17 for DCM
@@ -122,8 +123,8 @@ sigma_x, sigma_y = skf.calc_bandwidth(wfr4, units='urad') #calculates sigma fot 
 print('sigma_x_23 = ', round(sigma_x,3),'[urad] \t','sigma_y_23 = ', round(sigma_y,3),'[urad]')
 
 #%%
-#skf.skf_plot_spec(spec1) #function to draw spectrum
-#skf.skf_plot_spec(spec2) #function to draw spectrum
+skf.skf_plot_spec(spec1) #function to draw spectrum
+skf.skf_plot_spec(spec2) #function to draw spectrum
 #%%
 #path_name = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/TechReports/inter1/pic/'
 #figure_name = 'power_dens.pdf'
@@ -249,7 +250,7 @@ opCr3 = SRWLOptCryst(_d_sp=dSpC400, _psi0r=psi0rC400,
 orientDataCr3 = opCr3.find_orient(wfr4.avgPhotEn)
 orientCr3 = orientDataCr3[0] #1st crystal orientation
 tCr3 = orientCr3[0]; nCr3 = orientCr3[2] # Tangential and Normal vectors to crystal surface
-print('   3st crystal orientation:');# print(' t=', tCr4,'\n', 's=', orientCr4[1],'\n', 'n=', nCr4,'\n')
+#print('   3st crystal orientation:');# print(' t=', tCr4,'\n', 's=', orientCr4[1],'\n', 'n=', nCr4,'\n')
 #Set crystal orientation:
 opCr3.set_orient(nCr3[0], nCr3[1], nCr3[2], tCr3[0], tCr3[1])
 orientOutFrCr3 = orientDataCr3[1] #Orientation (coordinates of base vectors) of the output beam frame 
@@ -315,11 +316,11 @@ sigma_x_mm, sigma_y_mm   = skf.calc_bandwidth(wfr1, units='mm')
 slit_x = 2*sigma_x_mm#4*sigma_x*distance*1e-3 # mm
 slit_y = 2*sigma_y_mm
 
-Drift_AFTER_Cr   = SRWLOptD(1.) #Drift from diamond filter
-Drift_BEFORE_Cr1 = SRWLOptD(1.) #Drift from first diamond(111) CCM for 11 harmonic
-Drift_BEFORE_Cr2 = SRWLOptD(2.) #Drift from second diamond(111) CCM for 13 harmonic
-Drift_BEFORE_Cr3 = SRWLOptD(4.) #Drift from third diamond(111) CCM for 17 harmonic
-Drift_BEFORE_Cr4 = SRWLOptD(3.) #Drift from forth diamond(111) CCM for 23 harmonic
+#Drift_AFTER_Cr   = SRWLOptD(1.) #Drift before diamond filter
+Drift_BEFORE_Cr1 = SRWLOptD(1.) #Drift before first diamond(111) CCM for 11 harmonic
+Drift_BEFORE_Cr2 = SRWLOptD(2.) #Drift before second diamond(111) CCM for 13 harmonic
+Drift_BEFORE_Cr3 = SRWLOptD(4.) #Drift before silicon(111) DCM for 17 harmonic
+Drift_BEFORE_Cr4 = SRWLOptD(3.) #Drift before forth diamond(111) CCM for 23 harmonic
 
 SSA = SRWLOptA('r', 'a', 2*slit_x*1e-03, 2*slit_y*1e-03) #slit parameter
 Drift_AFTER_SLIT = SRWLOptD(1.) #Drift after the slit

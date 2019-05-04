@@ -15,6 +15,7 @@ import SKIF_lib as skf
 
 print('SKIF Extended Example for 1-1 # 2:')
 print('Extracts electric fields from the files. Plots intensity distributions and spectra.')
+station = '1_1'
 
 #harmonics number
 harm1 = 11
@@ -31,34 +32,20 @@ distance = 20.
 a = 10
 #**********************Input Parameters:
 SKIF_path = skf.get_SKIF_directory() #get SKIF project root directory
-TablesPath = skf.path_in_project('/1_1/TechReports/tabl/')#, your_sys='Mac OC')
-FigPath = skf.path_in_project('/1_1/TechReports/pic/')
-wfrPath = skf.path_in_project('/1_1/fields_1_1/')
-Diamond_T_path = skf.path_in_project('/crystals_data/diamond_T/')
+TablesPath = skf.path_in_project('/' + station + '/TechReports/tabl/')#, your_sys='Mac OC')
+FigPath = skf.path_in_project('/' + station + '/TechReports/pic/')
+wfrPath = skf.path_in_project('/' + station + '/fields_' + station + '/')
+Diamond_T_path = skf.path_in_project('/' + station + '/crystals_data_' + station + '/diamond_T/')
 
-wfrPathName = SKIF_path + '/1_1/fields_1_1/' #example data sub-folder name
-spec1FileName = 'wfr_spec1_1_4.wfr' #for spec1
-spec2FileName = 'wfr_spec2_1_4.wfr' #for spec2
-wfr2FileName = 'wfr_harm1.wfr' #for harm2
-wfr3FileName = 'wfr_harm2.wfr' #for harm3
-wfr4FileName = 'wfr_harm3.wfr' #for harm4
-wfr5FileName = 'wfr_harm4.wfr' #for harm5
+wfrPathName = SKIF_path + '/' + station + '/fields_' + station + '/' #example data sub-folder name
+spec1FileName = 'wfr_spec1_' + station + '.wfr' #for spec1
+spec2FileName = 'wfr_spec2_' + station + '.wfr' #for spec2
+wfr1FileName = 'wfr_harm1.wfr' #for harm 11 for CCD
+wfr2FileName = 'wfr_harm2.wfr' #for harm 13 for CCD
+wfr3FileName = 'wfr_harm3.wfr' #for harm 17 for DCM
+wfr4FileName = 'wfr_harm4.wfr' #for harm 23 for CCD
 stkPFileName = 'stkP.wfr'#for power density
 
-
-#x = np.linspace(-5,5, 10000)
-#sigma = 1
-#arIx = (1./np.sqrt(2*np.pi*sigma**2))*np.exp(-x**2 / (2*sigma**2))
-#plt.plot(x,arIx)
-#
-#difference = np.max(arIx) - np.min(arIx)
-#HM = difference / 2
-#nearest = (np.abs(arIx - HM)).argmin()
-#print(x[nearest])
-#max_index = np.max(np.where(arIx == np.amax(arIx)))#arIx.index(np.max(arIx))
-#print(max_index)
-#FWHM_x = 2*(np.abs(x[nearest] - x[max_index]))
-#print(FWHM_x/2.355)
 #%%
 print('extracting wfr from files')
 afile = open(wfrPathName + spec1FileName, 'rb')
@@ -69,19 +56,19 @@ afile = open(wfrPathName + spec2FileName, 'rb')
 spec2 =  pickle.load(afile)
 afile.close()
 
-afile = open(wfrPathName + wfr2FileName, 'rb')
+afile = open(wfrPathName + wfr1FileName, 'rb')
 wfr1 =  pickle.load(afile)
 afile.close()
 
-afile = open(wfrPathName + wfr3FileName, 'rb')
+afile = open(wfrPathName + wfr2FileName, 'rb')
 wfr2 =  pickle.load(afile)
 afile.close()
 
-afile = open(wfrPathName + wfr4FileName, 'rb')
+afile = open(wfrPathName + wfr3FileName, 'rb')
 wfr3 =  pickle.load(afile)
 afile.close()
 
-afile = open(wfrPathName + wfr5FileName, 'rb')
+afile = open(wfrPathName + wfr4FileName, 'rb')
 wfr4 =  pickle.load(afile)
 afile.close()
 
@@ -103,16 +90,17 @@ rms_x, rms_y = skf.calc_bandwidth(wfr1, units='urad')
 
 #%%
             ######### Intensity #######
-#skf.skf_wfr_subplot_XY(wfr1, fourth_plot=0, save_fig=False, file_path=SKIF_path + FigPath, figure_name='11_harm_befoure_optics.pdf')
-#skf.skf_wfr_subplot_XY(wfr2, fourth_plot=0, save_fig=True, file_path=SKIF_path + FigPath, figure_name='13_harm_befoure_optics.pdf', show=False)
-#skf.skf_wfr_subplot_XY(wfr3, fourth_plot=0, save_fig=True, file_path=SKIF_path + FigPath, figure_name='17_harm_befoure_optics.pdf', show=False)
-#skf.skf_wfr_subplot_XY(wfr4, fourth_plot=0, save_fig=True, file_path=SKIF_path + FigPath, figure_name='23_harm_befoure_optics.pdf', show=False)
+filepath= SKIF_path + FigPath
+skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name='11_harm_before_crystal.pdf', fourth_plot=5, show=False, file_path=filepath) #function to draw xy distribution
+skf.skf_wfr_subplot_XY(wfr2, save_fig=True, figure_name='13_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
+skf.skf_wfr_subplot_XY(wfr3, save_fig=True, figure_name='17_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
+skf.skf_wfr_subplot_XY(wfr4, save_fig=True, figure_name='23_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
 #%% 
     
 ######### Power density ###########
             
 skf.skf_power_subplot_XY(stkP, wfr=spec2, units='mm')
-#plt.savefig(SKIF_path + FigPath + 'power_dens.pdf')#, bbox_inches='tight')
+plt.savefig(SKIF_path + FigPath + 'power_dens.pdf')#, bbox_inches='tight')
 #%%
 
 
