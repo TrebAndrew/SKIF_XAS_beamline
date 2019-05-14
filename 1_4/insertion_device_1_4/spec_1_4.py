@@ -3,6 +3,7 @@
 #otimised for extracting spectrum and intensity. Save it to files using pickle lib
 #v0.1
 #############################################################################
+'''@author: Andrei Trebushinin'''
 
 from __future__ import print_function #Python 2.7 compatibility
 from srwlib import *
@@ -15,17 +16,30 @@ import numpy as np
 import matplotlib.pyplot as plt
 import SKIF_lib as skf
 
-print('SKIF Extended Example # 1:')
+print('1-4 beamline')
 print('Create an undulator structure. Calculate !two! electric field files otimised for extracting spectrum and intensity. Save it to files using pickle lib')
+station = '1_4'
+
 #**********************Output files
-wfrPathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_4/fields_1_4/' #example data sub-folder name
-spec1FileName = 'wfr_spec1_1_1.wfr' #for spec1
-spec2FileName = 'wfr_spec2_1_1.wfr' #for spec2
+speed_of_light = 299792458 #[m/s]
+h_bar = 6.582119514e-16 #[eV*s]
+gamma = 3./0.51099890221e-03 #relative energy E_electron/m_e [GeV/Gev]
+e_ = 1.60218e-19 #elementary charge
+
+#**********************Output files
+SKIF_path = skf.get_SKIF_directory() #get SKIF project root directory
+TablesPath = skf.path_in_project('/' + station + '/TechReports/tabl/')#, your_sys='Mac OC')
+FigPath = skf.path_in_project('/' + station + '/TechReports/pic/')
+wfrPath = skf.path_in_project('/' + station + '/fields_' + station + '/')
+Diamond_T_path = skf.path_in_project('/' + station + '/crystals_data_' + station + '/diamond_T/')
+
+wfrPathName = SKIF_path + '/' + station + '/fields_' + station + '/' #example data sub-folder name
+spec1FileName = 'wfr_spec1_' + station + '.wfr' #for spec1
+spec2FileName = 'wfr_spec2_' + station + '.wfr' #for spec2
 stkPFileName = 'stkP.wfr'#for power density
 
 wfrFileName = [spec1FileName, spec2FileName]#, stkPFileName]
-
-
+#%%
 #***********Undulator
 undarr = []
 undarrH = []
@@ -36,7 +50,7 @@ disty =  []
 Length = 2.3 # m
 undper = 0.018 # m
 numper = 128
-magf = 1.3
+magf = 1.33
 
 harmB1 = SRWLMagFldH() #magnetic field harmonic
 harmB1.n = 1 #harmonic number
@@ -47,11 +61,16 @@ und1 = SRWLMagFldU([harmB1])
 und1.per = undper  #period length [m]
 und1.nPer = numper #number of periods (will be rounded to integer)
 
-K = 0.965 * magf * undper * 100
-print("K = ", round(K))
-print("Undulator Length = ", undper * numper)
-magFldCnt = SRWLMagFldC([und1], array('d', [0]), array('d', [0]), array('d', [0])) #Container of all Field Elements
+K = 0.9336 * magf * undper * 100 #undulator parameter
+E1 = round(4*np.pi*speed_of_light*h_bar*gamma**2/(undper*(1 + K**2/2)), 2) #energy of the first harmonic
 
+print("K = ", round(K, 3))
+print("Undulator Length = ", undper * numper)
+for i in range(1, 25, 2):
+    Delta_theta = np.sqrt(4*np.pi*speed_of_light*h_bar/(i*E1)/undper/numper) #angle divergence (the first minimum of intensity)
+    print('E{} = '.format(i), round(i*E1, 2), '  ang_{} = '.format(i), round(Delta_theta,7))
+
+magFldCnt = SRWLMagFldC([und1], array('d', [0]), array('d', [0]), array('d', [0])) #Container of all Field Elements
 #***********Electron Beam
 eBeam = SRWLPartBeam()
 eBeam.Iavg = 0.4 #average current [A]
@@ -125,10 +144,10 @@ wfr1.partBeam = eBeam
 
 #***********UR Stokes Parameters (mesh) for Spectral Flux
 wfr2 = SRWLWfr() #For spectrum vs photon energy
-wfr2.allocate(20000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
+wfr2.allocate(10000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
 wfr2.mesh.zStart = distance #Longitudinal Position [m] at which SR has to be calculated
 wfr2.mesh.eStart = 100 #Initial Photon Energy [eV]
-wfr2.mesh.eFin = 20000#4300. #Final Photon Energy [eV]
+wfr2.mesh.eFin = 10000#4300. #Final Photon Energy [eV]
 wfr2.mesh.xStart = -a*distance*1e-6 #Initial Horizontal Position [m]
 wfr2.mesh.xFin = a*distance*1e-6 #Final Horizontal Position [m]
 wfr2.mesh.yStart = -a*distance*1e-6 #Initial Vertical Position [m]
@@ -173,6 +192,7 @@ for (wfr, fname) in zip(wfrContainer, wfrFileName):
     pickle.dump(wfr, afile)
     afile.close()
 
+
 #%%
 ######## Power ########
 
@@ -195,7 +215,7 @@ print('done')
 
 skf.skf_power_subplot_XY(stkP, units='urad')
 
-afile = open(wfrPathName + stkPFileName, 'wb')
+afile = open(wfrPathName + '{}'.format(distance) + stkPFileName, 'wb')
 pickle.dump(stkP, afile)
 afile.close()
 

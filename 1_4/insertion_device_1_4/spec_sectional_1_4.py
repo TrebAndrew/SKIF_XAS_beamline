@@ -144,7 +144,7 @@ print('done')
 E, spec = skf.renorm_wfr(wfr1, elec_fld_units='W/mm^2/eV', emittance=0)
 skf.skf_plot(E, spec, elec_fld_units='W/mm^2/eV', color='blue', grid=True, 
              linewidth=1, save_fig=True, figure_name='sim_und_spec.pdf', file_path='/home/andrei/Documents/diploma/TexPresent/pic/')
-
+plt.show()
 ##%% 
 #*****************Saving to files
 afile = open(wfrPathName + spec1FileName, 'wb')

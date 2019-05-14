@@ -158,14 +158,14 @@ wfr2 = SRWLWfr() #For spectrum vs photon energy
 wfr2.allocate(20000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
 wfr2.mesh.zStart = 25 #Longitudinal Position [m] at which SR has to be calculated
 wfr2.mesh.eStart = 100 #Initial Photon Energy [eV]
-wfr2.mesh.eFin = 20000#4300. #Final Photon Energy [eV]
+wfr2.mesh.eFin = 30000#4300. #Final Photon Energy [eV]
 wfr2.mesh.xStart = -a*distance*1e-6 #Initial Horizontal Position [m]
 wfr2.mesh.xFin = a*distance*1e-6 #Final Horizontal Position [m]
 wfr2.mesh.yStart = -a*distance*1e-6 #Initial Vertical Position [m]
 wfr2.mesh.yFin = a*distance*1e-6 #Final Vertical Position [m]
 wfr2.partBeam = eBeam
 
-wfrContainer = [wfr1, wfr2]#, stkP]
+wfrContainer = [wfr2]#, wfr2]#, stkP]
 
 #%%exclude unnecessary objects from wfrContainer
 #somelist = wfrContainer
@@ -189,9 +189,13 @@ E, spec1 = skf.renorm_wfr(wfr1, elec_fld_units='W/mm^2/eV', emittance=0)
 skf.skf_plot(E, spec1, elec_fld_units='W/mm^2/eV', color='blue', grid=True, linewidth=1.5, show=True)
 print('Total power density = ', round((np.sum(spec1))*((wfr1.mesh.eFin - wfr1.mesh.eStart) / wfr1.mesh.ne)), '[W/mm^2]')
 
-plt.figure()
+#plt.figure(figsize=(3*2,1*2))
 E, spec2 = skf.renorm_wfr(wfr2, elec_fld_units='W/mm^2/eV', emittance=0)
 skf.skf_plot(E, spec2, elec_fld_units='W/mm^2/eV', color='blue', grid=True, linewidth=1, show=True)
+plt.grid()
+plt.tight_layout()
+#plt.savefig('/home/andrei/Documents/diploma/TexPresent/pic/spec_und_1-2.pdf')#, bbox_inches='tight')
+#plt.savefig('/home/andrei/Documents/diploma/Diploma/pic/spec_und_1-2.pdf')#, bbox_inches='tight')
 
 print('done')
 #%% 

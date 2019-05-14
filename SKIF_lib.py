@@ -252,7 +252,7 @@ def skf_plot(x, y, color='blue', scale_x=None, elec_fld_units=None, grid=True, l
     :figure_name: filename of the saved file
     :show:      draw the graph of not
     '''
-    fontsize=16
+    fontsize=14
     #plt.figure(figsize=(1.5*4,1.5*3))
     if file_path is None:
         file_path = '/home/andrei/Documents/9_term/diplom/beamlines/1_4/'
@@ -346,10 +346,8 @@ def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='urad', four
         A = 1e6/wfr.mesh.zStart
         xy_unit=r'$[\mu rad]$'
    
-    sigma_x_mm, sigma_y_mm   = skf.calc_bandwidth(wfr, units='mm')
-    sigma_x_rad, sigma_y_rad = skf.calc_bandwidth(wfr, units='urad')
-#    print('sigma_x = ', round(sigma_x_rad,3),'[urad] \t','sigma_y = ', round(sigma_y_rad,3),'[urad]')
-#    print('sigma_x = ', round(sigma_x_mm,3),'[mm] \t','sigma_y = ', round(sigma_y_mm,3),'[urad]')
+#    sigma_x_mm, sigma_y_mm   = skf.calc_bandwidth(wfr, units='mm')
+#    sigma_x_rad, sigma_y_rad = skf.calc_bandwidth(wfr, units='urad')
 
     ########
     plt.subplot(221)  
@@ -375,17 +373,17 @@ def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='urad', four
     ########
     plt.subplot(224) 
 
-    plt.axis('off')
-    fontsize = 24
-    x_pos = 0.1#*A*wfr.mesh.xFin
-    y_pos = 0.9#*np.max(arIx)
-    a = plt.text(x_pos, y_pos, r'$RMS_x = {} [\mu rad]$'.format(round(sigma_x_rad, 1)), fontsize=fontsize)
-    y_pos = 0.75#*np.max(arIx)
-    a = plt.text(x_pos, y_pos, r'$RMS_x = {} [mm]$'.format(round(sigma_x_mm, 3)), fontsize=fontsize)   
-    y_pos = 0.6#*A*wfr.mesh.yFin
-    b = plt.text(x_pos, y_pos, r'$RMS_y = {} [\mu rad]$'.format(round(sigma_y_rad, 1)), fontsize=fontsize)
-    y_pos = 0.45#*A*wfr.mesh.yFin
-    b = plt.text(x_pos, y_pos, r'$RMS_y = {} [mm]$'.format(round(sigma_y_mm, 3)), fontsize=fontsize)
+#    plt.axis('off')
+#    fontsize = 24
+#    x_pos = 0.1#*A*wfr.mesh.xFin
+#    y_pos = 0.9#*np.max(arIx)
+#    a = plt.text(x_pos, y_pos, r'$RMS_x = {} [\mu rad]$'.format(round(sigma_x_rad, 1)), fontsize=fontsize)
+#    y_pos = 0.75#*np.max(arIx)
+#    a = plt.text(x_pos, y_pos, r'$RMS_x = {} [mm]$'.format(round(sigma_x_mm, 3)), fontsize=fontsize)   
+#    y_pos = 0.6#*A*wfr.mesh.yFin
+#    b = plt.text(x_pos, y_pos, r'$RMS_y = {} [\mu rad]$'.format(round(sigma_y_rad, 1)), fontsize=fontsize)
+#    y_pos = 0.45#*A*wfr.mesh.yFin
+#    b = plt.text(x_pos, y_pos, r'$RMS_y = {} [mm]$'.format(round(sigma_y_mm, 3)), fontsize=fontsize)
 
     ########
     plt.subplot(223)

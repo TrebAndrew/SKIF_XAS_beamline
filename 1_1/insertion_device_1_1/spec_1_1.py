@@ -134,13 +134,12 @@ sampFactNxNyForProp = 0 #sampling factor for adjusting nx, ny (effective if > 0)
 arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, sampFactNxNyForProp]
 #%%
 mesh_wfr = 200
-distance = 20.
 a = 0.001
-
+distance = 25
 #***********UR Stokes Parameters (mesh) for Spectral Flux
 wfr1 = SRWLWfr() #For spectrum vs photon energy
 wfr1.allocate(60000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
-wfr1.mesh.zStart = 25 #Longitudinal Position [m] at which SR has to be calculated
+wfr1.mesh.zStart = distance #Longitudinal Position [m] at which SR has to be calculated
 wfr1.mesh.eStart = 100 #Initial Photon Energy [eV]
 wfr1.mesh.eFin = 60000#4300. #Final Photon Energy [eV]
 wfr1.mesh.xStart = -a#*distance*1e-6 #Initial Horizontal Position [m]
@@ -152,7 +151,7 @@ wfr1.partBeam = eBeam
 #***********UR Stokes Parameters (mesh) for Spectral Flux
 wfr2 = SRWLWfr() #For spectrum vs photon energy
 wfr2.allocate(20000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
-wfr2.mesh.zStart = 25 #Longitudinal Position [m] at which SR has to be calculated
+wfr2.mesh.zStart = distance #Longitudinal Position [m] at which SR has to be calculated
 wfr2.mesh.eStart = 100 #Initial Photon Energy [eV]
 wfr2.mesh.eFin = 20000#4300. #Final Photon Energy [eV]
 wfr2.mesh.xStart = -a*distance*1e-6 #Initial Horizontal Position [m]
@@ -185,9 +184,13 @@ E, spec1 = skf.renorm_wfr(wfr1, elec_fld_units='W/mm^2/eV', emittance=0)
 skf.skf_plot(E, spec1, elec_fld_units='W/mm^2/eV', color='blue', grid=True, linewidth=1.5, show=True)
 print('Total power density = ', round((np.sum(spec1))*((wfr1.mesh.eFin - wfr1.mesh.eStart) / wfr1.mesh.ne)), '[W/mm^2]')
 
-plt.figure()
+#plt.figure()
 E, spec2 = skf.renorm_wfr(wfr2, elec_fld_units='W/mm^2/eV', emittance=0)
 skf.skf_plot(E, spec2, elec_fld_units='W/mm^2/eV', color='blue', grid=True, linewidth=1, show=True)
+plt.grid()
+plt.tight_layout()
+#plt.savefig('/home/andrei/Documents/diploma/TexPresent/pic/spec_und_1-1.pdf')#, bbox_inches='tight')
+#plt.savefig('/home/andrei/Documents/diploma/Diploma/pic/spec_und_1-1.pdf')#, bbox_inches='tight')
 
 print('done')
 #%% 
@@ -205,7 +208,7 @@ for (wfr, fname) in zip(wfrContainer, wfrFileName):
 a = 10#[mm]
 b = 10#[mm]
 A = 1e-3#[mm] -> [m]
-distance = 25#[m]
+distance = distance#[m]
 
 stkP = SRWLStokes() #for power density
 stkP.allocate(1, 151, 151) #numbers of points vs horizontal and vertical positions (photon energy is not taken into account)
