@@ -94,9 +94,9 @@ afile = open(wfrPathName + wfr4FileName, 'rb')
 wfr4 =  pickle.load(afile)
 afile.close()
 
-afile = open(wfrPathName + stkPFileName, 'rb')
-stkP =  pickle.load(afile)
-afile.close()
+#afile = open(wfrPathName + stkPFileName, 'rb')
+#stkP =  pickle.load(afile)
+#afile.close()
 
 wfrContainer = [wfr1, wfr2, wfr3, wfr4]
 #%% Drawing spectrum absorption characteristic
@@ -203,7 +203,7 @@ for (fld, n, bwth) in zip(wfr, harm, dE_E):
     F = np.sum(arI)*(fld.mesh.yFin - fld.mesh.yStart)*(fld.mesh.yFin - fld.mesh.yStart)/fld.mesh.nx/fld.mesh.ny#ph/s/0.1bw
     print('F = ', F)
     arI = arI/E/1e-3 #ph/s/eV
-    TotF = np.sum(arI)*bwth*fld.avgPhotEn*(fld.mesh.yFin - fld.mesh.yStart)*(fld.mesh.yFin - fld.mesh.yStart)/fld.mesh.nx/fld.mesh.ny
+    TotF = np.sum(arI)*bwth*(fld.mesh.yFin - fld.mesh.yStart)*(fld.mesh.yFin - fld.mesh.yStart)/fld.mesh.nx/fld.mesh.ny*fld.avgPhotEn / 0.001
     print('TotF = ', TotF)
     HARM.append([int(n), fld.avgPhotEn,  h*speed_of_light*1e9/fld.avgPhotEn, TotF, F, bwth])
 np.savetxt(SKIF_path + TablesPath +  "ph_beam_par_after_cr.csv", 

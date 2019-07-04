@@ -90,17 +90,66 @@ rms_x, rms_y = skf.calc_bandwidth(wfr1, units='urad')
 
 #%%
             ######### Intensity #######
-filepath= SKIF_path + FigPath
-skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name='11_harm_before_crystal.pdf', fourth_plot=5, show=False, file_path=filepath) #function to draw xy distribution
-skf.skf_wfr_subplot_XY(wfr2, save_fig=True, figure_name='13_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
-skf.skf_wfr_subplot_XY(wfr3, save_fig=True, figure_name='17_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
-skf.skf_wfr_subplot_XY(wfr4, save_fig=True, figure_name='23_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
+#filepath= SKIF_path + FigPath
+#skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name='11_harm_before_crystal.pdf', fourth_plot=5, show=False, file_path=filepath) #function to draw xy distribution
+#skf.skf_wfr_subplot_XY(wfr2, save_fig=True, figure_name='13_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
+#skf.skf_wfr_subplot_XY(wfr3, save_fig=True, figure_name='17_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
+#skf.skf_wfr_subplot_XY(wfr4, save_fig=True, figure_name='23_harm_before_crystal.pdf', fourth_plot=1, show=False, file_path=filepath) #function to draw xy distribution
 #%% 
     
 ######### Power density ###########
             
-skf.skf_power_subplot_XY(stkP, wfr=spec2, units='mm')
-plt.savefig(SKIF_path + FigPath + 'power_dens.pdf')#, bbox_inches='tight')
+skf.skf_power_subplot_XY(stkP, wfr=spec1, units='mm')
+plt.tight_layout()
+plt.savefig(SKIF_path + FigPath + 'power_dens_1-1.pdf')#, bbox_inches='tight')
+
+plt.figure(figsize=(1.5*4,1.5*4))
+wfr=spec1
+xy_unit=r'$[mm]$'
+fontsize=16
+A = 1e3
+z = []
+Z = []
+i = 0 
+j = 0 
+cmap_ph = plt.get_cmap('viridis')
+    
+x = np.linspace(A*stkP.mesh.xStart, A*stkP.mesh.xFin, stkP.mesh.nx)
+y = np.linspace(A*stkP.mesh.yStart, A*stkP.mesh.yFin, stkP.mesh.ny)
+ 
+for j in range(len(y)):
+    for i in range(len(x)):
+        z.extend([stkP.arS[j*len(x) + i]])
+    Z.append(z)
+    z = []
+Z = np.array(Z)
+plt.pcolormesh(x, y, Z, cmap=cmap_ph)  
+#plt.title(r'Плотность мощности', fontsize=fontsize)
+plt.ylim(A*stkP.mesh.yStart, A*stkP.mesh.yFin)
+plt.xticks(fontsize=fontsize)
+plt.yticks(fontsize=fontsize)
+plt.xlabel(r'$[мм]$', fontsize=fontsize, labelpad = 0.0)
+plt.ylabel(r'$[мм]$', fontsize=fontsize, labelpad = 0.0, rotation=90)
+plt.tight_layout()
+plt.show()
+plt.savefig(SKIF_path + FigPath + 'power_dens_1-1_2d.pdf')#, bbox_inches='tight')
+
+plt.figure(figsize=(1.5*4,1.5*4))
+E, spec = skf.renorm_wfr(wfr, emittance=0, elec_fld_units='W/mm^2/eV')
+plt.plot(E/1000, spec, color='blue')
+plt.xlim(0)
+plt.ylim(0)
+plt.grid(True)
+plt.xlabel(r'$E, [кэВ]$', fontsize=fontsize, labelpad = 0.0)
+#    plt.ylabel(r'$I, [\gamma/с/мм^2/0.1\%bw]$', fontsize=fontsize, labelpad = 0.0, rotation=90)
+plt.ylabel(r'$I, [Вт/мм^2/эВ]$', fontsize=fontsize, labelpad = 0.0, rotation=90)
+#    skf.skf_plot(E, spec, elec_fld_units='ph/s/mm^2/0.1%bw', scale_x = 1000, show=False)
+plt.xticks(fontsize=fontsize)
+plt.yticks(fontsize=fontsize) 
+plt.tight_layout()
+plt.show()
+plt.savefig(SKIF_path + FigPath + 'Spec_1-1.pdf')#, bbox_inches='tight')
+
 #%%
 
 

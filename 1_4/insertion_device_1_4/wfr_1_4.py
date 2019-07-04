@@ -140,7 +140,7 @@ arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, sampFactN
 #%%
 
 mesh_wfr = 150
-distance = 25. #[m]
+distance = 22. #[m]
 a = 0.001 #[m]
 
 wfr1 = SRWLWfr() #For intensity distribution at fixed photon energy

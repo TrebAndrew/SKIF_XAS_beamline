@@ -253,7 +253,7 @@ def skf_plot(x, y, color='blue', scale_x=None, elec_fld_units=None, grid=True, l
     :show:      draw the graph of not
     '''
     fontsize=14
-    #plt.figure(figsize=(1.5*4,1.5*3))
+    plt.figure(figsize=(1.7*4.2,1.7*3))
     if file_path is None:
         file_path = '/home/andrei/Documents/9_term/diplom/beamlines/1_4/'
     if scale_x is not None:
@@ -268,10 +268,10 @@ def skf_plot(x, y, color='blue', scale_x=None, elec_fld_units=None, grid=True, l
         plt.ylabel(r'$a.u.$', fontsize=fontsize, labelpad = 0.0, rotation=90)
     
     elif elec_fld_units == 'ph/s/mm^2/0.1%bw':
-        plt.ylabel(r'$I, [\gamma/с/мм^2/0.1\%ПП]$', fontsize=fontsize, labelpad = 0.0, rotation=90)
+        plt.ylabel(r'$I, [\gamma/с/мм^2/0.1\%bw]$', fontsize=fontsize, labelpad = 0.0, rotation=90)
     
     elif elec_fld_units == 'ph/s/0.1%bw':
-        plt.ylabel(r'$I, [\gamma/с/0.1\%ПП]$', fontsize=fontsize, labelpad = 0.0, rotation=90)
+        plt.ylabel(r'$I, [\gamma/с/0.1\%bw]$', fontsize=fontsize, labelpad = 0.0, rotation=90)
     
     elif elec_fld_units == 'W/mm^2/eV':
         plt.ylabel(r'$I, [Вт/мм^2/эВ]$', fontsize=fontsize, labelpad = 0.0, rotation=90)
@@ -287,7 +287,7 @@ def skf_plot(x, y, color='blue', scale_x=None, elec_fld_units=None, grid=True, l
     ax.yaxis.set_ticks_position('left')
     ax.spines['top'].set_position(('data',0))
     ax.xaxis.set_label_coords(0.95, -0.12)
-    ax.yaxis.set_label_coords(-0.1, 0.8)
+    ax.yaxis.set_label_coords(-0.13, 0.8)
 
     plt.xticks(fontsize=fontsize)
     plt.yticks(fontsize=fontsize)
@@ -306,8 +306,54 @@ def skf_plot(x, y, color='blue', scale_x=None, elec_fld_units=None, grid=True, l
         
 #    if show is True:
 #        plt.show()
+def skf_wfr_2d(wfr, save_fig=False, figure_name=None, units='mm', fourth_plot=None, three_first=1, show=True, file_path=None):
+    fontsize=22
 
-def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='urad', fourth_plot=None, three_first=1, show=True, file_path=None):
+    if file_path is None:
+        file_path = '/home/andrei/Documents/9_term/diplom/beamlines/1_1/'
+    z = []
+    Z = []
+    i = 0 
+    j = 0   
+    plt.figure(figsize=(2*5,2*5))
+    
+    if units == 'mm': 
+        A = 1e3
+        xy_unit=r'$[мм]$'
+    elif units == 'urad':
+        A = 1e6/wfr.mesh.zStart
+        xy_unit=r'$[\mu rad]$'
+    
+    cmap_ph = plt.get_cmap('viridis')
+    arI = array('f', [0]*wfr.mesh.nx*wfr.mesh.ny) #"flat" 2D array to take intensity data
+    srwl.CalcIntFromElecField(arI, wfr, 6, three_first, 3, wfr.mesh.eStart, 0, 0)
+    x = np.linspace(A*wfr.mesh.xStart, A*wfr.mesh.xFin, wfr.mesh.nx)
+    y = np.linspace(A*wfr.mesh.yStart, A*wfr.mesh.yFin, wfr.mesh.ny)
+    
+    for j in range(len(y)):
+        for i in range(len(x)):
+            z.extend([arI[j*len(x) + i]])
+        Z.append(z)
+        z = []
+    
+    plt.pcolormesh(x, y, Z, cmap=cmap_ph)  
+    plt.ylabel(xy_unit, fontsize=fontsize, labelpad = 0.0, rotation=90)
+    plt.xlabel(xy_unit, fontsize=fontsize, labelpad = 0.0)
+#    plt.title('Multiple electron Intensity at ' + str(wfr.mesh.eStart) + ' eV', fontsize=fontsize)
+    plt.xlim(A*wfr.mesh.xStart,  A*wfr.mesh.xFin)
+    plt.ylim(A*wfr.mesh.yStart, A*wfr.mesh.yFin)
+    plt.xticks(fontsize=fontsize)
+    plt.yticks(fontsize=fontsize)
+        
+    plt.tight_layout()
+    if save_fig is True:
+        plt.savefig(file_path + figure_name)#, bbox_inches='tight')
+    if show is True:
+        plt.show()
+    else: 
+        return None
+    
+def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='mm', fourth_plot=None, three_first=1, show=True, file_path=None):
     '''
     In development
     Draw a plot with four subplots with wfr field distribution. The fourth is for arbitrary dependence.
@@ -341,7 +387,7 @@ def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='urad', four
     
     if units == 'mm': 
         A = 1e3
-        xy_unit=r'$[mm]$'
+        xy_unit=r'$[мм]$'
     elif units == 'urad':
         A = 1e6/wfr.mesh.zStart
         xy_unit=r'$[\mu rad]$'
@@ -373,7 +419,7 @@ def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='urad', four
     ########
     plt.subplot(224) 
 
-#    plt.axis('off')
+    plt.axis('off')
 #    fontsize = 24
 #    x_pos = 0.1#*A*wfr.mesh.xFin
 #    y_pos = 0.9#*np.max(arIx)
@@ -411,7 +457,7 @@ def skf_wfr_subplot_XY(wfr, save_fig=False, figure_name=None, units='urad', four
     
     plt.tight_layout()
     if save_fig is True:
-        plt.savefig(file_path + figure_name, dpi=200)#, bbox_inches='tight')
+        plt.savefig(file_path + figure_name)#, bbox_inches='tight')
     if show is True:
         plt.show()
     else: 
@@ -460,9 +506,9 @@ def skf_power_subplot_XY(stkP, wfr=None,save_fig=False, figure_name=None, units=
         z = []
     Z = np.array(Z)
     plt.pcolormesh(x, y, Z, cmap=cmap_ph)  
-    plt.ylabel(r'$Vertical Position$' + xy_unit, fontsize=fontsize, labelpad = 0.0, rotation=90)
+    plt.ylabel(xy_unit, fontsize=fontsize, labelpad = 0.0, rotation=90)
     #plt.xlabel(r'$Horizontal Position$' + xy_unit, fontsize=18, labelpad = 0.0)
-    plt.title('Power density', fontsize=fontsize)
+    plt.title(r'Плотность мощности', fontsize=fontsize)
     plt.ylim(A*stkP.mesh.yStart, A*stkP.mesh.yFin)
     plt.xticks(fontsize=fontsize)
     plt.yticks(fontsize=fontsize)
@@ -472,7 +518,7 @@ def skf_power_subplot_XY(stkP, wfr=None,save_fig=False, figure_name=None, units=
     x = np.linspace(A*stkP.mesh.xStart, A*stkP.mesh.xFin, stkP.mesh.nx)
     plt.plot(x, Z[int(stkP.mesh.nx*0.5),:], color='blue')
     plt.ylabel(r'$I, [Вт/мм^2]$', fontsize=fontsize, labelpad = 0.0, rotation=90)
-    plt.xlabel(r'$Horizontal Position$' + xy_unit, fontsize=fontsize, labelpad = 0.0)
+    plt.xlabel(xy_unit, fontsize=fontsize, labelpad = 0.0)
     plt.grid(True)
     plt.xlim(A*stkP.mesh.xStart,  A*stkP.mesh.xFin)
     plt.xticks(fontsize=fontsize)
@@ -490,16 +536,23 @@ def skf_power_subplot_XY(stkP, wfr=None,save_fig=False, figure_name=None, units=
     plt.xlim(0)
     plt.xticks(fontsize=fontsize)
     plt.yticks(fontsize=fontsize)
-    a = plt.text(np.max(Z)*0.15, A*stkP.mesh.yFin*0.8, r'$W_m = {} [W/mm^2]$'.format(round(np.max(stkP.arS))), fontsize=24)
+    W = round(np.max(stkP.arS)/1.0,1)
+    a = plt.text(np.max(Z)*0.15, A*stkP.mesh.yFin*0.8, r'$W_m = {} [Вт/мм^2]$'.format(W), fontsize=24)
     #########
-    if wfr is not None:
-        plt.subplot(224) 
-        E, spec = skf.renorm_wfr(wfr, elec_fld_units=None, emittance=0)
-        skf.skf_plot(E, spec, elec_fld_units='ph/s/mm^2/0.1%bw', scale_x = 1000)
-        plt.xticks(fontsize=fontsize)
-        plt.yticks(fontsize=fontsize)  
+    plt.subplot(224) 
+    E, spec = skf.renorm_wfr(wfr, emittance=0, elec_fld_units='W/mm^2/eV')
+    plt.plot(E/1000, spec, color='blue')
+    plt.xlim(0)
+    plt.ylim(0)
+    plt.grid(True)
+    plt.xlabel(r'$E, [кэВ]$', fontsize=fontsize, labelpad = 0.0)
+#    plt.ylabel(r'$I, [\gamma/с/мм^2/0.1\%bw]$', fontsize=fontsize, labelpad = 0.0, rotation=90)
+    plt.ylabel(r'$I, [Вт/мм^2/эВ]$', fontsize=fontsize, labelpad = 0.0, rotation=90)
+#    skf.skf_plot(E, spec, elec_fld_units='ph/s/mm^2/0.1%bw', scale_x = 1000, show=False)
+    plt.xticks(fontsize=fontsize)
+    plt.yticks(fontsize=fontsize)  
     
-    print('max power density on axis = ', round(np.max(stkP.arS), 1), '[W/mm^2]')
+    print('max power density on axis = ', round(np.max(stkP.arS), 2), '[W/mm^2]')
 
     if save_fig is True:
         plt.savefig(path_name + figure_name, dpi=150)#, bbox_inches='tight')

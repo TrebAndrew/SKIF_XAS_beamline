@@ -204,7 +204,7 @@ for (fld, n, bwth) in zip(wfr, harm, dE_E):
     
     F = np.sum(arI)*(fld.mesh.yFin - fld.mesh.yStart)*(fld.mesh.yFin - fld.mesh.yStart)/fld.mesh.nx/fld.mesh.ny#ph/s/0.1bw
     arI = arI/E/1e-3 #ph/s/eV
-    TotF = np.sum(arI)*bwth*fld.avgPhotEn
+    TotF = np.sum(arI)*bwth*(fld.mesh.yFin - fld.mesh.yStart)*(fld.mesh.yFin - fld.mesh.yStart)/fld.mesh.nx/fld.mesh.ny*fld.avgPhotEn / 0.001
     HARM.append([int(n), fld.avgPhotEn,  h*speed_of_light*1e9/fld.avgPhotEn, TotF, F])
 np.savetxt(SKIF_path + TablesPath +  "ph_beam_par_after_cr.csv", 
            HARM, fmt='%10.d,%10.0f,%10.4f,%.2e,%.2e', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')

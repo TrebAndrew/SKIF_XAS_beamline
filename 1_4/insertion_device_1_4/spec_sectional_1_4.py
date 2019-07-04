@@ -32,9 +32,9 @@ disty =  []
 
 PER = 150
 NumPIECE = 5
-undper = 0.02 # [m]
+undper = 0.018 # [m]
 numper = PER/NumPIECE
-magf = 1.0 #[T]
+magf = 1 #[T]
 magf_step = (1.5/100)*magf
 
 Bx = 1 #Peak Horizontal field [T]
@@ -48,7 +48,7 @@ ycID = -0.0
 zcID = 0 #Longitudinal Coordinate of Undulator Center [m]
 
 for i in range(NumPIECE-7, NumPIECE-2):
-    B2 = By + (i-1)*magf_step
+    B2 = magf + (i-1)*magf_step
     print(B2)
     #phBx = rn.uniform(0, 2*np.pi)
     und = SRWLMagFldU([SRWLMagFldH(1, 'h', B2, phBx, sBx, 1)], undper, numper)#, SRWLMagFldH(1, 'h', B2, phBx, sBx, 1)], undPer, numPer) #Ellipsoidal Undulator
@@ -58,8 +58,8 @@ for i in range(NumPIECE-7, NumPIECE-2):
     disty.append(0)
 print(distx, distz)
 
-K = 0.965 * magf * undper * 100
-print("K = ", round(K))
+K = 0.9336 * magf * undper * 100
+print("K = ", round(K, 3))
 print("Undulator Length = ", PER * undper)
 magFldCnt = SRWLMagFldC(undarr, array('d', distx), array('d', disty), array('d', distz)) #Container of all Field Elements
 #magFldCnt = SRWLMagFldC([und1, und2, und3], array('d', [0, 0, 0]), array('d', [0, 0, 0]), array('d', [0, numper*undper+2*undper, 2*numper*undper+4*undper])) #Container of all Field Elements
@@ -123,10 +123,10 @@ arPrecPar = [meth, relPrec, zStartInteg, zEndInteg, npTraj, useTermin, sampFactN
 
 
 wfr1 = SRWLWfr() #For spectrum vs photon energy (Spectral Flux)
-wfr1.allocate(4000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
+wfr1.allocate(1000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
 wfr1.mesh.zStart = 25. #Longitudinal Position [m] at which SR has to be calculated
-wfr1.mesh.eStart = 4300. #Initial Photon Energy [eV]
-wfr1.mesh.eFin = 5200. #Final Photon Energy [eV]
+wfr1.mesh.eStart = 5500. #Initial Photon Energy [eV]
+wfr1.mesh.eFin = 6600. #Final Photon Energy [eV]
 a = 0.0002
 wfr1.mesh.xStart = -a #Initial Horizontal Position [m]
 wfr1.mesh.xFin = a #Final Horizontal Position [m]
@@ -141,15 +141,49 @@ print('   Performing Electric Field (spectrum vs photon energy) calculation ... 
 srwl.CalcElecFieldSR(wfr1, 0, magFldCnt, arPrecPar)
 print('done')
 
-E, spec = skf.renorm_wfr(wfr1, elec_fld_units='W/mm^2/eV', emittance=0)
-skf.skf_plot(E, spec, elec_fld_units='W/mm^2/eV', color='blue', grid=True, 
-             linewidth=1, save_fig=True, figure_name='sim_und_spec.pdf', file_path='/home/andrei/Documents/diploma/TexPresent/pic/')
-plt.show()
+E, spec = skf.renorm_wfr(wfr1, emittance=0)
+print(spec)
+skf.skf_plot(E, spec, elec_fld_units='ph/s/mm^2/0.1%bw', color='blue', grid=True, 
+             linewidth=1, save_fig=True, figure_name='sim_und_spec_new.pdf', file_path='/home/andrei/Documents/diploma/TexPresent/pic/')
+
+
+#plt.show()
 ##%% 
 #*****************Saving to files
-afile = open(wfrPathName + spec1FileName, 'wb')
-pickle.dump(wfr1, afile)
-afile.close()
+#afile = open(wfrPathName + spec1FileName, 'wb')
+#pickle.dump(wfr1, afile)
+#afile.close()
+
+#%%
+wfr2 = SRWLWfr() #For spectrum vs photon energy (Spectral Flux)
+wfr2.allocate(400, 40, 40) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
+wfr2.mesh.zStart = 25. #Longitudinal Position [m] at which SR has to be calculated
+wfr2.mesh.eStart = 5500. #Initial Photon Energy [eV]
+wfr2.mesh.eFin = 6600. #Final Photon Energy [eV]
+a = 0.001
+wfr2.mesh.xStart = -a #Initial Horizontal Position [m]
+wfr2.mesh.xFin = a #Final Horizontal Position [m]
+wfr2.mesh.yStart = -a #Initial Vertical Position [m]
+wfr2.mesh.yFin = a #Final Vertical Position [m]
+wfr2.partBeam = eBeam
+
+print('   Performing Electric Field (spectrum vs photon energy) calculation ... ', end='')
+srwl.CalcElecFieldSR(wfr2, 0, magFldCnt, arPrecPar)
+print('done')
+
+E1, spec1 = skf.renorm_wfr(wfr2, elec_fld_units='W/eV', emittance=0)
+arI = array('f', [0]*wfr2.mesh.ne)
+E1 = np.linspace(wfr2.mesh.eStart, wfr2.mesh.eFin, wfr2.mesh.ne)
+srwl.CalcIntFromElecField(arI, wfr2, 6, 3, 0, wfr2.mesh.eStart, wfr2.mesh.xStart, wfr2.mesh.yStart)
+
+#%%
+e_ = 1.60218e-19 #elementary charge
+#arI = np.array(arI)
+#spec1 = arI*e_/1e-3 #* ((wfr.mesh.eFin-wfr.mesh.eStart)/wfr.mesh.ne)
+
+skf.skf_plot(E1, arI, elec_fld_units='ph/s/0.1%bw', color='blue', grid=True, 
+             linewidth=1, save_fig=True, figure_name='sim_und_spec_new_mm.pdf', file_path='/home/andrei/Documents/diploma/TexPresent/pic/')
+#plt.show()
 
 #%%
 ######## Power ########

@@ -81,7 +81,8 @@ print('finishing extracting')
 A = 1e6/wfr1.mesh.zStart #scaling facor for the transferring xy distribution from [m] to [rad] 
 
 filepath= SKIF_path + FigPath
-skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name='3_harm_before_optics.pdf', fourth_plot=5, show=False, file_path=filepath) #function to draw xy distribution
+#skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name='3_harm_before_optics.pdf', fourth_plot=5, show=False, file_path=filepath) #function to draw xy distribution
+skf.skf_wfr_2d(wfr1, save_fig=True, figure_name='3_harm_before_optics_2d.pdf', fourth_plot=5, show=True, file_path=filepath)
 
 #%%
 wfr = [wfr1]#, wfr2, wfr3, wfr4]
@@ -92,15 +93,6 @@ for (fld, n) in zip(wfr, harm):
     HARM.append([int(n), sigma_x_mm, sigma_y_mm, sigma_x_rad, sigma_y_rad])
 np.savetxt(SKIF_path + TablesPath + "RMS_before.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
 np.savetxt(SKIF_path + TablesPath + "RMS_before.csv", HARM, fmt='%10.d,%10.3f,%10.3f,%10.3f,%10.3f', delimiter=',')#, delimiter=' & ', fmt='%2.2e', newline=' \\\\\n')
-#%%
-#sigma_x, sigma_y = skf.calc_bandwidth(wfr1, units='urad') #calculates sigma fot the electric field distribution 
-#print('sigma_x_11 = ', round(sigma_x,3),'[urad] \t','sigma_y_11 = ', round(sigma_y,3),'[urad]')
-#sigma_x, sigma_y = skf.calc_bandwidth(wfr2, units='urad') #calculates sigma fot the electric field distribution 
-#print('sigma_x_13 = ', round(sigma_x,3),'[urad] \t','sigma_y_13 = ', round(sigma_y,3),'[urad]')
-#sigma_x, sigma_y = skf.calc_bandwidth(wfr3, units='urad') #calculates sigma fot the electric field distribution 
-#print('sigma_x_17 = ', round(sigma_x,3),'[urad] \t','sigma_y_17 = ', round(sigma_y,3),'[urad]')
-#sigma_x, sigma_y = skf.calc_bandwidth(wfr4, units='urad') #calculates sigma fot the electric field distribution 
-#print('sigma_x_23 = ', round(sigma_x,3),'[urad] \t','sigma_y_23 = ', round(sigma_y,3),'[urad]')
 
 #%%
 #skf.skf_plot_spec(spec1) #function to draw spectrum
@@ -111,7 +103,7 @@ np.savetxt(SKIF_path + TablesPath + "RMS_before.csv", HARM, fmt='%10.d,%10.3f,%1
 #skf.skf_power_subplot_XY(stkP, spec2,units='urad', figure_name=figure_name, path_name=path_name, save_fig=True) #function to power density distribution
 
 #%% A Long long part of the code with the crystal definition
-#%% Double Crystal Monochromator (for harm 17)
+###   Double Crystal Monochromator (for harm 17)
 ###
 #C(400) Crystal Constants:
 dSpC400 = 3.1355713563754857 #Crystal reflecting planes d-spacing for C(400) crystal
@@ -168,49 +160,20 @@ sigma_x_mm, sigma_y_mm   = skf.calc_bandwidth(wfr1, units='mm')
 slit_x = 2*sigma_x_mm#4*sigma_x*distance*1e-3 # mm
 slit_y = 2*sigma_y_mm
 
-#Drift_AFTER_Cr   = SRWLOptD(1.) #Drift before diamond filter
 Drift_BEFORE_Cr = SRWLOptD(1.5) #Drift before silicon(111) DCM for 3 harmonic
 
 SSA = SRWLOptA('r', 'a', 2*slit_x*1e-03, 2*slit_y*1e-03) #slit parameter
-Drift_AFTER_SLIT = SRWLOptD(1.) #Drift after the slit
-#Drift_SSA_SCREEN = SRWLOptD(1.) #Drift from SSA to Center of Vertically Focusing K-B Mirror (VKB)
-
-Drift_to_KB = SRWLOptD(9.25) #Drift space after 2 slits
-
-#%%
-angVKB = 2.5e-03 #grazing angle at VKB center [rad]
-VKB = SRWLOptMirEl(_p=35.75, _q=9.25, _ang_graz=angVKB, _r_sag=1.0e+40, _size_tang=0.9,_size_sag=0.05, _nvx=0, _nvy=cos(angVKB), _nvz=-sin(angVKB), _tvx=0, _tvy=-sin(angVKB), _x=0, _y=0, _treat_in_out=1) #VKB Ellipsoidal Mirror
-
-Drift_VKB_HKB = SRWLOptD(0.5) #Distance between centers of Vertically and Horizontally focusing K-B mirrors 
-
-angHKB = 2.5e-03 #[rad]
-HKB = SRWLOptMirEl(_p=36.25, _q=8.75, _ang_graz=angHKB, _r_sag=1.0e+40, _size_tang=0.9,_size_sag=0.05, _nvx=cos(angHKB), _nvy=0, _nvz=-sin(angHKB), _tvx=-sin(angHKB), _tvy=0, _x=0, _y=0, _treat_in_out=1) #HKB Ellipsoidal Mirror
-#HKB = SRWLOptL(_Fx=11.5*0.5/(11.5 + 0.5))
-
-Drift_HKB_Sample = SRWLOptD(9.25) #Drift from HKB Center to Sample
 #%%
 #Wavefront Propagation Parameters:
 #                       [ 0] [1] [2]  [3] [4] [5]  [6]  [7]  [8]  [9] [10] [11] 
-prParInit =             [ 0,  0,  1.,  1,  0, 1.0, 2.0, 1.0, 2.0,  0,  0,   0]
 pprPar0 =               [ 0,  0,  1.,  1,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
 
 ppSSA               =   [ 0,  0, 1.0,  0,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
 
 ppDrift_BEFORE_Cr  =    [ 0,  0, 1.0,  1,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
 
-prParPost =             [ 0,  0,  1.,  0,  0, 1.0, 3.0, 1.0, 3.0,  0,  0,   0]
+prParPost =             [ 0,  0,  1.,  0,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
 
-ppDrift_AFTER_Cr1  =    [ 0,  0, 1.0,  1,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
-ppDrift_BEFORE_SLIT =   [ 0,  0, 1.0,  1,  0, 1.,  0.7, 1.,   0.7, 0,  0,   0]
-ppDrift_AFTER_SLIT  =   [ 0,  0, 1.0,  1,  0, 1.1, 1.0, 1.1,  1.0, 0,  0,   0]
-
-ppApKB =                [ 0,  0, 1.0,  0,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
-ppVKB =                 [ 0,  0, 1.0,  1,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
-ppDrift_VKB_HKB =       [ 0,  0, 1.0,  1,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
-ppHKB =                 [ 0,  0, 1.0,  1,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
-ppDrift_HKB_Sample =    [ 0,  0, 1.0,  1,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
-
-ppFinal =               [ 0,  0, 1.0,  0,  1, 0.2, 4.0, 0.2, 4.0,  0,  0,   0]
 #[ 0]: Auto-Resize (1) or not (0) Before propagation
 #[ 1]: Auto-Resize (1) or not (0) After propagation
 #[ 2]: Relative Precision for propagation with Auto-Resizing (1. is nominal)
@@ -224,32 +187,23 @@ ppFinal =               [ 0,  0, 1.0,  0,  1, 0.2, 4.0, 0.2, 4.0,  0,  0,   0]
 #[10]: New Horizontal wavefront Center position after Shift (not yet implemented)
 #[11]: New Vertical wavefront Center position after Shift (not yet implemented)
 
-#"Beamline" - Container of Optical Elements (together with the corresponding wavefront propagation instructions)
-#optBL1 = SRWLOptC([SSA,Drift_BEFORE_Cr1,SSA, Drift_BEFORE_Cr1, opCr1], 
-#                  [prParInit, ppSSA,ppDrift_BEFORE_Cr1, ppSSA, ppDrift_BEFORE_Cr1, pprPar0, prParPost])
-
-optBL = SRWLOptC([SSA, Drift_BEFORE_Cr, DCM_Cr1, DCM_Cr2, Drift_to_KB, VKB,   Drift_VKB_HKB,   HKB,   Drift_HKB_Sample], # 17 harm
-                  [prParInit, ppSSA, ppDrift_BEFORE_Cr, pprPar0, pprPar0, ppVKB, ppDrift_VKB_HKB, ppHKB, ppDrift_HKB_Sample, ppFinal])
-
-#optBL = SRWLOptC([Drift_BEFORE_SLIT], [ppDrift_BEFORE_SLIT, prParPost])
+optBL = SRWLOptC([SSA,       Drift_BEFORE_Cr,   DCM_Cr1, DCM_Cr2],
+                 [ppSSA,     ppDrift_BEFORE_Cr, pprPar0, pprPar0, prParPost])
 
 #%%
 #///////////WAVEFRONT PROPOGATION//////#
 print('   Simulating Electric Field Wavefront Propagation ... ', end='')
-t0 = time.time();
+t0 = time.time()
 srwl.PropagElecField(wfr1, optBL) # 3 harm for DCM
 print('done; lasted', round(time.time() - t0), 's')
-#%%
-wfrContainer = [wfr1]#, wfr2, wfr4, wfr4]
-angleContainer = [angleDCM_Cr1]
 
 #%% Drawing part of the code (after propogation)
 filepath = SKIF_path + FigPath
-skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name='3_harm_after_crystal.pdf', fourth_plot=5, show=False, file_path=filepath)
-#%%
-#wfrPathName = SKIF_path #example data sub-folder name
+#skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name='3_harm_after_DCM.pdf', fourth_plot=5, show=False, file_path=filepath)
+skf.skf_wfr_2d(wfr1, save_fig=True, figure_name='3_harm_after_DCM_2d.pdf', fourth_plot=5, show=True, file_path=filepath)
 
-wfr1FileName = 'wfr_harm1_after_Cr.wfr' #for harm2
+#%%
+wfr1FileName = 'wfr_harm1_after_DCM.wfr' #for harm2
 wfrFileName = [wfr1FileName]#, wfr2FileName, wfr3FileName, wfr4FileName]#, stkPFileName]
 wfrContainer = [wfr1]#, wfr2, wfr3, wfr4]
 
@@ -261,3 +215,49 @@ for (wfr, fname) in zip(wfrContainer, wfrFileName):
     pickle.dump(wfr, afile)
     afile.close()
     
+#%%
+Drift_to_KB = SRWLOptD(9.25) #Drift space to KB
+angVKB = 2.5e-03 #grazing angle at VKB center [rad]
+VKB = SRWLOptMirEl(_p=35.75, _q=9.25, _ang_graz=angVKB, _r_sag=1.0e+40, _size_tang=0.9,_size_sag=0.05, _nvx=0, _nvy=cos(angVKB), _nvz=-sin(angVKB), _tvx=0, _tvy=-sin(angVKB), _x=0, _y=0, _treat_in_out=1) #VKB Ellipsoidal Mirror
+
+Drift_VKB_HKB = SRWLOptD(0.5) #Distance between centers of Vertically and Horizontally focusing K-B mirrors 
+
+angHKB = 2.5e-03 #[rad]
+HKB = SRWLOptMirEl(_p=36.25, _q=8.75, _ang_graz=angHKB, _r_sag=1.0e+40, _size_tang=0.9,_size_sag=0.05, _nvx=cos(angHKB), _nvy=0, _nvz=-sin(angHKB), _tvx=-sin(angHKB), _tvy=0, _x=0, _y=0, _treat_in_out=1) #HKB Ellipsoidal Mirror
+#HKB = SRWLOptL(_Fx=11.5*0.5/(11.5 + 0.5))
+
+Drift_HKB_Sample = SRWLOptD(9.25) #Drift from HKB Center to Sample
+
+ppVKB =                 [ 0,  0, 1.0,  1,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
+ppDrift_VKB_HKB =       [ 0,  0, 1.0,  1,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
+ppHKB =                 [ 0,  0, 1.0,  1,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
+ppDrift_HKB_Sample =    [ 0,  0, 1.0,  1,  0, 1.0, 1.0, 1.0, 1.0,  0,  0,   0]
+
+ppFinal =               [ 0,  0, 1.0,  0,  1, 0.2, 4.0, 0.2, 4.0,  0,  0,   0]
+
+optBL = SRWLOptC([Drift_to_KB,        VKB,   Drift_VKB_HKB,   HKB,   Drift_HKB_Sample], # 3 harm
+                 [ppDrift_VKB_HKB,    ppVKB, ppDrift_VKB_HKB, ppHKB, ppDrift_HKB_Sample, ppFinal])
+
+#%%
+#///////////WAVEFRONT PROPOGATION//////#
+print('   Simulating Electric Field Wavefront Propagation ... ', end='')
+t0 = time.time();
+srwl.PropagElecField(wfr1, optBL) # 3 harm for DCM
+print('done; lasted', round(time.time() - t0), 's')
+#%%
+filepath = SKIF_path + FigPath
+#skf.skf_wfr_subplot_XY(wfr1, save_fig=True, figure_name='3_harm_after_Sph_Mir.pdf', fourth_plot=5, show=False, file_path=filepath)
+skf.skf_wfr_2d(wfr1, save_fig=True, figure_name='3_harm_after_Sph_Mir_2d.pdf', fourth_plot=5, show=True, file_path=filepath)
+
+#%%
+wfr1FileName = 'wfr_harm1_after_Sph_Mir.wfr' #for harm2
+wfrFileName = [wfr1FileName]#, wfr2FileName, wfr3FileName, wfr4FileName]#, stkPFileName]
+wfrContainer = [wfr1]#, wfr2, wfr3, wfr4]
+
+print('saving to the files')
+#*****************Saving to files
+for (wfr, fname) in zip(wfrContainer, wfrFileName):
+    print(wfr, fname, "\n")
+    afile = open(wfrPathName + fname, 'wb')
+    pickle.dump(wfr, afile)
+    afile.close()

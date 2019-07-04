@@ -41,7 +41,7 @@ harm4 = 23
 Length = 2.3 # [m]
 undper = 0.018 # [m]
 numper = 128
-magf = 1.36 # [T]
+magf = 1.49 #0.6 [T]
 
 #**********************Output files
 PathName = '/home/andrei/Documents/SKIF_XAS_beamline/1_1/fields_1_1/' #example data sub-folder name
@@ -147,10 +147,10 @@ a = 0.001
 
 #***********UR Stokes Parameters (mesh) for Spectral Flux
 wfr1 = SRWLWfr() #For spectrum vs photon energy
-wfr1.allocate(3000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
+wfr1.allocate(10000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
 wfr1.mesh.zStart = 25 #Longitudinal Position [m] at which SR has to be calculated
 wfr1.mesh.eStart = 100 #Initial Photon Energy [eV]
-wfr1.mesh.eFin = 10000#4300. #Final Photon Energy [eV]
+wfr1.mesh.eFin = 30000#4300. #Final Photon Energy [eV]
 wfr1.mesh.xStart = -a#*distance*1e-6 #Initial Horizontal Position [m]
 wfr1.mesh.xFin = a#*distance*1e-6 #Final Horizontal Position [m]
 wfr1.mesh.yStart = -a#*distance*1e-6 #Initial Vertical Position [m]
@@ -162,7 +162,7 @@ wfr2 = SRWLWfr() #For spectrum vs photon energy
 wfr2.allocate(5000, 1, 1) #Numbers of points vs Photon Energy, Horizontal and Vertical Positions
 wfr2.mesh.zStart = 25 #Longitudinal Position [m] at which SR has to be calculated
 wfr2.mesh.eStart = 1000 #Initial Photon Energy [eV]
-wfr2.mesh.eFin = 10000#4300. #Final Photon Energy [eV]
+wfr2.mesh.eFin = 30000#4300. #Final Photon Energy [eV]
 wfr2.mesh.xStart = -a*distance*1e-6 #Initial Horizontal Position [m]
 wfr2.mesh.xFin = a*distance*1e-6 #Final Horizontal Position [m]
 wfr2.mesh.yStart = -a*distance*1e-6 #Initial Vertical Position [m]
@@ -188,20 +188,19 @@ print('   Performing extraction of the wfrs and plotting it ... ', end='')
 z1 = wfr1.mesh.zStart
 z2 = wfr2.mesh.zStart 
 
-plt.figure()
-E, spec1 = skf.renorm_wfr(wfr1, elec_fld_units='W/mm^2/eV', emittance=0)
-print('max spec = ', round(np.max(spec1)),'W/mm/eV ')
-skf.skf_plot(E, spec1, elec_fld_units='W/mm^2/eV', color='blue', grid=True, linewidth=1.5, show=True)
-print('Total power density = ', round((np.sum(spec1))*((wfr1.mesh.eFin - wfr1.mesh.eStart) / wfr1.mesh.ne)), '[W/mm^2]')
+E, spec1 = skf.renorm_wfr(wfr1, emittance=0)
+skf.skf_plot(E, spec1, elec_fld_units='ph/s/mm^2/0.1%bw', color='blue', grid=True, linewidth=1.5, show=True, save_fig=True, figure_name='spec_und_1-1.pdf', file_path='/home/andrei/Documents/diploma/Diploma/pic/')
+#print('Total power density = ', round((np.sum(spec1))*((wfr1.mesh.eFin - wfr1.mesh.eStart) / wfr1.mesh.ne)), '[W/mm^2]')
 '''
 plt.figure()
-E, spec2 = skf.renorm_wfr(wfr2, elec_fld_units='W/mm^2/eV', emittance=0)
-skf.skf_plot(E, spec2, elec_fld_units='W/mm^2/eV', color='blue', grid=True, linewidth=1, show=True)
+E, spec2 = skf.renorm_wfr(wfr2, emittance=0)
+skf.skf_plot(E, spec2, color='blue', grid=True, linewidth=1, show=True)
 '''
 print('done')
 #%% 
 
 #%%
+'''
 ######## Power ########
 
 a = 10#[mm]
@@ -222,10 +221,12 @@ srwl.CalcPowDenSR(stkP, eBeam, 0, magFldCnt, arPrecP)
 print('done')
 
 skf.skf_power_subplot_XY(stkP, units='urad')
-'''
+
 afile = open(wfrPathName + stkPFileName, 'wb')
 pickle.dump(stkP, afile)
 afile.close()
+
+
 '''
 #%%
 ###### Trajectory #######
